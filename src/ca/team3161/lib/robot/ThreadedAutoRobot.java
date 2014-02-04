@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ca.team3161.iapetus.lib.robot;
+package ca.team3161.lib.robot;
 
 import ca.team3161.iapetus.Constants;
 import edu.wpi.first.wpilibj.IterativeRobot;
