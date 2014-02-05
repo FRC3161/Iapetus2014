@@ -48,6 +48,9 @@ public class Iapetus extends ThreadedAutoRobot {
      * core robot functionality, eg feeding the Watchdog and responding to
      * FMS events. A new Thread handles autonomous behaviour so that we can
      * use Thread.sleep() rather than checking Timer values.
+     * This method's semantics are one-shot, as opposed to continuous looping
+     * as provided by autonomousPeriodic or autonomousContinuous. This allows
+     * simpler scripting and also avoids busy-wait conditions.
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
@@ -79,7 +82,11 @@ public class Iapetus extends ThreadedAutoRobot {
     }
 
     /**
-     * This function is called periodically during operator control
+     * This function is called periodically during operator control, just like
+     * teleopPeriodic in the IterativeRobot base class.
+     * We use teleopThreadsafe instead to ensure safety with our separate
+     * autonomous thread. DO NOT create a teleopPeriodic in this class or any
+     * subclasses! Use teleopThreadsafe instead, only!
      */
     public void teleopThreadsafe() {
         dsLcd.clear();
