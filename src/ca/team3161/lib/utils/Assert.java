@@ -50,9 +50,7 @@ public class Assert {
      * @param condition throw an exception if the given condition holds
      */
     public static void assertFalse(boolean condition) {
-        if (condition) {
-            throw new AssertionException();
-        }
+        assertTrue(!condition);
     }
     
     /**
@@ -60,9 +58,7 @@ public class Assert {
      * @param condition throw an exception if the given condition holds
      */
     public static void assertFalse(String reason, boolean condition) {
-        if (condition) {
-            throw new AssertionException(reason);
-        }
+        assertTrue(reason, !condition);
     }
     
     /**
