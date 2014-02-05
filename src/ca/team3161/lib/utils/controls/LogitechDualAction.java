@@ -73,7 +73,7 @@ public class LogitechDualAction implements Gamepad {
      * @return the Y-axis value of the left joystick
      */
     public double getLeftY() {
-        return getAxisHelper(LEFT_STICK_Y);
+        return - getAxisHelper(LEFT_STICK_Y);
     }
         
     /**
@@ -87,7 +87,7 @@ public class LogitechDualAction implements Gamepad {
      * @return the Y-axis value of the right joystick
      */
     public double getRightY() {
-        return getAxisHelper(RIGHT_STICK_Y);
+        return - getAxisHelper(RIGHT_STICK_Y);
     }
         
     /**
