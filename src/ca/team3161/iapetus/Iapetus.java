@@ -52,12 +52,7 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void autonomousThreaded() throws Exception {
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
-        dsLcd.clear(0);
-        dsLcd.clear(1);
-        dsLcd.clear(2);
-        dsLcd.clear(3);
-        dsLcd.clear(4);
-        dsLcd.clear(5);
+        dsLcd.clear();
         dsLcd.println(1, "AUTO: DRIVE 0.5 0.5");
         allDrive.set(0.5);
         waitFor(1000);
@@ -87,12 +82,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * This function is called periodically during operator control
      */
     public void teleopThreadsafe() {
-        dsLcd.clear(0);
-        dsLcd.clear(1);
-        dsLcd.clear(2);
-        dsLcd.clear(3);
-        dsLcd.clear(4);
-        dsLcd.clear(5);
+        dsLcd.clear();
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());        
