@@ -13,7 +13,6 @@ import java.util.Vector;
 
 /**
  * Implements a container for SpeedControllers.
- * @author Team 3161
  */
 public class Drivetrain implements SpeedController {
     private final Vector motorControllers;

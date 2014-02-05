@@ -5,10 +5,6 @@
  */
 package ca.team3161.iapetus;
 
-/**
- *
- * @author aazores
- */
 public class Constants {
 
     public static class Gamepad {

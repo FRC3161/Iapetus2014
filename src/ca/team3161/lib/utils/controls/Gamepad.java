@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.GenericHID;
  * Not all Gamepads will have variable triggers, and not all raw button or
  * axis mappings are the same. These details are left to specific Gamepad
  * implementations.
- * @author andrew
  */
 public interface Gamepad {
 

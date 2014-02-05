@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * A Gamepad implementation describing the Logitech DualAction gamepad
- * @author andrew
  */
 public class LogitechDualAction implements Gamepad {
     

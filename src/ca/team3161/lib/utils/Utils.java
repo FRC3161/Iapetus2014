@@ -6,10 +6,6 @@
 
 package ca.team3161.lib.utils;
 
-/**
- *
- * @author andrew
- */
 public class Utils {
     
     /**

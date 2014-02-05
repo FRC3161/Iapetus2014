@@ -9,10 +9,6 @@ package ca.team3161.lib.robot;
 import ca.team3161.iapetus.Constants;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
-/**
- *
- * @author andrew
- */
 public abstract class ThreadedAutoRobot extends IterativeRobot {
     
     private static final int MAX_AUTO_PERIOD_LENGTH = Constants.Game.AUTONOMOUS_SECONDS * 1000;
