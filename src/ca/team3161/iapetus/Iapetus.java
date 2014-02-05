@@ -39,6 +39,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        gamepad.setInverted(true);
         dsLcd.println(0, "Robot Init!");
     }
     

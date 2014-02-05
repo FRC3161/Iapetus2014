@@ -34,6 +34,7 @@ public class LogitechDualAction implements Gamepad {
 
     private final GenericHID backingHID;
     
+    private double inversion = 1.0d;
     private final double DEADZONE;
     
     /**
@@ -73,7 +74,7 @@ public class LogitechDualAction implements Gamepad {
      * @return the Y-axis value of the left joystick
      */
     public double getLeftY() {
-        return - getAxisHelper(LEFT_STICK_Y);
+        return inversion * getAxisHelper(LEFT_STICK_Y);
     }
         
     /**
@@ -87,7 +88,7 @@ public class LogitechDualAction implements Gamepad {
      * @return the Y-axis value of the right joystick
      */
     public double getRightY() {
-        return - getAxisHelper(RIGHT_STICK_Y);
+        return inversion * getAxisHelper(RIGHT_STICK_Y);
     }
         
     /**
@@ -138,6 +139,19 @@ public class LogitechDualAction implements Gamepad {
      */
     public boolean getRightTrigger() {
         return backingHID.getRawButton(RIGHT_TRIGGER);
+    }
+    
+    public Gamepad setInverted(final boolean inverted) {
+        if (inverted) {
+            this.inversion = -1.0d;
+        } else {
+            this.inversion = 1.0d;
+        }
+        return this;
+    }
+    
+    public boolean getInverted() {
+        return this.inversion == -1.0d;
     }
 
 } 

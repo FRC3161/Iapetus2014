@@ -25,4 +25,6 @@ public interface Gamepad {
     public double getDpadHorizontal();
     public double getDpadVertical();
     public boolean getButton(int button);
+    public Gamepad setInverted(boolean inverted);
+    public boolean getInverted();
 }
