@@ -74,10 +74,17 @@ public class Assert {
      */
     public static class AssertionException extends RuntimeException {
 
+        /**
+         * Create a new AssertionException with generic cause
+         */
         public AssertionException() {
             super("Unspecified assertion failure");
         }
 
+        /**
+         * Create a new AssertionException
+         * @param cause the cause for this exception to have occurred
+         */
         public AssertionException(String cause) {
             super(cause);
         }

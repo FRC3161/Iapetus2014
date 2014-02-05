@@ -78,5 +78,10 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * and teleop functionality
      */
     public abstract void teleopThreadsafe();
+
+    /**
+     * The one-shot autonomous "script" to be run in a new Thread
+     * @throws Exception
+     */
     public abstract void autonomousThreaded() throws Exception;
 }

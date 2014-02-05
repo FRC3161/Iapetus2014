@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class LogitechDualAction implements Gamepad {
     
-    /* Axis mappings */
+    /** Axis mappings */
     public static final int
             LEFT_STICK_X = 1,
             LEFT_STICK_Y = 2,
@@ -25,13 +25,16 @@ public class LogitechDualAction implements Gamepad {
             DPAD_HORIZONTAL = 5,
             DPAD_VERTICAL = 6;
     
-    /* "Trigger" button numbers */
+    /** "Trigger" button numbers */
     public static final int
             LEFT_BUMPER = 5,
             RIGHT_BUMPER = 6,
             LEFT_TRIGGER = 7,
             RIGHT_TRIGGER = 8;
 
+    /* The actual FIRST-provided input device that we are implementing a
+    * convenience wrapper around.
+    */
     private final GenericHID backingHID;
     
     private double inversion = 1.0d;
@@ -55,6 +58,12 @@ public class LogitechDualAction implements Gamepad {
         return backingHID;
     }
     
+    /**
+     * Get a stick axis value
+     * @param axis which axis to get
+     * @return the value from this axis, or 0 if the raw value falls within the
+     * deadzone
+     */
     private double getAxisHelper(final int axis) {
         final double val = backingHID.getRawAxis(axis);
         if (Math.abs(val) < DEADZONE) {
@@ -141,6 +150,11 @@ public class LogitechDualAction implements Gamepad {
         return backingHID.getRawButton(RIGHT_TRIGGER);
     }
     
+    /**
+     * Invert the Y-axes of the thumbsticks on this Gamepad
+     * @param inverted true iff the Y-axes should be inverted
+     * @return this Gamepad instance
+     */
     public Gamepad setInverted(final boolean inverted) {
         if (inverted) {
             this.inversion = -1.0d;
@@ -150,6 +164,11 @@ public class LogitechDualAction implements Gamepad {
         return this;
     }
     
+
+    /**
+     * Check if this gamepad's sticks are inverted
+     * @return if the sticks are inverted
+     */
     public boolean getInverted() {
         return this.inversion == -1.0d;
     }
