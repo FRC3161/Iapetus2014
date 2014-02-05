@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Iapetus extends ThreadedAutoRobot {
 
     private final SpeedController leftDrive = new Drivetrain (new SpeedController[] {new Talon (1), new Victor (2), new Talon (3)}).setInverted(true);
-    private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)});
+    private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)}).setInverted(false);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
@@ -53,6 +53,10 @@ public class Iapetus extends ThreadedAutoRobot {
     public void autonomousThreaded() throws Exception {
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
         dsLcd.println(1, "AUTO: DRIVE 0.5 0.5");
+        dsLcd.println(2, "");
+        dsLcd.println(3, "");
+        dsLcd.println(4, "");
+        dsLcd.println(5, "");
         allDrive.set(0.5);
         waitFor(1000);
         dsLcd.println(1, "AUTO: DRIVE 0.0 0.0");
@@ -84,9 +88,13 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
+        dsLcd.println(3, "");
+        dsLcd.println(4, "");
+        dsLcd.println(5, "");
+        
 
-        leftDrive.set(gamepad.getLeftY() - gamepad.getRightX());
-        rightDrive.set(gamepad.getLeftY() + gamepad.getRightX());
+        leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
+        rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
     }
 
     /**
