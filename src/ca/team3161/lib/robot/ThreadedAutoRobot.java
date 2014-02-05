@@ -30,6 +30,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * executing both autonomous and teleop routines at the same time.
      */
     public void autonomousInit() {
+        accumulatedTime = 0;
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -61,12 +62,21 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
         }
     }
     
+    /**
+     * Do not override this in subclasses, or else there may be no guarantee
+     * that the autonomous thread and the main robot thread, executing teleop
+     * code, will not attempt to run concurrently.
+     */
     public void teleopPeriodic() {
         synchronized (modeLock) {
             teleopThreadsafe();
         }
     }
     
+    /**
+     * Override these two methods in subclasses to complete autonomous
+     * and teleop functionality
+     */
     public abstract void teleopThreadsafe();
     public abstract void autonomousThreaded() throws Exception;
 }
