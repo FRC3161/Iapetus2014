@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
 import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -54,12 +55,15 @@ public class Iapetus extends ThreadedAutoRobot {
 
     private final SpeedController leftDrive = new Drivetrain (new SpeedController[] {new Talon (1), new Victor (2), new Talon (3)}).setInverted(true);
     private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)}).setInverted(false);
-    
+
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
-    
+
     private final Timer autoElapsedTimer = new Timer();
     private DriverStation.Alliance alliance;
+    private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
+    private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kOn;
+    private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -69,8 +73,13 @@ public class Iapetus extends ThreadedAutoRobot {
         alliance = DriverStation.getInstance().getAlliance();
         gamepad.setInverted(true);
         dsLcd.println(0, "Robot Init! Alliance: " + alliance.name);
+        if (alliance.equals(DriverStation.Alliance.kBlue)) {
+            underglowController.set(BLUE_UNDERGLOW);
+        } else {
+            underglowController.set(RED_UNDERGLOW);
+        }
     }
-    
+
     /**
      * This method is invoked by a new Thread.
      * The main robot thread's role during autonomous is simply to maintain
@@ -92,7 +101,7 @@ public class Iapetus extends ThreadedAutoRobot {
         allDrive.set(0.0);
         dsLcd.println(5, "AUTO: FINISHED");
     }
-    
+
     /**
      * Put anything here that needs to be performed by the main robot thread
      * during the autonomous period. DO NOT use any Drivetrain, Gamepad,
@@ -121,7 +130,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.clear();
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
-        dsLcd.println(2, "Right Drive: " + rightDrive.get());        
+        dsLcd.println(2, "Right Drive: " + rightDrive.get());
 
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
