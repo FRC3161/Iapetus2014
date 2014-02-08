@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
 import ca.team3161.lib.utils.io.DriverStationLCD;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -58,14 +59,16 @@ public class Iapetus extends ThreadedAutoRobot {
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     
     private final Timer autoElapsedTimer = new Timer();
+    private DriverStation.Alliance alliance;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        alliance = DriverStation.getInstance().getAlliance();
         gamepad.setInverted(true);
-        dsLcd.println(0, "Robot Init!");
+        dsLcd.println(0, "Robot Init! Alliance: " + alliance.name);
     }
     
     /**
