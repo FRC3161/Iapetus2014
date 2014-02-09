@@ -73,7 +73,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void robotInit() {
         alliance = DriverStation.getInstance().getAlliance();
         gamepad.setInverted(true);
-        dsLcd.println(0, "Alliance: " + alliance.name);
+        dsLcd.println(0, "Alliance: " + alliance.name.toUpperCase());
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
         } else {
@@ -141,8 +141,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
-        dsLcd.println(3, "Pot: " + shooter.getDrawback());
-        dsLcd.println(4, "Failsafe: " + shooter.getFailsafeSwitch());
+        dsLcd.println(3, "Stopswitch: " + shooter.getStopSwitch());
 
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
@@ -153,18 +152,17 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.pullTrigger();
             shooterTriggerTimer.start();
         }
+        
         if (shooterTriggerTimer.get() > 0.25) {
             shooterTriggerTimer.stop();
             shooterTriggerTimer.reset();
             shooter.returnTrigger();
-        }
-        
-        //winch motor controll
-        if (gamepad.getRightTrigger()) {
             shooter.drawWinch(-0.5);
         }
         
-        if (gamepad.getButton(4)) shooter.drawWinch(0.0d);
+        if (shooter.getStopSwitch()) {
+            shooter.drawWinch(0.0d);
+        }
         
         //shoulder motor (fork) conroll
         if (gamepad.getDpadVertical() > 0.0) {

@@ -57,8 +57,7 @@ public class Shooter {
     private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
-    private final Potentiometer drawback = new AnalogPotentiometer (1);
-    private final DigitalInput failsafeSwitch = new DigitalInput(1);
+    private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     
     public Shooter() {
     }
@@ -75,7 +74,7 @@ public class Shooter {
      * @param speed set the winch motor
      */
     public void drawWinch(final double speed) {
-        if (getDrawback() >= 1.0d || getFailsafeSwitch()) {
+        if (getStopSwitch()) {
             winch.set(0.0d);
             return;
         }
@@ -130,15 +129,8 @@ public class Shooter {
         fork.set(Utils.normalizePwm(speed));
     }
     
-    /**
-     * @return a double from 0.0 to 1.0 representing % drawback of the shooter rod
-     */
-    public double getDrawback() {
-        return drawback.get() / 3.0;
-    }
-    
-    public boolean getFailsafeSwitch() {
-        return !failsafeSwitch.get();
+    public boolean getStopSwitch() {
+        return !drawbackStopSwitch.get();
     }
 
 }
