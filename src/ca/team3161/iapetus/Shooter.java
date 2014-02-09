@@ -25,9 +25,8 @@
 
 package ca.team3161.iapetus;
 
-import ca.team3161.lib.robot.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -75,49 +74,35 @@ public class Shooter {
      * Release the trigger pin
      */
     public void pullTrigger() {
-        trigger.set(true);
+        trigger.set(DoubleSolenoid.Value.kForward);
     }
     
     /**
      * Set the trigger pin back in
      */
     public void returnTrigger() {
-        trigger.set(false);
-    }
-    
-    /**
-     * Release tension on the trigger pin
-     */
-    public void resetTrigger() {
-        trigger.reset();
+        trigger.set(DoubleSolenoid.Value.kReverse);
     }
     
     /**
      * Open the roller claw
      */
     public void openClaw() {
-        claw.set(true);
+        claw.set(DoubleSolenoid.Value.kForward);
     }
     
     /**
      * Close the roller claw
      */
     public void closeClaw() {
-        claw.set(false);
-    }
-    
-    /**
-     * Release tension on the roller claw
-     */
-    public void resetClaw() {
-        claw.reset();
+        claw.set(DoubleSolenoid.Value.kReverse);
     }
     
     /**
      * @return whether the claw is closed or not.
      */
     public boolean getClaw() {
-        return claw.get();
+        return claw.get().equals(DoubleSolenoid.Value.kForward);
     }
     
     /**
