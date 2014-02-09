@@ -6,6 +6,7 @@
 
 package ca.team3161.iapetus;
 
+import ca.team3161.lib.robot.DoubleSolenoid;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -33,8 +34,8 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 public class Shooter {
     
     private final SpeedController winch = new Victor (7);
-    private final Solenoid trigger = new Solenoid (1);
-    private final Solenoid claw = new Solenoid (2);
+    private final DoubleSolenoid trigger = new DoubleSolenoid(new Solenoid (1), new Solenoid(2));
+    private final DoubleSolenoid claw = new DoubleSolenoid(new Solenoid (3), new Solenoid(4));
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
     private final Potentiometer drawback = new AnalogPotentiometer (10);
@@ -53,16 +54,24 @@ public class Shooter {
         trigger.set(true);
     }
     
-    public void resetTrigger() {
+    public void returnTrigger() {
         trigger.set(false);
     }
     
+    public void resetTrigger() {
+        trigger.reset();
+    }
+    
     public void openClaw() {
-        claw.set(false);
+        claw.set(true);
     }
     
     public void closeClaw() {
-        claw.set(true);
+        claw.set(false);
+    }
+    
+    public void resetClaw() {
+        claw.reset();
     }
     
     /**

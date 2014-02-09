@@ -150,7 +150,7 @@ public class Iapetus extends ThreadedAutoRobot {
         if (shooterTriggerTimer.get() > 0.25) {
             shooterTriggerTimer.stop();
             shooterTriggerTimer.reset();
-            shooter.resetTrigger();
+            shooter.returnTrigger();
         }
         
         if (gamepad.getRightTrigger()) {
