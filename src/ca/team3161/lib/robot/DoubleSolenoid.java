@@ -27,6 +27,9 @@ package ca.team3161.lib.robot;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
+/**
+ * Simple wrapper class to handle double solenoids
+ */
 public class DoubleSolenoid {
     
     private final Solenoid first, second;
