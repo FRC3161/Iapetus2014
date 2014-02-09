@@ -73,12 +73,13 @@ public class Iapetus extends ThreadedAutoRobot {
     public void robotInit() {
         alliance = DriverStation.getInstance().getAlliance();
         gamepad.setInverted(true);
-        dsLcd.println(0, "Robot Init! Alliance: " + alliance.name);
+        dsLcd.println(0, "Alliance: " + alliance.name);
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
         } else {
             underglowController.set(RED_UNDERGLOW);
         }
+        shooter.disableAll();
     }
 
     /**
@@ -136,9 +137,11 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopThreadsafe() {
         dsLcd.clear();
+        
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
+        dsLcd.println(3, "Pot: " + shooter.getDrawback());
 
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
@@ -157,8 +160,10 @@ public class Iapetus extends ThreadedAutoRobot {
         
         //winch motor controll
         if (gamepad.getRightTrigger()) {
-            shooter.drawWinch(0.5);
+            shooter.drawWinch(-0.5);
         }
+        
+        if (gamepad.getButton(4)) shooter.drawWinch(0.0d);
         
         //shoulder motor (fork) conroll
         if (gamepad.getDpadVertical() > 0.0) {
@@ -191,6 +196,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void disabledPeriodic() {
         leftDrive.disable();
         rightDrive.disable();
+        shooter.disableAll();
     }
 
     /**
