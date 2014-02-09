@@ -26,6 +26,7 @@
 package ca.team3161.lib.robot;
 
 import ca.team3161.lib.utils.Assert;
+import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.SpeedController;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -96,7 +97,7 @@ public class Drivetrain implements SpeedController {
      */
     public void set(double pwm) {
         // PWM value must be between -1 and 1
-        pwm = normalize(pwm);
+        pwm = Utils.normalizePwm(pwm);
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();
@@ -111,7 +112,7 @@ public class Drivetrain implements SpeedController {
      */
     public void set(double pwm, final byte syncGroup) {
         // PWM value must be between -1 and 1
-        pwm = normalize(pwm);
+        pwm = Utils.normalizePwm(pwm);
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();
@@ -137,10 +138,5 @@ public class Drivetrain implements SpeedController {
             controller.pidWrite(output);
         }
     }
-    
-    private double normalize(final double val) {
-        if (val > 1.0d) return 1.0d;
-        if (val < -1.0d) return -1.0d;
-        return val;
-    }
+
 }

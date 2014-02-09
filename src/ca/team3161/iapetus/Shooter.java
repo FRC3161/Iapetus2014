@@ -25,6 +25,7 @@
 
 package ca.team3161.iapetus;
 
+import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -67,7 +68,7 @@ public class Shooter {
         if (getDrawback() >= 1.0d) {
             return;
         }
-        winch.set(normalize(speed));
+        winch.set(Utils.normalizePwm(speed));
     }
     
     /**
@@ -109,14 +110,14 @@ public class Shooter {
      * @param speed set the PWM for the roller motors
      */
     public void setRoller(final double speed) {
-        roller.set(normalize(speed));
+        roller.set(Utils.normalizePwm(speed));
     }
     
     /**
      * @param speed set the PWM for the shoulder motor
      */
     public void setFork(final double speed) {
-        fork.set(normalize(speed));
+        fork.set(Utils.normalizePwm(speed));
     }
     
     /**
@@ -125,10 +126,5 @@ public class Shooter {
     public double getDrawback() {
         return drawback.get();
     }
-    
-    private static double normalize(final double val) {
-        if (val < -1.0d) return -1.0d;
-        if (val > 1.0d) return 1.0d;
-        return val;
-    }
+
 }

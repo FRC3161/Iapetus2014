@@ -72,4 +72,10 @@ public class Utils {
         final long unscaledLong = (long) unscaled;
         return (double) unscaledLong / TENS[precision];
     }
+    
+    public static double normalizePwm(final double val) {
+        if (val < -1.0d) return -1.0d;
+        if (val > 1.0d) return 1.0d;
+        return val;
+    }
 }
