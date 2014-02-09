@@ -34,9 +34,9 @@ public class DoubleSolenoid {
     
     private final Solenoid first, second;
     
-    public DoubleSolenoid (final Solenoid first, final Solenoid second) {
-        this.first = first;
-        this.second = second;
+    public DoubleSolenoid (final int firstChannel, final int secondChannel) {
+        first = new Solenoid(firstChannel);
+        second = new Solenoid(secondChannel);
     }
     
     public void set(final boolean state) {
