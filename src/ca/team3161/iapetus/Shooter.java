@@ -61,6 +61,14 @@ public class Shooter {
     public Shooter() {
     }
     
+    public void disableAll() {
+        winch.set(0.0d);
+        trigger.set(DoubleSolenoid.Value.kOff);
+        claw.set(DoubleSolenoid.Value.kOff);
+        roller.set(0.0d);
+        fork.set(0.0d);
+    }
+    
     /**
      * @param speed set the winch motor
      */
@@ -76,8 +84,7 @@ public class Shooter {
      */
     public void pullTrigger() {
         trigger.set(DoubleSolenoid.Value.kForward);
-    }
-    
+    }   
     /**
      * Set the trigger pin back in
      */
@@ -124,7 +131,7 @@ public class Shooter {
      * @return a double from 0.0 to 1.0 representing % drawback of the shooter rod
      */
     public double getDrawback() {
-        return drawback.get();
+        return drawback.get() / 3.0;
     }
 
 }
