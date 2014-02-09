@@ -157,7 +157,7 @@ public class Iapetus extends ThreadedAutoRobot {
             shooterTriggerTimer.stop();
             shooterTriggerTimer.reset();
             shooter.returnTrigger();
-            shooter.drawWinch(-0.5);
+            shooter.drawWinch(0.5);
         }
         
         if (shooter.getStopSwitch()) {

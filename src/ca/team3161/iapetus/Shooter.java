@@ -71,14 +71,19 @@ public class Shooter {
     }
     
     /**
-     * @param speed set the winch motor
+     * @param speed set the winch motor. The motor actually runs in reverse,
+     * so this method negates the value before setting it so that positive
+     * values wind the winch back.
      */
     public void drawWinch(final double speed) {
         if (getStopSwitch()) {
             winch.set(0.0d);
             return;
         }
-        winch.set(Utils.normalizePwm(speed));
+        if (speed < 0.0d) { // do not run reverse!
+            return;
+        }
+        winch.set(Utils.normalizePwm(-speed));
     }
     
     /**
