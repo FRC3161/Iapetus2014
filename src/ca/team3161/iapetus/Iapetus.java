@@ -55,11 +55,12 @@ public class Iapetus extends ThreadedAutoRobot {
 
     private final SpeedController leftDrive = new Drivetrain (new SpeedController[] {new Talon (1), new Victor (2), new Talon (3)}).setInverted(true);
     private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)}).setInverted(false);
-
+    private final Shooter shooter = new Shooter();
+    
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
 
-    private final Timer autoElapsedTimer = new Timer();
+    private final Timer autoElapsedTimer = new Timer(), shooterTriggerTimer = new Timer();
     private DriverStation.Alliance alliance;
     private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kOn;
@@ -99,6 +100,11 @@ public class Iapetus extends ThreadedAutoRobot {
         waitFor(1000);
         dsLcd.println(1, "AUTO: DRIVE 0.0 0.0");
         allDrive.set(0.0);
+        shooter.openClaw();
+        shooter.setFork(-0.5);
+        waitFor(300);
+        shooter.setFork(0.0);
+        shooter.closeClaw();
         dsLcd.println(5, "AUTO: FINISHED");
     }
 
@@ -117,6 +123,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        autoElapsedTimer.stop();
+        autoElapsedTimer.reset();
     }
 
     /**
@@ -134,6 +142,34 @@ public class Iapetus extends ThreadedAutoRobot {
 
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
+        
+        if (gamepad.getButton(2) && shooterTriggerTimer.get() < 0.25) {
+            shooter.pullTrigger();
+            shooterTriggerTimer.start();
+        }
+        if (shooterTriggerTimer.get() > 0.25) {
+            shooterTriggerTimer.stop();
+            shooterTriggerTimer.reset();
+            shooter.resetTrigger();
+        }
+        
+        if (gamepad.getRightTrigger()) {
+            shooter.drawWinch(0.5);
+        }
+        
+        if (gamepad.getDpadVertical() > 0.0) {
+            shooter.setFork(0.25);
+        }
+        
+        if (gamepad.getDpadVertical() < 0.0) {
+            shooter.setFork(-0.25);
+        }
+        
+        if (shooter.getClaw()) {
+            shooter.setRoller(0.5);
+        } else {
+            shooter.setRoller(0.0);
+        }
     }
 
     /**
