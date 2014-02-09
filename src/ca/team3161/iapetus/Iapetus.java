@@ -142,6 +142,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
         dsLcd.println(3, "Pot: " + shooter.getDrawback());
+        dsLcd.println(4, "Failsafe: " + shooter.getFailsafeSwitch());
 
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());

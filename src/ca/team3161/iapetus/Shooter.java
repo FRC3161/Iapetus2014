@@ -75,7 +75,7 @@ public class Shooter {
      * @param speed set the winch motor
      */
     public void drawWinch(final double speed) {
-        if (getDrawback() >= 1.0d || failsafeSwitch.get()) {
+        if (getDrawback() >= 1.0d || getFailsafeSwitch()) {
             winch.set(0.0d);
             return;
         }
@@ -135,6 +135,10 @@ public class Shooter {
      */
     public double getDrawback() {
         return drawback.get() / 3.0;
+    }
+    
+    public boolean getFailsafeSwitch() {
+        return !failsafeSwitch.get();
     }
 
 }
