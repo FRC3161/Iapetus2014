@@ -61,6 +61,9 @@ public class Shooter {
     public Shooter() {
     }
     
+    /**
+     * @param speed set the winch motor
+     */
     public void drawWinch(final double speed) {
         if (getDrawback() >= 1.0d) {
             return;
@@ -68,26 +71,44 @@ public class Shooter {
         winch.set(normalize(speed));
     }
     
+    /**
+     * Release the trigger pin
+     */
     public void pullTrigger() {
         trigger.set(true);
     }
     
+    /**
+     * Set the trigger pin back in
+     */
     public void returnTrigger() {
         trigger.set(false);
     }
     
+    /**
+     * Release tension on the trigger pin
+     */
     public void resetTrigger() {
         trigger.reset();
     }
     
+    /**
+     * Open the roller claw
+     */
     public void openClaw() {
         claw.set(true);
     }
     
+    /**
+     * Close the roller claw
+     */
     public void closeClaw() {
         claw.set(false);
     }
     
+    /**
+     * Release tension on the roller claw
+     */
     public void resetClaw() {
         claw.reset();
     }
@@ -99,10 +120,16 @@ public class Shooter {
         return claw.get();
     }
     
+    /**
+     * @param speed set the PWM for the roller motors
+     */
     public void setRoller(final double speed) {
         roller.set(normalize(speed));
     }
     
+    /**
+     * @param speed set the PWM for the shoulder motor
+     */
     public void setFork(final double speed) {
         fork.set(normalize(speed));
     }
