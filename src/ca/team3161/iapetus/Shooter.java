@@ -28,6 +28,7 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -57,6 +58,7 @@ public class Shooter {
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
     private final Potentiometer drawback = new AnalogPotentiometer (1);
+    private final DigitalInput failsafeSwitch = new DigitalInput(1);
     
     public Shooter() {
     }
@@ -73,7 +75,8 @@ public class Shooter {
      * @param speed set the winch motor
      */
     public void drawWinch(final double speed) {
-        if (getDrawback() >= 1.0d) {
+        if (getDrawback() >= 1.0d || failsafeSwitch.get()) {
+            winch.set(0.0d);
             return;
         }
         winch.set(Utils.normalizePwm(speed));
