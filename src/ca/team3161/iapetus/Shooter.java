@@ -56,7 +56,7 @@ public class Shooter {
     private final DoubleSolenoid claw = new DoubleSolenoid(new Solenoid (3), new Solenoid(4));
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
-    private final Potentiometer drawback = new AnalogPotentiometer (10);
+    private final Potentiometer drawback = new AnalogPotentiometer (1);
     
     public Shooter() {
     }

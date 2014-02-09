@@ -140,9 +140,11 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
 
+        //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
         
+        //trigger piston mechanism
         if (gamepad.getButton(2) && shooterTriggerTimer.get() < 0.25) {
             shooter.pullTrigger();
             shooterTriggerTimer.start();
@@ -153,10 +155,12 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.returnTrigger();
         }
         
+        //winch motor controll
         if (gamepad.getRightTrigger()) {
             shooter.drawWinch(0.5);
         }
         
+        //shoulder motor (fork) conroll
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setFork(0.25);
         }
@@ -165,6 +169,7 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setFork(-0.25);
         }
         
+        //roller up/down
         if (shooter.getClaw()) {
             shooter.setRoller(0.5);
         } else {
