@@ -52,8 +52,8 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 public class Shooter {
     
     private final SpeedController winch = new Victor (7);
-    private final DoubleSolenoid trigger = new DoubleSolenoid(new Solenoid (1), new Solenoid(2));
-    private final DoubleSolenoid claw = new DoubleSolenoid(new Solenoid (3), new Solenoid(4));
+    private final DoubleSolenoid trigger = new DoubleSolenoid(1, 2);
+    private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
     private final Potentiometer drawback = new AnalogPotentiometer (10);
