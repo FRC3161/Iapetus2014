@@ -1,3 +1,8 @@
 = Iapetus
 Team 3161
 v0.1, 10 February 2014
+
+== What is this?
+Iapetus is the working name for FRC 3161's robot code for the 2014 season. For
+more information about the team, or the robot for which this code was written,
+please visit http://team3161.ca.
