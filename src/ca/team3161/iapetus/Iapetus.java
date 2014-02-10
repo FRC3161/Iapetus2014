@@ -39,7 +39,6 @@ import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
-import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
