@@ -44,7 +44,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * modeLock is used to ensure that the robot is never simultaneously
      * executing both autonomous and teleop routines at the same time.
      */
-    public void autonomousInit() {
+    public final void autonomousInit() {
         accumulatedTime = 0;
         new Thread(new Runnable() {
             public void run() {
@@ -66,7 +66,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * @param millis
      * @throws InterruptedException 
      */
-    public void waitFor(long millis) throws InterruptedException {
+    public final void waitFor(long millis) throws InterruptedException {
         accumulatedTime += millis;
         if (accumulatedTime > MAX_AUTO_PERIOD_LENGTH) {
             throw new InterruptedException("Auto is over!");
@@ -82,7 +82,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * that the autonomous thread and the main robot thread, executing teleop
      * code, will not attempt to run concurrently.
      */
-    public void teleopPeriodic() {
+    public final void teleopPeriodic() {
         synchronized (modeLock) {
             teleopThreadsafe();
         }
