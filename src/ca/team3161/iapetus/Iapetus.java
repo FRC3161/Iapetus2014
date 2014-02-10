@@ -58,7 +58,6 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Shooter shooter = new Shooter();
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
-    private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
 
     private final Timer autoElapsedTimer = new Timer(), shooterTriggerTimer = new Timer();
     private DriverStation.Alliance alliance;

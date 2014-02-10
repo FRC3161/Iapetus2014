@@ -26,6 +26,7 @@
 package ca.team3161.lib.robot;
 
 import ca.team3161.iapetus.Constants;
+import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public abstract class ThreadedAutoRobot extends IterativeRobot {
@@ -33,6 +34,8 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
     private static final int MAX_AUTO_PERIOD_LENGTH = Constants.Game.AUTONOMOUS_SECONDS * 1000;
     private volatile int accumulatedTime = 0;
     private final Object modeLock = new Object();
+    
+    protected final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     
     /** DO NOT override this in subclasses!
      * At the start of the autonomous period, spawn and start a new Thread
@@ -53,6 +56,8 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
                         autonomousThreaded();
                     }
                 } catch (Exception e) {
+                    dsLcd.println(0, "AUTO INTERRUPTED!");
+                    dsLcd.println(1, e.getMessage());
                 }
             }
         }).start();
