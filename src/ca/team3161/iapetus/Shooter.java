@@ -27,12 +27,10 @@ package ca.team3161.iapetus;
 
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  *
@@ -135,7 +133,7 @@ public class Shooter {
     }
     
     public boolean getStopSwitch() {
-        return !drawbackStopSwitch.get();
+        return drawbackStopSwitch.get();
     }
 
 }

@@ -58,7 +58,7 @@ public class Iapetus extends ThreadedAutoRobot {
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
 
-    private final Timer autoElapsedTimer = new Timer(), shooterTriggerTimer = new Timer();
+    private final Timer autoElapsedTimer = new Timer(), shooterTriggerTimer = new Timer(), shooterClawTimer = new Timer();
     private DriverStation.Alliance alliance;
     private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kOn;
@@ -162,7 +162,7 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.drawWinch(0.0d);
         }
         
-        //shoulder motor (fork) conroll
+        //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setFork(0.25);
         }
@@ -171,12 +171,22 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setFork(-0.25);
         }
         
-        //roller up/down
-        if (shooter.getClaw()) {
+        //roller on/off
+        if (gamepad.getRightBumper()) {
             shooter.setRoller(0.5);
         } else {
             shooter.setRoller(0.0);
         }
+        
+        //roller up/down
+        if (gamepad.getButton(3)) {
+            shooter.closeClaw();
+        }
+    
+        if (gamepad.getButton(1)) {
+            shooter.openClaw();
+        }
+        
     }
 
     /**
