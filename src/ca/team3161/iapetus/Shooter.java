@@ -28,6 +28,7 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -56,6 +57,7 @@ public class Shooter {
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
+    private final AnalogPotentiometer forkPot = new AnalogPotentiometer(2);
     
     public Shooter() {
     }
@@ -136,4 +138,7 @@ public class Shooter {
         return drawbackStopSwitch.get();
     }
 
+    public double getFork() {
+        return forkPot.get();
+    }
 }
