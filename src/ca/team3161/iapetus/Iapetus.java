@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, FRC3161
+ /* Copyright (c) 2014, FRC3161
 * All rights reserved.
 * 
 * Redistribution and use in source and binary forms, with or without modification,
@@ -133,6 +133,9 @@ public class Iapetus extends ThreadedAutoRobot {
      * autonomous thread. DO NOT create a teleopPeriodic in this class or any
      * subclasses! Use teleopThreadsafe instead, only!
      */
+    private static boolean padPress = false;
+    private static int padCount = 0;
+        
     public void teleopThreadsafe() {
         dsLcd.clear();
         
@@ -170,6 +173,17 @@ public class Iapetus extends ThreadedAutoRobot {
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setFork(-0.25);
         }
+        /*
+        //fork up/down
+        if (gamepad.getDpadVertical() == 0) {
+            padPress = false;
+        } else if (gamepad.getDpadVertical() > 0 && !padPress && padCount != 2) {
+            padCount++;
+            padPress = true;
+        } else if (gamepad.getDpadVertical() < 0 && !padPress && padCount != 0) {
+            padCount--;
+            padPress = true;
+         */
         
         //roller on/off
         if (gamepad.getRightBumper()) {
