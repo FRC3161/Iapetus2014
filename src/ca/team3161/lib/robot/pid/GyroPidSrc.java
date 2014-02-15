@@ -23,7 +23,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package ca.team3161.lib.robot;
+package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.Gyro;
 

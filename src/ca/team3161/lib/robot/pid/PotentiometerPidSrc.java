@@ -23,8 +23,33 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package ca.team3161.lib.robot;
+package ca.team3161.lib.robot.pid;
 
-public interface PIDSrc {
-    public double getValue();
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+
+public class PotentiometerPidSrc implements IAnglePidSrc {
+    
+    private final Potentiometer pot;
+    private final double minVolt, maxVolt, minAngle, maxAngle;
+    
+    public PotentiometerPidSrc(final Potentiometer pot,
+            final double minVolt, final double maxVolt,
+            final double minAngle, final double maxAngle) {
+        this.pot = pot;
+        this.minVolt = minVolt;
+        this.maxVolt = maxVolt;
+        this.minAngle = minAngle;
+        this.maxAngle = maxAngle;
+    }
+    
+    public Potentiometer getSensor() {
+        return pot;
+    }
+    
+    public double getValue() {
+        final double slope = (maxAngle - minAngle) / (maxVolt - minVolt);
+        final double offset = minAngle - slope * minVolt;
+        return slope * pot.get() + offset;
+    }
+    
 }

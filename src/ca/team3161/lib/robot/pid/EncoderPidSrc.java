@@ -23,7 +23,23 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package ca.team3161.lib.robot;
+package ca.team3161.lib.robot.pid;
 
-public interface IAnglePidSrc extends PIDSrc {
+import edu.wpi.first.wpilibj.Encoder;
+
+public class EncoderPidSrc implements PIDSrc {
+
+    private final Encoder enc;
+    
+    public EncoderPidSrc(final int aChannel, final int bChannel) {
+        enc = new Encoder(aChannel, bChannel);
+    }
+    
+    public Encoder getSensor() {
+        return enc;
+    }
+    
+    public double getValue() {
+        return enc.get();
+    }
 }
