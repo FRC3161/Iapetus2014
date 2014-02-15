@@ -193,6 +193,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void disabledInit() {
         leftDrive.disable();
         rightDrive.disable();
+        shooter.disableAll();
     }
 
     /**
