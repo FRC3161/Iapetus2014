@@ -33,7 +33,6 @@ import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -59,6 +58,7 @@ public class Shooter extends Subsystem {
     
     private static final float DRAW_SPEED = 0.65f;
     private volatile boolean firing = false;
+    private volatile boolean disabled = false;
     private volatile double forkAngle = 45.0;
     
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
@@ -69,8 +69,8 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 0.0/*minVolt*/, 0.0/*maxVolt*/, 45, 180);
-    private final PIDulum pidulum = new PIDulum(pidPot, 0.0/*kP*/, 0.0/*kI*/, 0.0/*kD*/, 0.0/*offsetAngle*/, 0.0/*torqueConstant*/);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.83/*minVolt*/, 2.78/*maxVolt*/, 55, 185);
+    private final PIDulum pidulum = new PIDulum(pidPot, -0.002/*kP*/, 0.0/*kI*/, 0.0/*kD*/, 135/*offsetAngle*/, 0.001/*torqueConstant*/);
     
     public Shooter() {
         super(20, true);
@@ -90,6 +90,7 @@ public class Shooter extends Subsystem {
         claw.set(DoubleSolenoid.Value.kOff);
         roller.set(0.0d);
         fork.set(0.0d);
+        disabled = true;
     }
     
     /**
@@ -173,6 +174,7 @@ public class Shooter extends Subsystem {
     }
     
     public void setForkAngle(double angle) {
+        disabled = false;
         if (angle < pidPot.getMinAngle()) {
             angle = pidPot.getMinAngle();
         }
@@ -180,13 +182,14 @@ public class Shooter extends Subsystem {
             angle = pidPot.getMaxAngle();
         }
         this.forkAngle = angle;
+        pidulum.clear();
     }
     
     /**
      * @param speed set the PWM for the shoulder motor
      */
-    public void setFork(final double speed) {
-        fork.set(Utils.normalizePwm(speed));
+    private void setFork(final double speed) {
+        fork.set(Utils.normalizePwm(speed) / 2);
     }
     
     private boolean getStopSwitch() {
@@ -197,13 +200,20 @@ public class Shooter extends Subsystem {
         return pidPot.getValue();
     }
     
-    protected void task() throws Exception {
+    public double getForkTargetAngle() {
+        return forkAngle;
+    }
+    
+    public void task() throws Exception {
         if (getStopSwitch()) {
             winch.set(0.0);
+        }
+        dsLcd.println(2, "VOLT: " + forkPot.get());
+        if (disabled) {
+            return;
         }
         final double pidVal = pidulum.pd(forkAngle);
         setFork(pidVal);
         dsLcd.println(1, "PID: " + pidVal);
-        dsLcd.println(2, "Fork: " + getForkAngle());
     }
 }

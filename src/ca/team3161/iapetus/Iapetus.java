@@ -78,6 +78,7 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         shooter.disableAll();
         shooter.start();
+        shooter.setForkAngle(135);
     }
 
     /**
@@ -100,9 +101,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "AUTO: DRIVE 0.0 0.0");
         allDrive.set(0.0);
         shooter.openClaw();
-        shooter.setFork(-0.5);
         waitFor(300);
-        shooter.setFork(0.0);
         shooter.closeClaw();
         waitFor(500);
         shooter.fire();
@@ -140,9 +139,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void teleopThreadsafe() {
         dsLcd.clear();
         
-        dsLcd.println(0, "Teleop running");
-        dsLcd.println(3, "Gyro: " + gyro.getAngle());
-
+        dsLcd.println(0, "TGT: " + shooter.getForkTargetAngle());
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
@@ -154,12 +151,17 @@ public class Iapetus extends ThreadedAutoRobot {
         
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
-            shooter.setFork(0.25);
+            shooter.setForkAngle(180);
+        }
+        
+        if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
+            shooter.setForkAngle(135);
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
-            shooter.setFork(-0.25);
+            shooter.setForkAngle(55);
         }
+        
         /*
         //fork up/down
         if (gamepad.getDpadVertical < 0) {
