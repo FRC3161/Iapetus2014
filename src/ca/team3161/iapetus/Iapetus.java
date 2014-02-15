@@ -35,6 +35,7 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
+import ca.team3161.lib.robot.pid.PIDulum;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
@@ -130,8 +131,10 @@ public class Iapetus extends ThreadedAutoRobot {
      * subclasses! Use teleopThreadsafe instead, only!
      */
     
-    //private static boolean padPress = false;
-    //private static int padCount = 0;
+    /* private static boolean padPress = false;
+    private static int padCount = 0;
+    double[] forkMode = {45.0, 120.0, 180.0};
+    */
         
     public void teleopThreadsafe() {
         dsLcd.clear();
@@ -145,7 +148,7 @@ public class Iapetus extends ThreadedAutoRobot {
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
         
         //trigger piston mechanism
-        if (gamepad.getButton(2)) {
+        if (gamepad.getRightBumper()) {
             shooter.fire();
         }
         
@@ -159,29 +162,31 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         /*
         //fork up/down
-        if (gamepad.getDpadVertical() == 0) {
-            padPress = false;
-        } else if (gamepad.getDpadVertical() > 0 && !padPress && padCount != 2) {
-            padCount++;
-            padPress = true;
-        } else if (gamepad.getDpadVertical() < 0 && !padPress && padCount != 0) {
-            padCount--;
-            padPress = true;
+        if (gamepad.getDpadVertical < 0) {
+            shooter.setFork(forkMode[0]);
+        }
+        if (gamepad.getDpadHorizontal != 0) {
+            shooter.setFork(forkMode[1]);
+        }
+        if (gamepad.getDpadVertical > 0) {
+            shooter.setFork(forkMode[2]);
+        }
+        
          */
         
         //roller on/off
-        if (gamepad.getRightBumper()) {
+        if (gamepad.getRightTrigger()) {
             shooter.setRoller(0.5);
         } else {
             shooter.setRoller(0.0);
         }
         
         //roller up/down
-        if (gamepad.getButton(3)) {
+        if (gamepad.getLeftTrigger()) {
             shooter.closeClaw();
         }
     
-        if (gamepad.getButton(1)) {
+        if (gamepad.getLeftBumper()) {
             shooter.openClaw();
         }
         
