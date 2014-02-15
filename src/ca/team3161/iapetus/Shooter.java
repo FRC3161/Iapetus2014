@@ -25,6 +25,8 @@
 
 package ca.team3161.iapetus;
 
+import ca.team3161.lib.robot.PIDulum;
+import ca.team3161.lib.robot.PotentiometerPidSrc;
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -58,6 +60,8 @@ public class Shooter {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final AnalogPotentiometer forkPot = new AnalogPotentiometer(2);
+    //private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, minVolt, maxVolt, 45, 180);
+    //private final PIDulum pidulum = new PIDulum(pidPot, kP, kI, kD, offsetAngle, torqueConstant);
     
     public Shooter() {
     }
@@ -126,6 +130,12 @@ public class Shooter {
     public void setRoller(final double speed) {
         roller.set(Utils.normalizePwm(speed));
     }
+    /*
+    public void setForkAngle(final double angle) {
+        final double result = pidulum.pd(angle);
+        setFork(result);
+    }
+    */
     
     /**
      * @param speed set the PWM for the shoulder motor

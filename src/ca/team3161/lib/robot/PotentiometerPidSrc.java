@@ -25,56 +25,31 @@
 
 package ca.team3161.lib.robot;
 
-public class PID {
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+
+public class PotentiometerPidSrc implements IAnglePidSrc {
     
-    protected final PIDSrc source;
-    protected double kP, kI, kD, integralError, prevError, deltaError;
+    private final Potentiometer pot;
+    private final double minVolt, maxVolt, minAngle, maxAngle;
     
-    public PID(final PIDSrc source,
-            final double kP, final double kI, final double kD) {
-        this.source = source;
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
+    public PotentiometerPidSrc(final Potentiometer pot,
+            final double minVolt, final double maxVolt,
+            final double minAngle, final double maxAngle) {
+        this.pot = pot;
+        this.minVolt = minVolt;
+        this.maxVolt = maxVolt;
+        this.minAngle = minAngle;
+        this.maxAngle = maxAngle;
     }
     
-    public void clear() {
-        integralError = 0.0;
-        prevError = 0.0;
-        deltaError = 0.0;
+    public Potentiometer getSensor() {
+        return pot;
     }
     
-    public double pd(final double target) {
-        double kErr;
-        double pOut;
-        double iOut;
-        double dOut;
-        double output;
-
-        kErr = target - source.getValue();
-
-        deltaError = prevError - kErr;
-        prevError = kErr;
-        integralError += kErr;
-
-        pOut = kErr * kP;
-        iOut = integralError * kI;
-        dOut = deltaError * kD;
-
-        if (iOut > 1) {
-            iOut = 1;
-        }
-
-        output = (pOut + iOut + dOut);
-
-        if (output > 1) {
-
-            return 1;
-        }
-        if (output < -1) {
-            return -1;
-        }
-        return output;
+    public double getValue() {
+        final double slope = (maxAngle - minAngle) / (maxVolt - minVolt);
+        final double offset = minAngle - slope * minVolt;
+        return slope * pot.get() + offset;
     }
     
 }

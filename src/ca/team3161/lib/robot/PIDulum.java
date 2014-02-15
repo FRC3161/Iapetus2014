@@ -25,23 +25,17 @@
 
 package ca.team3161.lib.robot;
 
-public class PID {
+public class PIDulum extends PID {
     
-    protected final PIDSrc source;
-    protected double kP, kI, kD, integralError, prevError, deltaError;
+    private final double offsetAngle;
+    private final double torqueConstant;
     
-    public PID(final PIDSrc source,
-            final double kP, final double kI, final double kD) {
-        this.source = source;
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-    }
-    
-    public void clear() {
-        integralError = 0.0;
-        prevError = 0.0;
-        deltaError = 0.0;
+    public PIDulum(final IAnglePidSrc source,
+            final double kP, final double kI, final double kD,
+            final double offsetAngle, final double torqueConstant) {
+        super(source, kP, kI, kD);
+        this.offsetAngle = offsetAngle;
+        this.torqueConstant = torqueConstant;
     }
     
     public double pd(final double target) {
@@ -49,6 +43,7 @@ public class PID {
         double pOut;
         double iOut;
         double dOut;
+        double feedForward;
         double output;
 
         kErr = target - source.getValue();
@@ -64,11 +59,12 @@ public class PID {
         if (iOut > 1) {
             iOut = 1;
         }
+        
+        feedForward = torqueConstant * (source.getValue() - offsetAngle);
 
-        output = (pOut + iOut + dOut);
+        output = (pOut + iOut + dOut + feedForward);
 
         if (output > 1) {
-
             return 1;
         }
         if (output < -1) {

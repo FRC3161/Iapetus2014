@@ -25,56 +25,21 @@
 
 package ca.team3161.lib.robot;
 
-public class PID {
+import edu.wpi.first.wpilibj.Encoder;
+
+public class EncoderPidSrc implements PIDSrc {
+
+    private final Encoder enc;
     
-    protected final PIDSrc source;
-    protected double kP, kI, kD, integralError, prevError, deltaError;
-    
-    public PID(final PIDSrc source,
-            final double kP, final double kI, final double kD) {
-        this.source = source;
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
+    public EncoderPidSrc(final int aChannel, final int bChannel) {
+        enc = new Encoder(aChannel, bChannel);
     }
     
-    public void clear() {
-        integralError = 0.0;
-        prevError = 0.0;
-        deltaError = 0.0;
+    public Encoder getSensor() {
+        return enc;
     }
     
-    public double pd(final double target) {
-        double kErr;
-        double pOut;
-        double iOut;
-        double dOut;
-        double output;
-
-        kErr = target - source.getValue();
-
-        deltaError = prevError - kErr;
-        prevError = kErr;
-        integralError += kErr;
-
-        pOut = kErr * kP;
-        iOut = integralError * kI;
-        dOut = deltaError * kD;
-
-        if (iOut > 1) {
-            iOut = 1;
-        }
-
-        output = (pOut + iOut + dOut);
-
-        if (output > 1) {
-
-            return 1;
-        }
-        if (output < -1) {
-            return -1;
-        }
-        return output;
+    public double getValue() {
+        return enc.get();
     }
-    
 }

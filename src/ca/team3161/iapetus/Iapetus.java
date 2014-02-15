@@ -9,7 +9,7 @@
 * 
 * * Redistributions in binary form must reproduce the above copyright notice, this
 *   list of conditions and the following disclaimer in the documentation and/or
-*   other materials provided with the distribution.
+*   other materials provided with the distribution. 
 * 
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -133,8 +133,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * autonomous thread. DO NOT create a teleopPeriodic in this class or any
      * subclasses! Use teleopThreadsafe instead, only!
      */
-    private static boolean padPress = false;
-    private static int padCount = 0;
+    private boolean padPress = false;
+    private int padCount = 0;
         
     public void teleopThreadsafe() {
         dsLcd.clear();
