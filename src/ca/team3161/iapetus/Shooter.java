@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  *
@@ -54,6 +55,7 @@ public class Shooter {
     private static final long TASK_TIMEOUT = 10; // milliseconds
     private static final float DRAW_SPEED = 0.5f;
     private volatile boolean firing = false;
+    private volatile double forkAngle = 0.0f;
     private final Thread t;
     
     private final SpeedController winch = new Victor (7);
@@ -62,7 +64,7 @@ public class Shooter {
     private final SpeedController roller = new Talon (8);
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
-    private final AnalogPotentiometer forkPot = new AnalogPotentiometer(2);
+    private final Potentiometer forkPot = new AnalogPotentiometer(2);
     //private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, minVolt, maxVolt, 45, 180);
     //private final PIDulum pidulum = new PIDulum(pidPot, kP, kI, kD, offsetAngle, torqueConstant);
     
@@ -161,8 +163,13 @@ public class Shooter {
     }
     /*
     public void setForkAngle(final double angle) {
-        final double result = pidulum.pd(angle);
-        setFork(result);
+        if (angle < 45.0) {
+            angle = 45.0;
+        }
+        if (angle > 180.0) {
+            angle = 180.0;
+        }
+        this.forkAngle = angle;
     }
     */
     
@@ -183,8 +190,12 @@ public class Shooter {
     
     private class MonitorTask implements Runnable {
         public void run() {
-            if (getStopSwitch()) {
-                winch.set(0.0);
+            while(true) {
+                    if (getStopSwitch()) {
+                    winch.set(0.0);
+                }
+                setFork(pidulum.pd(forkAngle));
+                Thread.sleep(TASK_TIMEOUT);
             }
         }
     }
