@@ -190,12 +190,15 @@ public class Shooter {
     
     private class MonitorTask implements Runnable {
         public void run() {
-            while(true) {
-                    if (getStopSwitch()) {
+            while (true) {
+                if (getStopSwitch()) {
                     winch.set(0.0);
                 }
-                setFork(pidulum.pd(forkAngle));
-                Thread.sleep(TASK_TIMEOUT);
+                //setFork(pidulum.pd(forkAngle));
+                try {
+                    Thread.sleep(TASK_TIMEOUT);
+                } catch (final InterruptedException e) {
+                }
             }
         }
     }
