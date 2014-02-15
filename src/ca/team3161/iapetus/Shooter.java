@@ -25,10 +25,15 @@
 
 package ca.team3161.iapetus;
 
+import ca.team3161.lib.robot.Subsystem;
+import ca.team3161.lib.robot.pid.PIDulum;
+import ca.team3161.lib.robot.pid.PotentiometerPidSrc;
 import ca.team3161.lib.utils.Utils;
+import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -50,14 +55,13 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  * Shooting modes (power and whatnot)
  */
 
-public class Shooter {
+public class Shooter extends Subsystem {
     
-    private static final long TASK_TIMEOUT = 10; // milliseconds
-    private static final float DRAW_SPEED = 0.5f;
+    private static final float DRAW_SPEED = 0.65f;
     private volatile boolean firing = false;
-    private volatile double forkAngle = 0.0f;
-    private final Thread t;
+    private volatile double forkAngle = 45.0;
     
+    private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     private final SpeedController winch = new Victor (7);
     private final DoubleSolenoid trigger = new DoubleSolenoid(1, 2);
     private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
@@ -65,17 +69,19 @@ public class Shooter {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    //private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, minVolt, maxVolt, 45, 180);
-    //private final PIDulum pidulum = new PIDulum(pidPot, kP, kI, kD, offsetAngle, torqueConstant);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 0.0/*minVolt*/, 0.0/*maxVolt*/, 45, 180);
+    private final PIDulum pidulum = new PIDulum(pidPot, 0.0/*kP*/, 0.0/*kI*/, 0.0/*kD*/, 0.0/*offsetAngle*/, 0.0/*torqueConstant*/);
     
     public Shooter() {
-        t = new Thread(new MonitorTask());
+        super(20, true);
     }
     
-    public void startTask() {
-        if (!t.isAlive()) {
-            t.start();
-        }
+    protected void defineResources() {
+        require(winch);
+        require(drawbackStopSwitch);
+        require(pidulum);
+        require(pidPot);
+        require(forkPot);
     }
     
     public void disableAll() {
@@ -102,8 +108,12 @@ public class Shooter {
         winch.set(Utils.normalizePwm(-speed));
     }
     
+    public boolean forkInfiringPosition() {
+        return (forkAngle > 110.0 && forkAngle < 140.0);
+    }
+    
     public void fire() {
-        if (firing) {
+        if (firing || !forkInfiringPosition()) {
             return;
         }
         new Thread(new Runnable() {
@@ -161,17 +171,16 @@ public class Shooter {
     public void setRoller(final double speed) {
         roller.set(Utils.normalizePwm(speed));
     }
-    /*
-    public void setForkAngle(final double angle) {
-        if (angle < 45.0) {
-            angle = 45.0;
+    
+    public void setForkAngle(double angle) {
+        if (angle < pidPot.getMinAngle()) {
+            angle = pidPot.getMinAngle();
         }
-        if (angle > 180.0) {
-            angle = 180.0;
+        if (angle > pidPot.getMaxAngle()) {
+            angle = pidPot.getMaxAngle();
         }
         this.forkAngle = angle;
     }
-    */
     
     /**
      * @param speed set the PWM for the shoulder motor
@@ -184,22 +193,17 @@ public class Shooter {
         return drawbackStopSwitch.get();
     }
 
-    public double getFork() {
-        return forkPot.get();
+    public double getForkAngle() {
+        return pidPot.getValue();
     }
     
-    private class MonitorTask implements Runnable {
-        public void run() {
-            while (true) {
-                if (getStopSwitch()) {
-                    winch.set(0.0);
-                }
-                //setFork(pidulum.pd(forkAngle));
-                try {
-                    Thread.sleep(TASK_TIMEOUT);
-                } catch (final InterruptedException e) {
-                }
-            }
+    protected void task() throws Exception {
+        if (getStopSwitch()) {
+            winch.set(0.0);
         }
+        final double pidVal = pidulum.pd(forkAngle);
+        setFork(pidVal);
+        dsLcd.println(1, "PID: " + pidVal);
+        dsLcd.println(2, "Fork: " + getForkAngle());
     }
 }

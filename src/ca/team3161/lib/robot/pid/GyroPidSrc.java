@@ -27,7 +27,7 @@ package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.Gyro;
 
-public class GyroPidSrc implements IAnglePidSrc {
+public class GyroPidSrc implements AnglePidSrc {
     
     private final Gyro gyro;
     
@@ -41,6 +41,14 @@ public class GyroPidSrc implements IAnglePidSrc {
     
     public double getValue() {
         return gyro.getAngle();
+    }
+    
+    public double getMinAngle() {
+        return 0.0;
+    }
+    
+    public double getMaxAngle() {
+        return 360.0;
     }
     
 }

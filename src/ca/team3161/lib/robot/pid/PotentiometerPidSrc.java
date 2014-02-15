@@ -27,7 +27,7 @@ package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
-public class PotentiometerPidSrc implements IAnglePidSrc {
+public class PotentiometerPidSrc implements AnglePidSrc {
     
     private final Potentiometer pot;
     private final double minVolt, maxVolt, minAngle, maxAngle;
@@ -50,6 +50,14 @@ public class PotentiometerPidSrc implements IAnglePidSrc {
         final double slope = (maxAngle - minAngle) / (maxVolt - minVolt);
         final double offset = minAngle - slope * minVolt;
         return slope * pot.get() + offset;
+    }
+    
+    public double getMinAngle() {
+        return minAngle;
+    }
+    
+    public double getMaxAngle() {
+        return maxAngle;
     }
     
 }

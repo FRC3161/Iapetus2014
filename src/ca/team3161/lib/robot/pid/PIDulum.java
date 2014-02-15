@@ -30,7 +30,7 @@ public class PIDulum extends PID {
     private final double offsetAngle;
     private final double torqueConstant;
     
-    public PIDulum(final IAnglePidSrc source,
+    public PIDulum(final AnglePidSrc source,
             final double kP, final double kI, final double kD,
             final double offsetAngle, final double torqueConstant) {
         super(source, kP, kI, kD);

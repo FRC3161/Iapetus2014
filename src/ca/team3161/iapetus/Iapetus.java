@@ -35,11 +35,11 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
-import ca.team3161.lib.robot.pid.PIDulum;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
 
 /**
@@ -54,6 +54,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final SpeedController leftDrive = new Drivetrain (new SpeedController[] {new Talon (1), new Victor (2), new Talon (3)}).setInverted(true);
     private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)}).setInverted(false);
     private final Shooter shooter = new Shooter();
+    private final Gyro gyro = new Gyro(1);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
 
@@ -76,7 +77,7 @@ public class Iapetus extends ThreadedAutoRobot {
             underglowController.set(RED_UNDERGLOW);
         }
         shooter.disableAll();
-        shooter.startTask();
+        shooter.start();
     }
 
     /**
@@ -140,8 +141,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.clear();
         
         dsLcd.println(0, "Teleop running");
-        dsLcd.println(1, "Left Drive: " + leftDrive.get());
-        dsLcd.println(2, "Right Drive: " + rightDrive.get());
+        dsLcd.println(3, "Gyro: " + gyro.getAngle());
 
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
