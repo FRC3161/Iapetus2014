@@ -51,6 +51,11 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class Shooter {
     
+    private static final long TASK_TIMEOUT = 10; // milliseconds
+    private static final float DRAW_SPEED = 0.5f;
+    private volatile boolean firing = false;
+    private final Thread t;
+    
     private final SpeedController winch = new Victor (7);
     private final DoubleSolenoid trigger = new DoubleSolenoid(1, 2);
     private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
@@ -60,6 +65,13 @@ public class Shooter {
     private final AnalogPotentiometer forkPot = new AnalogPotentiometer(2);
     
     public Shooter() {
+        t = new Thread(new MonitorTask());
+    }
+    
+    public void startTask() {
+        if (!t.isAlive()) {
+            t.start();
+        }
     }
     
     public void disableAll() {
@@ -86,16 +98,35 @@ public class Shooter {
         winch.set(Utils.normalizePwm(-speed));
     }
     
+    public void fire() {
+        if (firing) {
+            return;
+        }
+        new Thread(new Runnable() {
+            public void run() {
+                firing = true;
+                pullTrigger();
+                try {
+                    Thread.sleep(250);
+                } catch (final InterruptedException e) {   
+                }
+                returnTrigger();
+                firing = false;
+                drawWinch(DRAW_SPEED);
+            }
+        }).start();
+    }
+    
     /**
      * Release the trigger pin
      */
-    public void pullTrigger() {
+    private void pullTrigger() {
         trigger.set(DoubleSolenoid.Value.kForward);
     }   
     /**
      * Set the trigger pin back in
      */
-    public void returnTrigger() {
+    private void returnTrigger() {
         trigger.set(DoubleSolenoid.Value.kReverse);
     }
     
@@ -134,11 +165,19 @@ public class Shooter {
         fork.set(Utils.normalizePwm(speed));
     }
     
-    public boolean getStopSwitch() {
+    private boolean getStopSwitch() {
         return drawbackStopSwitch.get();
     }
 
     public double getFork() {
         return forkPot.get();
+    }
+    
+    private class MonitorTask implements Runnable {
+        public void run() {
+            if (getStopSwitch()) {
+                winch.set(0.0);
+            }
+        }
     }
 }

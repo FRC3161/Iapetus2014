@@ -35,13 +35,11 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
-import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -58,7 +56,6 @@ public class Iapetus extends ThreadedAutoRobot {
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
 
-    private final Timer autoElapsedTimer = new Timer(), shooterTriggerTimer = new Timer();
     private DriverStation.Alliance alliance;
     private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kOn;
@@ -78,6 +75,7 @@ public class Iapetus extends ThreadedAutoRobot {
             underglowController.set(RED_UNDERGLOW);
         }
         shooter.disableAll();
+        shooter.startTask();
     }
 
     /**
@@ -104,6 +102,8 @@ public class Iapetus extends ThreadedAutoRobot {
         waitFor(300);
         shooter.setFork(0.0);
         shooter.closeClaw();
+        waitFor(500);
+        shooter.fire();
         dsLcd.println(5, "AUTO: FINISHED");
     }
 
@@ -114,16 +114,12 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */
     public void autonomousPeriodic() {
-        autoElapsedTimer.start(); // if it's already started, nothing happens
-        dsLcd.println(0, "Auto elapsed: " + Utils.round(autoElapsedTimer.get(), 2) + "s");
     }
 
     /**
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
-        autoElapsedTimer.stop();
-        autoElapsedTimer.reset();
     }
 
     /**
@@ -133,8 +129,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * autonomous thread. DO NOT create a teleopPeriodic in this class or any
      * subclasses! Use teleopThreadsafe instead, only!
      */
-    private static boolean padPress = false;
-    private static int padCount = 0;
+    //private static boolean padPress = false;
+    //private static int padCount = 0;
         
     public void teleopThreadsafe() {
         dsLcd.clear();
@@ -142,27 +138,14 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(0, "Teleop running");
         dsLcd.println(1, "Left Drive: " + leftDrive.get());
         dsLcd.println(2, "Right Drive: " + rightDrive.get());
-        dsLcd.println(3, "Stopswitch: " + shooter.getStopSwitch());
 
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
         
         //trigger piston mechanism
-        if (gamepad.getButton(2) && shooterTriggerTimer.get() < 0.25) {
-            shooter.pullTrigger();
-            shooterTriggerTimer.start();
-        }
-        
-        if (shooterTriggerTimer.get() > 0.25) {
-            shooterTriggerTimer.stop();
-            shooterTriggerTimer.reset();
-            shooter.returnTrigger();
-            shooter.drawWinch(0.5);
-        }
-        
-        if (shooter.getStopSwitch()) {
-            shooter.drawWinch(0.0d);
+        if (gamepad.getButton(2)) {
+            shooter.fire();
         }
         
         //shoulder motor (fork) control
