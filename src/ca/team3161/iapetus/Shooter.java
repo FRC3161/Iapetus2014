@@ -25,8 +25,6 @@
 
 package ca.team3161.iapetus;
 
-import ca.team3161.lib.robot.PIDulum;
-import ca.team3161.lib.robot.PotentiometerPidSrc;
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
