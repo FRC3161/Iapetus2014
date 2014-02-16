@@ -181,6 +181,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void teleopInit() {
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
+        dsLcd.println(2, "FORK MODE:");
     }
 
     /**
