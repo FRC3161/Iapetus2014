@@ -25,6 +25,10 @@
 
 package ca.team3161.lib.robot.pid;
 
+/**
+ * A PID source that specifically returns values to be interpreted as
+ * degrees
+ */
 public interface AnglePidSrc extends PIDSrc {
     public float getMinAngle();
     public float getMaxAngle();

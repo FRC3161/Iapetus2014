@@ -29,7 +29,6 @@ import ca.team3161.lib.robot.Subsystem;
 import ca.team3161.lib.robot.pid.PIDulum;
 import ca.team3161.lib.robot.pid.PotentiometerPidSrc;
 import ca.team3161.lib.utils.Utils;
-import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
@@ -49,19 +48,13 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  *      Auto: fork adjust, roller up, piston release, time delay, piston lock, winch motor activate
  * Pickup Mode: fork piston down, roller down, roller motors activate
  * Travel mode: roller motors off, roller down, fork up
- * 
- * TBD:
- * Shooting modes (power and whatnot)
  */
-
 public class Shooter extends Subsystem {
     
-    private static final float DRAW_SPEED = 0.65f;
     private volatile boolean firing = false;
     private volatile boolean disabled = false;
     private volatile float forkAngle = 45.0f;
     
-    private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     private final SpeedController winch = new Victor (7);
     private final DoubleSolenoid trigger = new DoubleSolenoid(1, 2);
     private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
@@ -135,7 +128,8 @@ public class Shooter extends Subsystem {
      */
     private void pullTrigger() {
         trigger.set(DoubleSolenoid.Value.kForward);
-    }   
+    }
+    
     /**
      * Set the trigger pin back in
      */

@@ -31,6 +31,13 @@ public class PID {
     protected float deadband, kP, kI, kD, integralError, prevError, deltaError;
     protected boolean atTarget;
     
+    /**
+     * @param source the PIDSrc source sensor
+     * @param deadband filter value - do not act when current error is within this bound
+     * @param kP P constant
+     * @param kI I constant
+     * @param kD D constant
+     */
     public PID(final PIDSrc source, final float deadband,
             final float kP, final float kI, final float kD) {
         this.source = source;
