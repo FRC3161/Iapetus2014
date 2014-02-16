@@ -129,7 +129,7 @@ public class LogitechDualAction implements Gamepad {
      * @return the vertical value of the directional pad
      */
     public double getDpadVertical() {
-        return getAxisHelper(DPAD_VERTICAL);
+        return -getAxisHelper(DPAD_VERTICAL);
     }
     
     /**
