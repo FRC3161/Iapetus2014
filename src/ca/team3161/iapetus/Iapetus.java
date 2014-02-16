@@ -116,7 +116,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "A DRIVE: 0.0 0.0");
         allDrive.set(0.0);
         
-        dsLcd.clearAndPrint(3, "A CLAW: OPEN");
+        dsLcd.println(3, "A CLAW: OPEN");
         shooter.openClaw();
         waitFor(500);
         
@@ -129,14 +129,14 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(3, "A CLAW: CLOSE");
         shooter.closeClaw();
         
-        dsLcd.clearAndPrint(1, "A DRIVE: -0.5 -0.5");
+        dsLcd.println(1, "A DRIVE: -0.5 -0.5");
         allDrive.set(-0.5);
         
-        dsLcd.clearAndPrint(2, "A MODE: INTAKE");
+        dsLcd.println(2, "A MODE: INTAKE");
         shooter.setForkAngle(Constants.Positions.INTAKE);
         waitFor(1000);
         
-        dsLcd.clearAndPrint(1, "A DRIVE: 0.5 -0.5");
+        dsLcd.println(1, "A DRIVE: 0.5 -0.5");
         leftDrive.set(0.5);
         rightDrive.set(-0.5);
         waitFor(2000);
@@ -216,7 +216,7 @@ public class Iapetus extends ThreadedAutoRobot {
     
         if (gamepad.getLeftBumper()) {
             shooter.openClaw();
-            dsLcd.println(4, "CLAW: OPEN ");
+            dsLcd.println(4, "CLAW: OPEN");
         }
         
         dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
