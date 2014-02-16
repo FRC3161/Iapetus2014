@@ -25,13 +25,14 @@
 
 package ca.team3161.lib.utils.io;
 
+import ca.team3161.lib.robot.Subsystem;
 import com.sun.squawk.util.Arrays;
 import edu.wpi.first.wpilibj.communication.FRCControl;
 
 /**
  * Provide access to LCD on the Driver Station.
  */
-public final class DriverStationLCD {
+public final class DriverStationLCD extends Subsystem {
 
     private static final DriverStationLCD INSTANCE = new DriverStationLCD();
 
@@ -74,6 +75,7 @@ public final class DriverStationLCD {
      * This is only called once the first time GetInstance() is called
      */
     private DriverStationLCD() {
+        super(250, true);
         final char[] blank_bytes = new char[LINE_LENGTH];
         Arrays.fill(blank_bytes, ' ');
         EMPTY_STRING = new String(blank_bytes);
@@ -121,7 +123,6 @@ public final class DriverStationLCD {
             validateLineNumber(line);
             final byte[] bytes = getBytes(text);
             textBuffer[line] = bytes;
-            updateLCD();
         }
     }
 
@@ -156,6 +157,14 @@ public final class DriverStationLCD {
         final byte[] result = EMPTY_STRING.getBytes();
         System.arraycopy(text.getBytes(), 0, result, 0, length);
         return result;
+    }
+
+    protected void defineResources() {
+        require(textBuffer);
+    }
+
+    protected void task() throws Exception {
+        updateLCD();
     }
 
 }

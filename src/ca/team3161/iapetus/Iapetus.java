@@ -196,7 +196,7 @@ public class Iapetus extends ThreadedAutoRobot {
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
-        dsLcd.println(1, "DRIVE: " + leftDrive.get() + " " + rightDrive.get());
+        dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
         
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
