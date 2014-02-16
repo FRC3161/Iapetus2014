@@ -189,7 +189,7 @@ public class Shooter extends Subsystem {
         fork.set(Utils.normalizePwm(speed));
     }
     
-    private boolean getStopSwitch() {
+    public boolean getStopSwitch() {
         return drawbackStopSwitch.get();
     }
 
@@ -199,6 +199,10 @@ public class Shooter extends Subsystem {
     
     public double getForkTargetAngle() {
         return forkAngle;
+    }
+    
+    public boolean isFiring() {
+        return firing;
     }
     
     public void task() throws Exception {

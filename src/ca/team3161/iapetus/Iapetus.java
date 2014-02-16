@@ -241,6 +241,13 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
+        
+        if (shooter.isFiring()) {
+            dsLcd.println(5, "SHOOTER: FIRING");
+        } else if (!shooter.getStopSwitch()) {
+            dsLcd.println(5, "SHOOTER: RELOADING");
+        } else
+            dsLcd.println(5, "SHOOTER: LOADED");
     }
 
     /**
