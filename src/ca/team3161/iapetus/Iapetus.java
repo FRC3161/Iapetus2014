@@ -35,6 +35,7 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
+import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
@@ -70,12 +71,20 @@ public class Iapetus extends ThreadedAutoRobot {
     public void robotInit() {
         alliance = DriverStation.getInstance().getAlliance();
         gamepad.setInverted(true);
+        
+        dsLcd.clear();
         dsLcd.println(0, "Alliance: " + alliance.name.toUpperCase());
+        dsLcd.println(1, "I DRIVE: START");
+        dsLcd.println(2, "I MODE: START");
+        dsLcd.println(3, "I CLAW: CLOSE");
+        dsLcd.println(4, "I PUNCHER: RESET");
+        
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
         } else {
             underglowController.set(RED_UNDERGLOW);
         }
+        
         shooter.disableAll();
         shooter.start();
         shooter.setForkAngle(Constants.Positions.START);
@@ -95,28 +104,44 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        dsLcd.println(5, "AUTO: START");
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
-        shooter.setForkAngle(Constants.Positions.START);
-        shooter.closeClaw();
-        dsLcd.clear();
-        dsLcd.println(1, "AUTO: DRIVE 0.5 0.5");
+        dsLcd.println(1, "A DRIVE: 0.5 0.5");
         allDrive.set(0.5);
-        waitFor(1000);
+        
+        dsLcd.println(2, "A MODE: SHOOTING");
         shooter.setForkAngle(Constants.Positions.SHOOTING);
-        dsLcd.println(1, "AUTO: DRIVE 0.0 0.0");
+        waitFor(1000);
+        
+        dsLcd.println(1, "A DRIVE: 0.0 0.0");
         allDrive.set(0.0);
+        
+        dsLcd.clearAndPrint(3, "A CLAW: OPEN");
         shooter.openClaw();
         waitFor(500);
+        
+        dsLcd.clear(4);
+        dsLcd.println(4, "A PUNCHER: FIRING");
         shooter.fire();
         waitFor(300);
+        
+        dsLcd.println(4, "A PUNCHER: RESET");
+        dsLcd.println(3, "A CLAW: CLOSE");
         shooter.closeClaw();
+        
+        dsLcd.clearAndPrint(1, "A DRIVE: -0.5 -0.5");
         allDrive.set(-0.5);
+        
+        dsLcd.clearAndPrint(2, "A MODE: INTAKE");
         shooter.setForkAngle(Constants.Positions.INTAKE);
         waitFor(1000);
-        allDrive.set(0.0);
+        
+        dsLcd.clearAndPrint(1, "A DRIVE: 0.5 -0.5");
         leftDrive.set(0.5);
         rightDrive.set(-0.5);
         waitFor(2000);
+        
+        dsLcd.println(1, "A DRIVE: 0.0 0.0");
         allDrive.set(0.0);
         dsLcd.println(5, "AUTO: FINISHED");
     }
@@ -134,8 +159,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
-        shooter.setForkAngle(Constants.Positions.START);
-        shooter.closeClaw();
+        dsLcd.clear();
+        dsLcd.println(0, "TELEOP MODE");
     }
 
     /**
@@ -145,19 +170,13 @@ public class Iapetus extends ThreadedAutoRobot {
      * autonomous thread. DO NOT create a teleopPeriodic in this class or any
      * subclasses! Use teleopThreadsafe instead, only!
      */
-    
-    /* private static boolean padPress = false;
-    private static int padCount = 0;
-    double[] forkMode = {45.0, 120.0, 180.0};
-    */
         
     public void teleopThreadsafe() {
-        dsLcd.clear();
         
-        dsLcd.println(0, "TGT: " + shooter.getForkTargetAngle());
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
+        dsLcd.println(1, "DRIVE: " + leftDrive.get() + " " + rightDrive.get() + "  ");
         
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
@@ -167,46 +186,40 @@ public class Iapetus extends ThreadedAutoRobot {
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setForkAngle(Constants.Positions.START);
+            dsLcd.println(2, "FORK MODE: TRAVEL  ");
         }
         
         if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
             shooter.setForkAngle(Constants.Positions.SHOOTING);
+            dsLcd.println(2, "FORK MODE: SHOOTING");
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(Constants.Positions.INTAKE);
+            dsLcd.println(2, "FORK MODE: INTAKE  ");
         }
-        
-        /*
-        //fork up/down
-        if (gamepad.getDpadVertical < 0) {
-            shooter.setFork(forkMode[0]);
-        }
-        if (gamepad.getDpadHorizontal != 0) {
-            shooter.setFork(forkMode[1]);
-        }
-        if (gamepad.getDpadVertical > 0) {
-            shooter.setFork(forkMode[2]);
-        }
-        
-         */
         
         //roller on/off
         if (gamepad.getRightTrigger()) {
             shooter.setRoller(0.5);
+            dsLcd.println(3, "ROLLER: ON ");
         } else {
             shooter.setRoller(0.0);
+            dsLcd.println(3, "ROLLER: OFF");
         }
         
         //roller up/down
         if (gamepad.getLeftTrigger()) {
             shooter.closeClaw();
+            dsLcd.println(4, "CLAW: CLOSE");
         }
     
         if (gamepad.getLeftBumper()) {
             shooter.openClaw();
+            dsLcd.println(4, "CLAW: OPEN ");
         }
         
+        dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
     }
 
     /**
