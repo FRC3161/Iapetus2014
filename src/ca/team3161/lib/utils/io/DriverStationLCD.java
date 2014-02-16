@@ -124,11 +124,6 @@ public final class DriverStationLCD {
             updateLCD();
         }
     }
-    
-    public void clearAndPrint(final int line, final String text) {
-        clear(line);
-        println(line, text);
-    }
 
     /* Creates a one-dimensional array of the appropriate size, adds the two
      * "command bytes" to the beginning, then copies the contents of the 2D
