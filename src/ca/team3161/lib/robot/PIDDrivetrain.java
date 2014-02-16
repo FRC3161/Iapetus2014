@@ -23,7 +23,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package ca.team3161.iapetus;
+package ca.team3161.lib.robot;
 
 import ca.team3161.lib.robot.Subsystem;
 import ca.team3161.lib.robot.pid.PID;
