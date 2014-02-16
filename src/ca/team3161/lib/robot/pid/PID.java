@@ -29,6 +29,7 @@ public class PID {
     
     protected final PIDSrc source;
     protected double deadband, kP, kI, kD, integralError, prevError, deltaError;
+    protected boolean atTarget;
     
     public PID(final PIDSrc source, final double deadband,
             final double kP, final double kI, final double kD) {
@@ -37,6 +38,7 @@ public class PID {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
+        this.atTarget = false;
     }
     
     public void clear() {
@@ -62,20 +64,30 @@ public class PID {
         iOut = integralError * kI;
         dOut = deltaError * kD;
 
-        if (iOut > 1) {
-            iOut = 1;
+        if (iOut > 1.0) {
+            iOut = 1.0;
+        }
+        
+        if (Math.abs(kErr) < deadband) {
+            atTarget = true;
+            return 0.0;
+        } else {
+            atTarget = false;
         }
 
         output = (pOut + iOut + dOut);
 
-        if (output > 1) {
-
-            return 1;
+        if (output > 1.0) {
+            return 1.0;
         }
-        if (output < -1) {
-            return -1;
+        if (output < -1.0) {
+            return -1.0;
         }
         return output;
+    }
+    
+    public boolean atTarget() {
+        return atTarget();
     }
     
 }
