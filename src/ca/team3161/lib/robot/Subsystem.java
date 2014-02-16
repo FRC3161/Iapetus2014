@@ -30,6 +30,11 @@ import edu.wpi.first.wpilibj.communication.SemaphoreException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+/**
+ * Abstracts a system which uses resources and has some task (recurring or
+ * one-shot) to be performed. An example is PID control - monitor sensors
+ * and periodically set motor values based on this.
+ */
 public abstract class Subsystem {
     
     protected final Vector resources = new Vector();
@@ -37,6 +42,10 @@ public abstract class Subsystem {
     protected final boolean repeating;
     private volatile boolean cancelled;
     
+    /**
+     * @param timeout update period (in milliseconds) between task repeats (if any)
+     * @param repeating true iff the task is recurring
+     */
     protected Subsystem(final long timeout, final boolean repeating) {
         TASK_TIMEOUT = timeout;
         this.repeating = repeating;
@@ -68,6 +77,10 @@ public abstract class Subsystem {
         }
     });
     
+    /**
+     * @param resource a sensor, speed controller, etc. that this subsystem
+     * needs exclusive access to during its task
+     */
     protected final void require(Object resource) {
         resources.addElement(ResourceTracker.track(resource));
     }

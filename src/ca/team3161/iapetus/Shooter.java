@@ -49,19 +49,13 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  *      Auto: fork adjust, roller up, piston release, time delay, piston lock, winch motor activate
  * Pickup Mode: fork piston down, roller down, roller motors activate
  * Travel mode: roller motors off, roller down, fork up
- * 
- * TBD:
- * Shooting modes (power and whatnot)
  */
-
 public class Shooter extends Subsystem {
     
-    private static final float DRAW_SPEED = 0.65f;
     private volatile boolean firing = false;
     private volatile boolean disabled = false;
     private volatile double forkAngle = 45.0;
     
-    private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     private final SpeedController winch = new Victor (7);
     private final DoubleSolenoid trigger = new DoubleSolenoid(1, 2);
     private final DoubleSolenoid claw = new DoubleSolenoid(3, 4);
@@ -73,6 +67,7 @@ public class Shooter extends Subsystem {
     private final PIDulum pidulum = new PIDulum(pidPot, 0.75, -0.035/*kP*/, 0.0/*kI*/, 0.065/*kD*/, 135/*offsetAngle*/, 0.001/*torqueConstant*/);
     
     public Shooter() {
+        /* recurring task, 20ms timeout*/
         super(20, true);
     }
     
@@ -134,7 +129,8 @@ public class Shooter extends Subsystem {
      */
     private void pullTrigger() {
         trigger.set(DoubleSolenoid.Value.kForward);
-    }   
+    }
+    
     /**
      * Set the trigger pin back in
      */

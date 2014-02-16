@@ -37,6 +37,7 @@ public class Constants {
     }
     
     public static class Positions {
+        /* Angles. 0 is straight down, 90 is straight forward, 180 straight up... */
         public static final int INTAKE = 60;
         public static final int SHOOTING = 145;
         public static final int START = 180;

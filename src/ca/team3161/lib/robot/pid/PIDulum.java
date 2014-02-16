@@ -25,11 +25,23 @@
 
 package ca.team3161.lib.robot.pid;
 
+/**
+ * A PID controller for inverted pendulum systems
+ */
 public class PIDulum extends PID {
     
     private final double offsetAngle;
     private final double torqueConstant;
     
+    /**
+     * @param source the PIDSrc source sensor
+     * @param deadband filter value - do not act when current error is within this bound
+     * @param kP P constant
+     * @param kI I constant
+     * @param kD D constant
+     * @param offsetAngle the balance point of the inverted pendulum
+     * @param torqueConstant "feed forward" term constant to allow the pendulum to hold position against gravity
+     */
     public PIDulum(final AnglePidSrc source, final double deadband,
             final double kP, final double kI, final double kD,
             final double offsetAngle, final double torqueConstant) {

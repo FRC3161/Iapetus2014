@@ -28,6 +28,10 @@ package ca.team3161.lib.robot;
 import edu.wpi.first.wpilibj.communication.Semaphore;
 import java.util.Hashtable;
 
+/**
+ * Tracks robot resources (sensors, motor controllers, etc.) to allow Subsystems
+ * to ensure separation of task runs
+ */
 public final class ResourceTracker {
     
     private static final Hashtable resources = new Hashtable();
