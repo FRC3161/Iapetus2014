@@ -29,7 +29,6 @@ import ca.team3161.lib.robot.Subsystem;
 import ca.team3161.lib.robot.pid.PIDulum;
 import ca.team3161.lib.robot.pid.PotentiometerPidSrc;
 import ca.team3161.lib.utils.Utils;
-import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
