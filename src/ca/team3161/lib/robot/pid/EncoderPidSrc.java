@@ -31,15 +31,15 @@ public class EncoderPidSrc implements PIDSrc {
 
     private final Encoder enc;
     
-    public EncoderPidSrc(final int aChannel, final int bChannel) {
-        enc = new Encoder(aChannel, bChannel);
+    public EncoderPidSrc(final Encoder enc) {
+        this.enc = enc;
     }
     
     public Encoder getSensor() {
         return enc;
     }
     
-    public double getValue() {
+    public float getValue() {
         return enc.get();
     }
 }

@@ -28,11 +28,11 @@ package ca.team3161.lib.robot.pid;
 public class PID {
     
     protected final PIDSrc source;
-    protected double deadband, kP, kI, kD, integralError, prevError, deltaError;
+    protected float deadband, kP, kI, kD, integralError, prevError, deltaError;
     protected boolean atTarget;
     
-    public PID(final PIDSrc source, final double deadband,
-            final double kP, final double kI, final double kD) {
+    public PID(final PIDSrc source, final float deadband,
+            final float kP, final float kI, final float kD) {
         this.source = source;
         this.deadband = deadband;
         this.kP = kP;
@@ -42,19 +42,19 @@ public class PID {
     }
     
     public void clear() {
-        integralError = 0.0;
-        prevError = 0.0;
-        deltaError = 0.0;
+        integralError = 0.0f;
+        prevError = 0.0f;
+        deltaError = 0.0f;
     }
     
-    public double pid(final double target) {
-        double kErr;
-        double pOut;
-        double iOut;
-        double dOut;
-        double output;
+    public float pid(final float target) {
+        float kErr;
+        float pOut;
+        float iOut;
+        float dOut;
+        float output;
 
-        kErr = target - source.getValue();
+        kErr = (float)(target - source.getValue());
 
         deltaError = prevError - kErr;
         prevError = kErr;
@@ -64,24 +64,24 @@ public class PID {
         iOut = integralError * kI;
         dOut = deltaError * kD;
 
-        if (iOut > 1.0) {
-            iOut = 1.0;
+        if (iOut > 1.0f) {
+            iOut = 1.0f;
         }
         
         if (Math.abs(kErr) < deadband) {
             atTarget = true;
-            return 0.0;
+            return 0.0f;
         } else {
             atTarget = false;
         }
 
         output = (pOut + iOut + dOut);
 
-        if (output > 1.0) {
-            return 1.0;
+        if (output > 1.0f) {
+            return 1.0f;
         }
-        if (output < -1.0) {
-            return -1.0;
+        if (output < -1.0f) {
+            return -1.0f;
         }
         return output;
     }
@@ -91,7 +91,7 @@ public class PID {
     }
     
     public boolean atTarget() {
-        return atTarget();
+        return atTarget;
     }
     
 }

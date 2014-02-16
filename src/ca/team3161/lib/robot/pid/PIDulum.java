@@ -27,26 +27,26 @@ package ca.team3161.lib.robot.pid;
 
 public class PIDulum extends PID {
     
-    private final double offsetAngle;
-    private final double torqueConstant;
+    private final float offsetAngle;
+    private final float torqueConstant;
     
-    public PIDulum(final AnglePidSrc source, final double deadband,
-            final double kP, final double kI, final double kD,
-            final double offsetAngle, final double torqueConstant) {
+    public PIDulum(final AnglePidSrc source, final float deadband,
+            final float kP, final float kI, final float kD,
+            final float offsetAngle, final float torqueConstant) {
         super(source, deadband, kP, kI, kD);
         this.offsetAngle = offsetAngle;
         this.torqueConstant = torqueConstant;
     }
     
-    public double pid(final double target) {
-        double kErr;
-        double pOut;
-        double iOut;
-        double dOut;
-        double feedForward;
-        double output;
+    public float pid(final float target) {
+        float kErr;
+        float pOut;
+        float iOut;
+        float dOut;
+        float feedForward;
+        float output;
 
-        kErr = target - source.getValue();
+        kErr = (float)(target - source.getValue());
 
         deltaError = prevError - kErr;
         prevError = kErr;
@@ -60,7 +60,7 @@ public class PIDulum extends PID {
             iOut = 1;
         }
         
-        feedForward = torqueConstant * (source.getValue() - offsetAngle);
+        feedForward = torqueConstant * (float)(source.getValue() - offsetAngle);
         
         if (Math.abs(kErr) < deadband) {
             atTarget = true;
@@ -71,11 +71,11 @@ public class PIDulum extends PID {
 
         output = (pOut + iOut + dOut + feedForward);
 
-        if (output > 1.0) {
-            return 1.0;
+        if (output > 1.0f) {
+            return 1.0f;
         }
-        if (output < -1.0) {
-            return -1.0;
+        if (output < -1.0f) {
+            return -1.0f;
         }
         return output;
     }

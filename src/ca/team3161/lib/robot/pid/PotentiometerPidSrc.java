@@ -30,11 +30,11 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 public class PotentiometerPidSrc implements AnglePidSrc {
     
     private final Potentiometer pot;
-    private final double minVolt, maxVolt, minAngle, maxAngle;
+    private final float minVolt, maxVolt, minAngle, maxAngle;
     
     public PotentiometerPidSrc(final Potentiometer pot,
-            final double minVolt, final double maxVolt,
-            final double minAngle, final double maxAngle) {
+            final float minVolt, final float maxVolt,
+            final float minAngle, final float maxAngle) {
         this.pot = pot;
         this.minVolt = minVolt;
         this.maxVolt = maxVolt;
@@ -46,17 +46,17 @@ public class PotentiometerPidSrc implements AnglePidSrc {
         return pot;
     }
     
-    public double getValue() {
-        final double slope = (maxAngle - minAngle) / (maxVolt - minVolt);
-        final double offset = minAngle - slope * minVolt;
-        return slope * pot.get() + offset;
+    public float getValue() {
+        final float slope = (maxAngle - minAngle) / (maxVolt - minVolt);
+        final float offset = minAngle - slope * minVolt;
+        return (float)(slope * pot.get() + offset);
     }
     
-    public double getMinAngle() {
+    public float getMinAngle() {
         return minAngle;
     }
     
-    public double getMaxAngle() {
+    public float getMaxAngle() {
         return maxAngle;
     }
     

@@ -31,24 +31,24 @@ public class GyroPidSrc implements AnglePidSrc {
     
     private final Gyro gyro;
     
-    public GyroPidSrc(final int channel) {
-        gyro = new Gyro(channel);
+    public GyroPidSrc(final Gyro gyro) {
+        this.gyro = gyro;
     }
     
     public Gyro getSensor() {
         return gyro;
     }
     
-    public double getValue() {
-        return gyro.getAngle();
+    public float getValue() {
+        return (float)gyro.getAngle();
     }
     
-    public double getMinAngle() {
-        return 0.0;
+    public float getMinAngle() {
+        return 0.0f;
     }
     
-    public double getMaxAngle() {
-        return 360.0;
+    public float getMaxAngle() {
+        return 360.0f;
     }
     
 }

@@ -26,5 +26,5 @@
 package ca.team3161.lib.robot.pid;
 
 public interface PIDSrc {
-    public double getValue();
+    public float getValue();
 }

@@ -31,76 +31,87 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class PIDDrivetrain extends Subsystem {
     
+    private boolean atTarget;
     private final SpeedController leftDrive, rightDrive;
     private final PID leftEncoder, rightEncoder, turningPid /*gyro*/, bearingPid;
-    private volatile double turningDegreesTarget = 0.0;
+    private volatile float turningDegreesTarget = 0.0f;
     private volatile int leftTicksTarget = 0, rightTicksTarget = 0;
     private DriveTask t;
     private final Object notifier;
     
     public DriveTask DRIVE = new DriveTask() {
         public void run() {
-            final double skew = bearingPid.pid(0.0);
-            leftDrive.set(leftEncoder.pid(leftTicksTarget) + skew);
-            rightDrive.set(rightEncoder.pid(rightTicksTarget) - skew);
+            leftDrive.set(leftEncoder.pid(leftTicksTarget)/* + bearingPid.pid(0.0f)*/);
+            rightDrive.set(-rightEncoder.pid(rightTicksTarget)/* - bearingPid.pid(0.0f)*/);
             if (leftEncoder.atTarget() || rightEncoder.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
+                atTarget = true;
                 leftEncoder.clear();
                 rightEncoder.clear();
                 bearingPid.clear();
-                leftTicksTarget = 0;
-                rightTicksTarget = 0;
             }
         }
     };
     
     public DriveTask TURN = new DriveTask() {
         public void run() {
-            final double pidVal = turningPid.pid(turningDegreesTarget);
-            leftDrive.set(pidVal);
-            rightDrive.set(-pidVal);
+            if (atTarget) {
+                return;
+            }
+            leftDrive.set(turningPid.pid(turningDegreesTarget));
+            rightDrive.set(-turningPid.pid(turningDegreesTarget));
             if (turningPid.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
+                atTarget = true;
                 turningPid.clear();
-                turningDegreesTarget = 0.0;
+                turningDegreesTarget = 0.0f;
             }
         }
     };
     
     public PIDDrivetrain(final SpeedController leftDrive, final SpeedController rightDrive,
             final PID leftEncoder, final PID rightEncoder, final PID turningPid) {
-        super(20, true);
+        super(20, true, "PID DRIVE");
         this.leftDrive = leftDrive;
         this.rightDrive = rightDrive;
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.turningPid = turningPid;
-        this.bearingPid = new PID(turningPid.getSrc(), 0.0, 0.0, 0.0, 0.0);
+        this.bearingPid = new PID(turningPid.getSrc(), 0.0f, 0.0f, 0.0f, 0.0f);
+        this.atTarget = false;
         this.notifier = new Object();
     }
-
-    protected void defineResources() {
-        require(leftDrive);
-        require(rightDrive);
-        require(leftEncoder);
-        require(rightEncoder);
-        require(turningPid);
+    
+    public void defineResources() {
     }
     
-    public void turnByDegrees(final double degrees) {
+    public boolean atTarget() {
+        return this.atTarget;
+    }
+    
+    public void turnByDegrees(final float degrees) {
+        this.atTarget = false;
         turningDegreesTarget = degrees;
     }
     
     public void setLeftTicksTarget(final int ticks) {
-        leftTicksTarget = ticks;
+        this.atTarget = false;
+        leftTicksTarget = -ticks;
     }
     
     public void setRightTicksTarget(final int ticks) {
-        rightTicksTarget = ticks;
+        this.atTarget = false;
+        rightTicksTarget = -ticks;
+    }
+    
+    public void waitForTarget() throws InterruptedException {
+        synchronized (notifier) {
+            notifier.wait();
+        }
     }
     
     public void setTask(final DriveTask t) {
@@ -109,12 +120,6 @@ public class PIDDrivetrain extends Subsystem {
 
     protected void task() throws Exception {
         t.run();
-    }
-    
-    public void waitForTarget() throws InterruptedException {
-        synchronized (notifier) {
-            notifier.wait();
-        }
     }
     
     private abstract class DriveTask implements Runnable {

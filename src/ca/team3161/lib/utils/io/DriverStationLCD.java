@@ -117,6 +117,9 @@ public final class DriverStationLCD {
      * @param text the text to print
      */
     public void println(final int line, final String text) {
+        if (text == null) {
+            return;
+        }
         synchronized (textBuffer) {
             validateLineNumber(line);
             final byte[] bytes = getBytes(text);

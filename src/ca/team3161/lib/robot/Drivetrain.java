@@ -36,7 +36,7 @@ import java.util.Vector;
  */
 public class Drivetrain implements SpeedController {
     private final Vector motorControllers;
-    private double inversion = 1.0d;
+    private float inversion = 1.0f;
     
     /**
      * Create a new Drivetrain instance
@@ -62,9 +62,9 @@ public class Drivetrain implements SpeedController {
      */
     public Drivetrain setInverted(final boolean inverted) {
         if (inverted) {
-            inversion = -1.0d;
+            inversion = -1.0f;
         } else {
-            inversion = 1.0d;
+            inversion = 1.0f;
         }
         return this;
     }

@@ -59,7 +59,7 @@ public class Shooter extends Subsystem {
     private static final float DRAW_SPEED = 0.65f;
     private volatile boolean firing = false;
     private volatile boolean disabled = false;
-    private volatile double forkAngle = 45.0;
+    private volatile float forkAngle = 45.0f;
     
     private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     private final SpeedController winch = new Victor (7);
@@ -69,11 +69,12 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 4.31/*minVolt*/, 3.22/*maxVolt*/, 60, 185);
-    private final PIDulum pidulum = new PIDulum(pidPot, 0.75, -0.035/*kP*/, 0.0/*kI*/, 0.065/*kD*/, 135/*offsetAngle*/, 0.001/*torqueConstant*/);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 4.31f/*minVolt*/, 3.22f/*maxVolt*/, 60, 185);
+    private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
+            -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
     
     public Shooter() {
-        super(20, true);
+        super(20, true, "SHOOTER");
     }
     
     protected void defineResources() {
@@ -94,12 +95,12 @@ public class Shooter extends Subsystem {
     }
     
     public void drawWinch() {
-        final double speed = Constants.Shooter.WINCH_SPEED;
+        final float speed = Constants.Shooter.WINCH_SPEED;
         if (getStopSwitch()) {
-            winch.set(0.0d);
+            winch.set(0.0f);
             return;
         }
-        if (speed < 0.0d) { // do not run reverse!
+        if (speed < 0.0f) { // do not run reverse!
             return;
         }
         winch.set(Utils.normalizePwm(-speed));
@@ -126,7 +127,7 @@ public class Shooter extends Subsystem {
                 firing = false;
                 drawWinch();
             }
-        }).start();
+        }, "TRIGGER").start();
     }
     
     /**
@@ -166,17 +167,17 @@ public class Shooter extends Subsystem {
     /**
      * @param speed set the PWM for the roller motors
      */
-    public void setRoller(final double speed) {
+    public void setRoller(final float speed) {
         roller.set(Utils.normalizePwm(speed));
     }
     
-    public void setForkAngle(double angle) {
+    public void setForkAngle(float angle) {
         disabled = false;
         if (angle < pidPot.getMinAngle()) {
-            angle = pidPot.getMinAngle();
+            angle = (float)pidPot.getMinAngle();
         }
         if (angle > pidPot.getMaxAngle()) {
-            angle = pidPot.getMaxAngle();
+            angle = (float)pidPot.getMaxAngle();
         }
         this.forkAngle = angle;
         pidulum.clear();
@@ -185,7 +186,7 @@ public class Shooter extends Subsystem {
     /**
      * @param speed set the PWM for the shoulder motor
      */
-    private void setFork(final double speed) {
+    private void setFork(final float speed) {
         fork.set(Utils.normalizePwm(speed));
     }
     
@@ -193,11 +194,11 @@ public class Shooter extends Subsystem {
         return drawbackStopSwitch.get();
     }
 
-    public double getForkAngle() {
+    public float getForkAngle() {
         return pidPot.getValue();
     }
     
-    public double getForkTargetAngle() {
+    public float getForkTargetAngle() {
         return forkAngle;
     }
     
@@ -212,7 +213,6 @@ public class Shooter extends Subsystem {
         if (disabled) {
             return;
         }
-        final double pidVal = pidulum.pid(forkAngle);
-        setFork(pidVal);
+        setFork(pidulum.pid(forkAngle));
     }
 }

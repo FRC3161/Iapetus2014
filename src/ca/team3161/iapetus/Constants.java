@@ -29,7 +29,7 @@ public class Constants {
 
     public static class Gamepad {
         public static final int PORT = 1;
-        public static final double DEADZONE = 0.125d;
+        public static final float DEADZONE = 0.125f;
     }
     
     public static class Game {
@@ -43,6 +43,6 @@ public class Constants {
     }
     
     public static class Shooter {
-        public static final double WINCH_SPEED = 0.65;
+        public static final float WINCH_SPEED = 0.65f;
     }
 }

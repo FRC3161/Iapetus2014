@@ -32,41 +32,46 @@ import java.util.Vector;
 
 public abstract class Subsystem {
     
-    protected final Vector resources = new Vector();
+    protected final Vector resources;
     protected final long TASK_TIMEOUT;
     protected final boolean repeating;
-    private volatile boolean cancelled;
+    protected volatile boolean cancelled;
+    protected boolean started;
+    private final Thread thread;
+    public final String threadName;
     
-    protected Subsystem(final long timeout, final boolean repeating) {
+    protected Subsystem(final long timeout, final boolean repeating, final String threadName) {
         TASK_TIMEOUT = timeout;
+        this.resources = new Vector();
         this.repeating = repeating;
         this.cancelled = false;
-    }
-    
-    private final Thread thread = new Thread(new Runnable() {
-        public void run() {
-            if (repeating && !cancelled) {
-                while (!cancelled) {
+        this.started = false;
+        this.threadName = threadName;
+        this.thread = new Thread(new Runnable() {
+            public void run() {
+                if (repeating && !cancelled) {
+                    while (!cancelled) {
+                        try {
+                            acquireResources();
+                            task();
+                            Thread.sleep(TASK_TIMEOUT);
+                        } catch (final Exception e) {
+                        } finally {
+                            releaseResources();
+                        }
+                    }
+                } else {
                     try {
                         acquireResources();
                         task();
-                        Thread.sleep(TASK_TIMEOUT);
                     } catch (final Exception e) {
                     } finally {
                         releaseResources();
                     }
                 }
-            } else {
-                try {
-                    acquireResources();
-                    task();
-                } catch (final Exception e) {
-                } finally {
-                    releaseResources();
-                }
             }
-        }
-    });
+        }, threadName);
+    }
     
     protected final void require(Object resource) {
         resources.addElement(ResourceTracker.track(resource));
@@ -100,7 +105,11 @@ public abstract class Subsystem {
     }
     
     public final void start() {
-        thread.start();
+        cancelled = false;
+        if (!started) {
+            started = true;
+            thread.start();
+        }
     }
     
     protected abstract void defineResources();

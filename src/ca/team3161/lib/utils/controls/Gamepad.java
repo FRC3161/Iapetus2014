@@ -45,32 +45,32 @@ public interface Gamepad {
     /**
      * @return the X-axis of the left thumbstick
      */
-    public double getLeftX();
+    public float getLeftX();
 
     /**
      * @return the Y-axis of the left thumbstick
      */
-    public double getLeftY();
+    public float getLeftY();
 
     /**
      * @return the X-axis of the right thumbstick
      */
-    public double getRightX();
+    public float getRightX();
 
     /**
      * @return the Y-axis of the right thumbstick
      */
-    public double getRightY();
+    public float getRightY();
 
     /**
      * @return the left/right value of the directional pad
      */
-    public double getDpadHorizontal();
+    public float getDpadHorizontal();
 
     /**
      * @return the up/down value of the directional pad
      */
-    public double getDpadVertical();
+    public float getDpadVertical();
 
     /**
      * Get the value of a button on the controller

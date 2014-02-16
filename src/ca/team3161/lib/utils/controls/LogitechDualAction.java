@@ -55,14 +55,14 @@ public class LogitechDualAction implements Gamepad {
     */
     private final GenericHID backingHID;
     
-    private double inversion = 1.0d;
-    private final double DEADZONE;
+    private float inversion = 1.0f;
+    private final float DEADZONE;
     
     /**
      * @param port the USB port for this controller
      * @param deadzone how large of a deadzone to use
      */
-    public LogitechDualAction(final int port, final double deadzone) {
+    public LogitechDualAction(final int port, final float deadzone) {
         Assert.assertTrue("Gamepad deadzone must be in range [0, 1]", deadzone >= 0.0d && deadzone <= 1.0d);
         backingHID = new Joystick(port); // Joystick happens to work well here, but any GenericHID is fine
         DEADZONE = deadzone;
@@ -82,10 +82,10 @@ public class LogitechDualAction implements Gamepad {
      * @return the value from this axis, or 0 if the raw value falls within the
      * deadzone
      */
-    private double getAxisHelper(final int axis) {
-        final double val = backingHID.getRawAxis(axis);
+    private float getAxisHelper(final int axis) {
+        final float val = (float)backingHID.getRawAxis(axis);
         if (Math.abs(val) < DEADZONE) {
-            return 0.0d;
+            return 0.0f;
         }
         return val;
     }
@@ -93,42 +93,42 @@ public class LogitechDualAction implements Gamepad {
     /**
      * @return the X-axis value of the left joystick
      */
-    public double getLeftX() {
+    public float getLeftX() {
         return getAxisHelper(LEFT_STICK_X);
     }
         
     /**
      * @return the Y-axis value of the left joystick
      */
-    public double getLeftY() {
+    public float getLeftY() {
         return inversion * getAxisHelper(LEFT_STICK_Y);
     }
         
     /**
      * @return the X-axis value of the right joystick
      */
-    public double getRightX() {
+    public float getRightX() {
         return getAxisHelper(RIGHT_STICK_X);
     }
         
     /**
      * @return the Y-axis value of the right joystick
      */
-    public double getRightY() {
+    public float getRightY() {
         return inversion * getAxisHelper(RIGHT_STICK_Y);
     }
         
     /**
      * @return the horizontal value of the directional pad
      */
-    public double getDpadHorizontal() {
+    public float getDpadHorizontal() {
         return getAxisHelper(DPAD_HORIZONTAL);
     }
         
     /**
      * @return the vertical value of the directional pad
      */
-    public double getDpadVertical() {
+    public float getDpadVertical() {
         return -getAxisHelper(DPAD_VERTICAL);
     }
     
@@ -175,9 +175,9 @@ public class LogitechDualAction implements Gamepad {
      */
     public Gamepad setInverted(final boolean inverted) {
         if (inverted) {
-            this.inversion = -1.0d;
+            this.inversion = -1.0f;
         } else {
-            this.inversion = 1.0d;
+            this.inversion = 1.0f;
         }
         return this;
     }

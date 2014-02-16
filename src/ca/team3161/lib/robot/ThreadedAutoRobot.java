@@ -34,6 +34,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
     private static final int MAX_AUTO_PERIOD_LENGTH = Constants.Game.AUTONOMOUS_SECONDS * 1000;
     private volatile int accumulatedTime = 0;
     private final Object modeLock = new Object();
+    private Thread autoThread;
     
     protected final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     
@@ -49,7 +50,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      */
     public final void autonomousInit() {
         accumulatedTime = 0;
-        new Thread(new Runnable() {
+        autoThread = new Thread(new Runnable() {
             public void run() {
                 try {
                     synchronized (modeLock) {
@@ -60,7 +61,8 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
                     dsLcd.println(1, e.getMessage());
                 }
             }
-        }).start();
+        }, "AUTO THREAD");
+        autoThread.start();
     }
     
     /**
@@ -88,6 +90,9 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
      * code, will not attempt to run concurrently.
      */
     public final void teleopPeriodic() {
+        if (autoThread != null) {
+            autoThread.interrupt();
+        }
         synchronized (modeLock) {
             teleopThreadsafe();
         }

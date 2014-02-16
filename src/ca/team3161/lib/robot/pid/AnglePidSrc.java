@@ -26,6 +26,6 @@
 package ca.team3161.lib.robot.pid;
 
 public interface AnglePidSrc extends PIDSrc {
-    public double getMinAngle();
-    public double getMaxAngle();
+    public float getMinAngle();
+    public float getMaxAngle();
 }
