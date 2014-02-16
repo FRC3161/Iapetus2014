@@ -246,8 +246,9 @@ public class Iapetus extends ThreadedAutoRobot {
             dsLcd.println(5, "SHOOTER: FIRING");
         } else if (!shooter.getStopSwitch()) {
             dsLcd.println(5, "SHOOTER: RELOADING");
-        } else
+        } else {
             dsLcd.println(5, "SHOOTER: LOADED");
+        }
     }
 
     /**
