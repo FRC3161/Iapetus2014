@@ -35,16 +35,18 @@ public abstract class Subsystem {
     protected final Vector resources = new Vector();
     protected final long TASK_TIMEOUT;
     protected final boolean repeating;
+    private volatile boolean cancelled;
     
     protected Subsystem(final long timeout, final boolean repeating) {
         TASK_TIMEOUT = timeout;
         this.repeating = repeating;
+        this.cancelled = false;
     }
     
     private final Thread thread = new Thread(new Runnable() {
         public void run() {
-            if (repeating) {
-                while (true) {
+            if (repeating && !cancelled) {
+                while (!cancelled) {
                     try {
                         acquireResources();
                         task();
@@ -87,6 +89,14 @@ public abstract class Subsystem {
             } catch (final SemaphoreException se) {
             }
         }
+    }
+    
+    public boolean getCancelled() {
+        return cancelled;
+    }
+    
+    public void cancel() {
+        cancelled = true;
     }
     
     public final void start() {
