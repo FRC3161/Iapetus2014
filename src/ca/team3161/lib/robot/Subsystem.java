@@ -37,7 +37,7 @@ public abstract class Subsystem {
     protected final boolean repeating;
     protected volatile boolean cancelled;
     protected boolean started;
-    private final Thread thread;
+    private Thread thread;
     public final String threadName;
     
     protected Subsystem(final long timeout, final boolean repeating, final String threadName) {
@@ -47,7 +47,10 @@ public abstract class Subsystem {
         this.cancelled = false;
         this.started = false;
         this.threadName = threadName;
-        this.thread = new Thread(new Runnable() {
+    }
+    
+    private final Thread getTaskThread() {
+        return new Thread(new Runnable() {
             public void run() {
                 if (repeating && !cancelled) {
                     while (!cancelled) {
@@ -106,10 +109,11 @@ public abstract class Subsystem {
     
     public final void start() {
         cancelled = false;
-        if (!started) {
-            started = true;
-            thread.start();
+        if (thread != null) {
+            thread.interrupt();
         }
+        thread = getTaskThread();
+        thread.start();
     }
     
     protected abstract void defineResources();

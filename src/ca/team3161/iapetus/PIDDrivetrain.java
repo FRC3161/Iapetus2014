@@ -41,34 +41,38 @@ public class PIDDrivetrain extends Subsystem {
     
     public DriveTask DRIVE = new DriveTask() {
         public void run() {
-            leftDrive.set(leftEncoder.pid(leftTicksTarget)/* + bearingPid.pid(0.0f)*/);
-            rightDrive.set(-rightEncoder.pid(rightTicksTarget)/* - bearingPid.pid(0.0f)*/);
+            leftDrive.set(leftEncoder.pid(leftTicksTarget));
+            rightDrive.set(rightEncoder.pid(rightTicksTarget));
+            
             if (leftEncoder.atTarget() || rightEncoder.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
                 atTarget = true;
+            }
+            
+            if (leftEncoder.atTarget()) {
                 leftEncoder.clear();
+                leftTicksTarget = 0;
+            }
+            
+            if (rightEncoder.atTarget()) {
                 rightEncoder.clear();
-                bearingPid.clear();
+                rightTicksTarget = 0;
             }
         }
     };
     
     public DriveTask TURN = new DriveTask() {
         public void run() {
-            if (atTarget) {
-                return;
-            }
             leftDrive.set(turningPid.pid(turningDegreesTarget));
-            rightDrive.set(-turningPid.pid(turningDegreesTarget));
+            rightDrive.set(turningPid.pid(turningDegreesTarget));
             if (turningPid.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
                 atTarget = true;
                 turningPid.clear();
-                turningDegreesTarget = 0.0f;
             }
         }
     };
@@ -87,6 +91,8 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     public void defineResources() {
+        require(leftDrive);
+        require(rightDrive);
     }
     
     public boolean atTarget() {
@@ -122,7 +128,7 @@ public class PIDDrivetrain extends Subsystem {
         t.run();
     }
     
-    private abstract class DriveTask implements Runnable {
+    public abstract class DriveTask implements Runnable {
     }
     
 }

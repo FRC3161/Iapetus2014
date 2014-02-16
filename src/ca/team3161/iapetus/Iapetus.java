@@ -61,8 +61,8 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-                new PID(new EncoderPidSrc(leftEncoder), 50.0f, -0.005f, 0.0f, -0.002f),
-                new PID(new EncoderPidSrc(rightEncoder), 50.0f, 0.005f, 0.0f, -0.002f),
+                new PID(new EncoderPidSrc(leftEncoder), 50.0f, -0.005f, 0.0f, 0.0f),
+                new PID(new EncoderPidSrc(rightEncoder), 50.0f, -0.005f, 0.0f, 0.0f),
                 new PID(new GyroPidSrc(gyro), 1.0f, 0.05f, 0.0f, 0.0f));
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
@@ -124,20 +124,17 @@ public class Iapetus extends ThreadedAutoRobot {
     public void autonomousThreaded() throws Exception {
         /*
         restartEncoders();
-        
         pidDrive.start();
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setLeftTicksTarget(15000);
-        pidDrive.setRightTicksTarget(15000);
-        dsLcd.println(4, "WAITING");
+        pidDrive.setLeftTicksTarget(1500);
+        pidDrive.setRightTicksTarget(1500);
         pidDrive.waitForTarget();
-        dsLcd.println(4, "AWAKE");
         pidDrive.cancel();
+        */
         
         //pidDrive.setTask(pidDrive.TURN);
         //pidDrive.turnByDegrees(180);
         //pidDrive.waitForTarget();
-        */
         
         
         dsLcd.println(5, "AUTO: START");
@@ -180,7 +177,6 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "A DRIVE: 0.0 0.0");
         allDrive.set(0.0);
         dsLcd.println(5, "AUTO: FINISHED");
-        
     }
 
     /**
