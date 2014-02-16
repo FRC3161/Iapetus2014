@@ -176,7 +176,7 @@ public class Iapetus extends ThreadedAutoRobot {
         //semi-arcade drive
         leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
         rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
-        dsLcd.println(1, "DRIVE: " + leftDrive.get() + " " + rightDrive.get() + "  ");
+        dsLcd.println(1, "DRIVE: " + leftDrive.get() + " " + rightDrive.get());
         
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
@@ -186,7 +186,7 @@ public class Iapetus extends ThreadedAutoRobot {
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setForkAngle(Constants.Positions.START);
-            dsLcd.println(2, "FORK MODE: TRAVEL  ");
+            dsLcd.println(2, "FORK MODE: TRAVEL");
         }
         
         if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
@@ -196,13 +196,13 @@ public class Iapetus extends ThreadedAutoRobot {
         
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(Constants.Positions.INTAKE);
-            dsLcd.println(2, "FORK MODE: INTAKE  ");
+            dsLcd.println(2, "FORK MODE: INTAKE");
         }
         
         //roller on/off
         if (gamepad.getRightTrigger()) {
             shooter.setRoller(0.5);
-            dsLcd.println(3, "ROLLER: ON ");
+            dsLcd.println(3, "ROLLER: ON");
         } else {
             shooter.setRoller(0.0);
             dsLcd.println(3, "ROLLER: OFF");
@@ -216,7 +216,7 @@ public class Iapetus extends ThreadedAutoRobot {
     
         if (gamepad.getLeftBumper()) {
             shooter.openClaw();
-            dsLcd.println(4, "CLAW: OPEN ");
+            dsLcd.println(4, "CLAW: OPEN");
         }
         
         dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
