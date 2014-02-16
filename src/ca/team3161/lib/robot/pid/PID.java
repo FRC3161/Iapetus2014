@@ -86,6 +86,10 @@ public class PID {
         return output;
     }
     
+    public PIDSrc getSrc() {
+        return this.source;
+    }
+    
     public boolean atTarget() {
         return atTarget();
     }
