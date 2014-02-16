@@ -78,7 +78,9 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         shooter.disableAll();
         shooter.start();
-        shooter.setForkAngle(135);
+        shooter.setForkAngle(Constants.Positions.START);
+        shooter.closeClaw();
+        shooter.drawWinch();
     }
 
     /**
@@ -94,17 +96,28 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void autonomousThreaded() throws Exception {
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
+        shooter.setForkAngle(Constants.Positions.START);
+        shooter.closeClaw();
         dsLcd.clear();
         dsLcd.println(1, "AUTO: DRIVE 0.5 0.5");
         allDrive.set(0.5);
         waitFor(1000);
+        shooter.setForkAngle(Constants.Positions.SHOOTING);
         dsLcd.println(1, "AUTO: DRIVE 0.0 0.0");
         allDrive.set(0.0);
         shooter.openClaw();
-        waitFor(300);
-        shooter.closeClaw();
         waitFor(500);
         shooter.fire();
+        waitFor(300);
+        shooter.closeClaw();
+        allDrive.set(-0.5);
+        shooter.setForkAngle(Constants.Positions.INTAKE);
+        waitFor(1000);
+        allDrive.set(0.0);
+        leftDrive.set(0.5);
+        rightDrive.set(-0.5);
+        waitFor(2000);
+        allDrive.set(0.0);
         dsLcd.println(5, "AUTO: FINISHED");
     }
 
@@ -121,6 +134,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        shooter.setForkAngle(Constants.Positions.START);
+        shooter.closeClaw();
     }
 
     /**
@@ -151,15 +166,15 @@ public class Iapetus extends ThreadedAutoRobot {
         
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
-            shooter.setForkAngle(180);
+            shooter.setForkAngle(Constants.Positions.START);
         }
         
         if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
-            shooter.setForkAngle(135);
+            shooter.setForkAngle(Constants.Positions.SHOOTING);
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
-            shooter.setForkAngle(55);
+            shooter.setForkAngle(Constants.Positions.INTAKE);
         }
         
         /*

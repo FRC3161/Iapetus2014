@@ -69,8 +69,8 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.83/*minVolt*/, 2.78/*maxVolt*/, 55, 185);
-    private final PIDulum pidulum = new PIDulum(pidPot, -0.002/*kP*/, 0.0/*kI*/, 0.0/*kD*/, 135/*offsetAngle*/, 0.001/*torqueConstant*/);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 4.31/*minVolt*/, 3.22/*maxVolt*/, 60, 185);
+    private final PIDulum pidulum = new PIDulum(pidPot, 0.75, -0.035/*kP*/, 0.0/*kI*/, 0.065/*kD*/, 135/*offsetAngle*/, 0.001/*torqueConstant*/);
     
     public Shooter() {
         super(20, true);
@@ -93,12 +93,8 @@ public class Shooter extends Subsystem {
         disabled = true;
     }
     
-    /**
-     * @param speed set the winch motor. The motor actually runs in reverse,
-     * so this method negates the value before setting it so that positive
-     * values wind the winch back.
-     */
-    public void drawWinch(final double speed) {
+    public void drawWinch() {
+        final double speed = Constants.Shooter.WINCH_SPEED;
         if (getStopSwitch()) {
             winch.set(0.0d);
             return;
@@ -110,11 +106,12 @@ public class Shooter extends Subsystem {
     }
     
     public boolean forkInfiringPosition() {
-        return (forkAngle > 110.0 && forkAngle < 140.0);
+        return (getForkAngle() < Constants.Positions.SHOOTING + 5
+                && getForkAngle() > Constants.Positions.SHOOTING - 5);
     }
     
     public void fire() {
-        if (firing || !forkInfiringPosition()) {
+        if (firing || !forkInfiringPosition() || !getClaw()) {
             return;
         }
         new Thread(new Runnable() {
@@ -127,7 +124,7 @@ public class Shooter extends Subsystem {
                 }
                 returnTrigger();
                 firing = false;
-                drawWinch(DRAW_SPEED);
+                drawWinch();
             }
         }).start();
     }
@@ -189,7 +186,7 @@ public class Shooter extends Subsystem {
      * @param speed set the PWM for the shoulder motor
      */
     private void setFork(final double speed) {
-        fork.set(Utils.normalizePwm(speed) / 2);
+        fork.set(Utils.normalizePwm(speed));
     }
     
     private boolean getStopSwitch() {
@@ -208,12 +205,10 @@ public class Shooter extends Subsystem {
         if (getStopSwitch()) {
             winch.set(0.0);
         }
-        dsLcd.println(2, "VOLT: " + forkPot.get());
         if (disabled) {
             return;
         }
-        final double pidVal = pidulum.pd(forkAngle);
+        final double pidVal = pidulum.pid(forkAngle);
         setFork(pidVal);
-        dsLcd.println(1, "PID: " + pidVal);
     }
 }

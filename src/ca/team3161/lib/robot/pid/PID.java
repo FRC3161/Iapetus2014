@@ -28,11 +28,12 @@ package ca.team3161.lib.robot.pid;
 public class PID {
     
     protected final PIDSrc source;
-    protected double kP, kI, kD, integralError, prevError, deltaError;
+    protected double deadband, kP, kI, kD, integralError, prevError, deltaError;
     
-    public PID(final PIDSrc source,
+    public PID(final PIDSrc source, final double deadband,
             final double kP, final double kI, final double kD) {
         this.source = source;
+        this.deadband = deadband;
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
@@ -44,7 +45,7 @@ public class PID {
         deltaError = 0.0;
     }
     
-    public double pd(final double target) {
+    public double pid(final double target) {
         double kErr;
         double pOut;
         double iOut;

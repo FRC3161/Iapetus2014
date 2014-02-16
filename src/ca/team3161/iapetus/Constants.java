@@ -35,4 +35,14 @@ public class Constants {
     public static class Game {
         public static final int AUTONOMOUS_SECONDS = 10;
     }
+    
+    public static class Positions {
+        public static final int INTAKE = 60;
+        public static final int SHOOTING = 145;
+        public static final int START = 180;
+    }
+    
+    public static class Shooter {
+        public static final double WINCH_SPEED = 0.65;
+    }
 }

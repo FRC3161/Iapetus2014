@@ -25,20 +25,23 @@
 
 package ca.team3161.lib.robot.pid;
 
+import ca.team3161.lib.utils.io.DriverStationLCD;
+
 public class PIDulum extends PID {
     
     private final double offsetAngle;
     private final double torqueConstant;
+    private final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     
-    public PIDulum(final AnglePidSrc source,
+    public PIDulum(final AnglePidSrc source, final double deadband,
             final double kP, final double kI, final double kD,
             final double offsetAngle, final double torqueConstant) {
-        super(source, kP, kI, kD);
+        super(source, deadband, kP, kI, kD);
         this.offsetAngle = offsetAngle;
         this.torqueConstant = torqueConstant;
     }
     
-    public double pd(final double target) {
+    public double pid(final double target) {
         double kErr;
         double pOut;
         double iOut;
@@ -61,6 +64,10 @@ public class PIDulum extends PID {
         }
         
         feedForward = torqueConstant * (source.getValue() - offsetAngle);
+        
+        if (Math.abs(kErr) < deadband) {
+            return feedForward;
+        }
 
         output = (pOut + iOut + dOut + feedForward);
 
