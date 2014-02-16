@@ -36,6 +36,7 @@ public class PIDDrivetrain extends Subsystem {
     private volatile double turningDegreesTarget = 0.0;
     private volatile int leftTicksTarget = 0, rightTicksTarget = 0;
     private DriveTask t;
+    private final Object notifier;
     
     public DriveTask DRIVE = new DriveTask() {
         public void run() {
@@ -43,6 +44,9 @@ public class PIDDrivetrain extends Subsystem {
             leftDrive.set(leftEncoder.pid(leftTicksTarget) + skew);
             rightDrive.set(rightEncoder.pid(rightTicksTarget) - skew);
             if (leftEncoder.atTarget() || rightEncoder.atTarget()) {
+                synchronized (notifier) {
+                    notifier.notifyAll();
+                }
                 leftEncoder.clear();
                 rightEncoder.clear();
                 bearingPid.clear();
@@ -58,6 +62,9 @@ public class PIDDrivetrain extends Subsystem {
             leftDrive.set(pidVal);
             rightDrive.set(-pidVal);
             if (turningPid.atTarget()) {
+                synchronized (notifier) {
+                    notifier.notifyAll();
+                }
                 turningPid.clear();
                 turningDegreesTarget = 0.0;
             }
@@ -73,6 +80,7 @@ public class PIDDrivetrain extends Subsystem {
         this.rightEncoder = rightEncoder;
         this.turningPid = turningPid;
         this.bearingPid = new PID(turningPid.getSrc(), 0.0, 0.0, 0.0, 0.0);
+        this.notifier = new Object();
     }
 
     protected void defineResources() {
@@ -101,6 +109,12 @@ public class PIDDrivetrain extends Subsystem {
 
     protected void task() throws Exception {
         t.run();
+    }
+    
+    public void waitForTarget() throws InterruptedException {
+        synchronized (notifier) {
+            notifier.wait();
+        }
     }
     
     private abstract class DriveTask implements Runnable {

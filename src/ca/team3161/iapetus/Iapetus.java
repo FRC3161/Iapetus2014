@@ -35,6 +35,9 @@ package ca.team3161.iapetus;
 import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
+import ca.team3161.lib.robot.pid.EncoderPidSrc;
+import ca.team3161.lib.robot.pid.GyroPidSrc;
+import ca.team3161.lib.robot.pid.PID;
 import ca.team3161.lib.utils.Utils;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -104,6 +107,23 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        /*
+        PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
+                new PID(new EncoderPidSrc(1, 2), 0.0, 0.0, 0.0, 0.0),
+                new PID(new EncoderPidSrc(3, 4), 0.0, 0.0, 0.0, 0.0),
+                new PID(new GyroPidSrc(1), 0.0, 0.0, 0.0, 0.0));
+        pidDrive.start();
+        
+        pidDrive.setTask(pidDrive.DRIVE);
+        pidDrive.setLeftTicksTarget(10000);
+        pidDrive.setRightTicksTarget(10000);
+        pidDrive.waitForTarget();
+        pidDrive.setTask(pidDrive.TURN);
+        pidDrive.turnByDegrees(180);
+        pidDrive.waitForTarget();
+        pidDrive.cancel();
+        */
+        
         dsLcd.println(5, "AUTO: START");
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
         dsLcd.println(1, "A DRIVE: 0.5 0.5");
