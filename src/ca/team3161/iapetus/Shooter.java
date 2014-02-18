@@ -64,7 +64,7 @@ public class Shooter extends Subsystem {
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
     private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.70f/*minVolt*/, 1.63f/*maxVolt*/, 60, 185);
     private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
-            -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
+            -0.03f/*kP*/, 0.0f/*kI*/, 0.075f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
     
     public Shooter() {
         super(20, true, "SHOOTER");
