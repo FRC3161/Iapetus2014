@@ -400,10 +400,14 @@ document will explain the concepts behind the Iapetus libraries.</p>
 <div class="sect2">
 <h3 id="_io_ca_team3161_lib_utils_io">IO (ca.team3161.lib.utils.io)</h3>
 <div class="paragraph">
-<p>File and DriverStation IO classes
-==== DriverStationLCD
-Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
+<p>File and DriverStation IO classes</p>
+</div>
+<div class="sect3">
+<h4 id="_driverstationlcd">DriverStationLCD</h4>
+<div class="paragraph">
+<p>Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
 class.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -462,71 +466,151 @@ within the range [-1.0, 1.0].</p>
 </div>
 <div class="sect2">
 <h3 id="_pid_ca_team3161_lib_robot_pid">PID (ca.team3161.lib.robot.pid)</h3>
+<div class="paragraph">
+<p>PID control libraries. If you don&#8217;t know what PID is or what it&#8217;s for,
+take a look at <a href="http://team3161.ca/teamresources/">Team 3161&#8217;s Resources</a> page.</p>
+</div>
 <div class="sect3">
 <h4 id="_anglepidsrc">AnglePidSrc</h4>
-
+<div class="paragraph">
+<p>A PIDSrc which returns values as angles.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_encoderpidsrc">EncoderPidSrc</h4>
-
+<div class="paragraph">
+<p>A PIDSrc which uses an encoder as its backing sensor.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_gyropidsrc">GyroPidSrc</h4>
-
+<div class="paragraph">
+<p>A PIDSrc which uses a gyro as its backing sensor.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_pid">PID</h4>
-
+<div class="paragraph">
+<p>A PID loop, which uses a PIDSrc and a set of constants to iteratively
+determine output values with which a system can reach and maintain a
+target value.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_pidsrc">PIDSrc</h4>
-
+<div class="paragraph">
+<p>An interface with a single method, getValue(). These are used as backing
+sensors for PID objects.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_pidulum">PIDulum</h4>
-
+<div class="paragraph">
+<p>A PID loop for the specific application of an inverted pendulum system.
+This works the same as a standard PID, but with an additional "Feed
+Forward" term, which is used to compensate for gravity pulling on the
+pendulum.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_potentiometerpidsrc">PotentiometerPidSrc</h4>
-
+<div class="paragraph">
+<p>A PIDSrc that uses two known points (voltage, angle) of a rotary
+potentiometer and is able to then convert measured voltages into
+corresponding angles.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_robot_subsystems_ca_team3161_lib_robot">Robot subsystems (ca.team3161.lib.robot)</h3>
+<div class="paragraph">
+<p>Higher level components and control systems defining major pieces of
+a robot.</p>
+</div>
 <div class="sect3">
 <h4 id="_drivetrain">Drivetrain</h4>
-
+<div class="paragraph">
+<p>A container object which groups heterogenous SpeedControllers and
+allows them to be managed as a unit.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_piddrivetrain">PIDDrivetrain</h4>
-
+<div class="paragraph">
+<p>A Drivetrain controller that uses PID objects and is able to accurately
+drive straight and turn by degrees. This is a type of Subsystem - the
+PID control is done in a background thread.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_resourcetracker">ResourceTracker</h4>
-
+<div class="paragraph">
+<p>A system allowing Subsystems to safely operate concurrently without
+using the same resources (such as SpeedControllers, sensors, relays)
+and being interrupted by other subsystems.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_subsystem">Subsystem</h4>
-
+<div class="paragraph">
+<p>Subsystems are objects that model major physical component subsystems
+on robots. Subsystems have a list of required resources and a task
+that they run in the background. This task can be run once or
+periodically. If being run periodically, the wait time between iterations
+is configurable.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_threadedautorobot">ThreadedAutoRobot</h4>
-
+<div class="paragraph">
+<p>A subclass of IterativeRobot. Autonomous is run in a new Thread,
+leaving the main robot thread responsible (generally) solely for
+handling FMS events, Watchdog, etc. This allows autonomous scripts
+to use convenient semantics such as Thread sleeping rather than
+periodically checking Timer objects. A method "waitFor" is supplied
+which should be used in favour of Thread.sleep as it provides assurances
+that the autonomous script will not run over the length of the autonomous
+period. As a replacement for teleopPeriodic, the new method
+teleopThreadsafe should be used. Use of this method ensures that the
+autonomous background thread and the main robot thread (running teleop
+code) will not coexist, which would cause indeterminate runtime
+behaviour.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_team_3161_s_2014_robot_ca_team3161_iapetus">Team 3161&#8217;s 2014 robot (ca.team3161.iapetus)</h3>
+<div class="paragraph">
+<p>2014 robot-specific code.</p>
+</div>
 <div class="sect3">
 <h4 id="_constants">Constants</h4>
-
+<div class="paragraph">
+<p>A small collection of constant values, such as Gamepad ports,
+roller/shooter speeds, fork position angles, etc.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_iapetus">Iapetus</h4>
-
+<div class="paragraph">
+<p>The main robot behaviour implementation. This is a subclass of
+ThreadedAutoRobot and defines what exactly the robot does in various
+modes. It makes use of PIDDrivetrain for autonomous,
+Joystick and LogitechDualAction for teleop control, Drivetrain for
+SpeedController management, etc.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_shooter">Shooter</h4>
-
+<div class="paragraph">
+<p>A Subsystem modelling our robot&#8217;s combined mechanism for handling game
+pieces. This includes a roller, a piston-controlled claw to which it
+is mounted, as well as a winch mechanism and a solenoid to release it
+which is used to propel game pieces. The background Subsystem task is
+used primarily to monitor how far back the winch has been drawn, ensuring
+that the robot will not physically damage itself no matter what happens
+in the main teleop or autonomous routines.</p>
+</div>
 </div>
 </div>
 </div>
@@ -535,7 +619,7 @@ within the range [-1.0, 1.0].</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2014-02-17 20:40:19 EST
+Last updated 2014-02-17 21:03:57 EST
 </div>
 </div>
 </body>

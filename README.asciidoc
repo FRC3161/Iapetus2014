@@ -20,6 +20,7 @@ document will explain the concepts behind the Iapetus libraries.
 == Overview
 === IO (ca.team3161.lib.utils.io)
 File and DriverStation IO classes
+
 ==== DriverStationLCD
 Provides a nice wrapper overtop of FIRST's provided DriverStationLCD
 class.
@@ -58,23 +59,97 @@ Pretty printing arrays, rounding doubles, and ensuring PWM values fall
 within the range [-1.0, 1.0].
 
 === PID (ca.team3161.lib.robot.pid)
+PID control libraries. If you don't know what PID is or what it's for,
+take a look at link:http://team3161.ca/teamresources/[Team 3161's Resources] page.
+
 ==== AnglePidSrc
+A PIDSrc which returns values as angles.
+
 ==== EncoderPidSrc
+A PIDSrc which uses an encoder as its backing sensor.
+
 ==== GyroPidSrc
+A PIDSrc which uses a gyro as its backing sensor.
+
 ==== PID
+A PID loop, which uses a PIDSrc and a set of constants to iteratively
+determine output values with which a system can reach and maintain a
+target value.
+
 ==== PIDSrc
+An interface with a single method, getValue(). These are used as backing
+sensors for PID objects.
+
 ==== PIDulum
+A PID loop for the specific application of an inverted pendulum system.
+This works the same as a standard PID, but with an additional "Feed 
+Forward" term, which is used to compensate for gravity pulling on the
+pendulum.
+
 ==== PotentiometerPidSrc
+A PIDSrc that uses two known points (voltage, angle) of a rotary
+potentiometer and is able to then convert measured voltages into
+corresponding angles.
 
 === Robot subsystems (ca.team3161.lib.robot)
+Higher level components and control systems defining major pieces of
+a robot.
+
 ==== Drivetrain
+A container object which groups heterogenous SpeedControllers and
+allows them to be managed as a unit.
+
 ==== PIDDrivetrain
+A Drivetrain controller that uses PID objects and is able to accurately
+drive straight and turn by degrees. This is a type of Subsystem - the
+PID control is done in a background thread.
+
 ==== ResourceTracker
+A system allowing Subsystems to safely operate concurrently without
+using the same resources (such as SpeedControllers, sensors, relays)
+and being interrupted by other subsystems.
+
 ==== Subsystem
+Subsystems are objects that model major physical component subsystems
+on robots. Subsystems have a list of required resources and a task
+that they run in the background. This task can be run once or
+periodically. If being run periodically, the wait time between iterations
+is configurable.
+
 ==== ThreadedAutoRobot
+A subclass of IterativeRobot. Autonomous is run in a new Thread,
+leaving the main robot thread responsible (generally) solely for
+handling FMS events, Watchdog, etc. This allows autonomous scripts
+to use convenient semantics such as Thread sleeping rather than
+periodically checking Timer objects. A method "waitFor" is supplied
+which should be used in favour of Thread.sleep as it provides assurances
+that the autonomous script will not run over the length of the autonomous
+period. As a replacement for teleopPeriodic, the new method
+teleopThreadsafe should be used. Use of this method ensures that the
+autonomous background thread and the main robot thread (running teleop
+code) will not coexist, which would cause indeterminate runtime
+behaviour.
 
 === Team 3161's 2014 robot (ca.team3161.iapetus)
+2014 robot-specific code.
+
 ==== Constants
+A small collection of constant values, such as Gamepad ports,
+roller/shooter speeds, fork position angles, etc.
+
 ==== Iapetus
+The main robot behaviour implementation. This is a subclass of
+ThreadedAutoRobot and defines what exactly the robot does in various
+modes. It makes use of PIDDrivetrain for autonomous,
+Joystick and LogitechDualAction for teleop control, Drivetrain for
+SpeedController management, etc.
+
 ==== Shooter
+A Subsystem modelling our robot's combined mechanism for handling game
+pieces. This includes a roller, a piston-controlled claw to which it
+is mounted, as well as a winch mechanism and a solenoid to release it
+which is used to propel game pieces. The background Subsystem task is
+used primarily to monitor how far back the winch has been drawn, ensuring
+that the robot will not physically damage itself no matter what happens
+in the main teleop or autonomous routines.
 
