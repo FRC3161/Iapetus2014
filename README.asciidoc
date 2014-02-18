@@ -29,9 +29,11 @@ An interface defining a physical gamepad type controller. These are
 expected to have two thumbsticks, a directional pad, and an assortment
 of buttons. They may have additional functionality as well, but this
 is the minimal set. The thumbsticks' Y-axes may also be inverted.
+
 ==== Joystick
 A thin wrapper overtop of FIRST's provided Joystick class, offering
 deadzone filtering.
+
 ==== LogitechDualAction
 A Gamepad implementation modelling the Logitech DualAction USB gamepad.
 In addition to the methods required by the Gamepad interface, this
