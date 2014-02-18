@@ -401,22 +401,32 @@ document will explain the concepts behind the Iapetus libraries.</p>
 <h3 id="_io_ca_team3161_lib_utils_io">IO (ca.team3161.lib.utils.io)</h3>
 <div class="sect3">
 <h4 id="_driverstationlcd">DriverStationLCD</h4>
-
+<div class="paragraph">
+<p>Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
+class.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_controls_ca_team3161_lib_utils_controls">Controls (ca.team3161.lib.utils.controls)</h3>
 <div class="sect3">
 <h4 id="_gamepad">Gamepad</h4>
-
+<div class="paragraph">
+<p>An interface defining a physical gamepad type controller. These are
+expected to have two thumbsticks, a directional pad, and an assortment
+of buttons. They may have additional functionality as well, but this
+is the minimal set. The thumbsticks' Y-axes may also be inverted.
+==== Joystick
+A thin wrapper overtop of FIRST&#8217;s provided Joystick class, offering
+deadzone filtering.
+==== LogitechDualAction
+A Gamepad implementation modelling the Logitech DualAction USB gamepad.
+In addition to the methods required by the Gamepad interface, this
+class offers convenience methods to check the "bumpers" and "triggers"
+(shoulder buttons) on the controller. It also offers deadzone filtering,
+so that very small values returned by the thumbsticks can be ignored, in
+case the gamepad is not properly zeroed, or has damaged springs, etc.</p>
 </div>
-<div class="sect3">
-<h4 id="_joystick">Joystick</h4>
-
-</div>
-<div class="sect3">
-<h4 id="_logitechdualaction">LogitechDualAction</h4>
-
 </div>
 </div>
 <div class="sect2">
@@ -505,7 +515,7 @@ document will explain the concepts behind the Iapetus libraries.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2014-02-17 20:30:15 EST
+Last updated 2014-02-17 20:35:33 EST
 </div>
 </div>
 </body>

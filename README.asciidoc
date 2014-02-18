@@ -20,11 +20,25 @@ document will explain the concepts behind the Iapetus libraries.
 == Overview
 === IO (ca.team3161.lib.utils.io)
 ==== DriverStationLCD
+Provides a nice wrapper overtop of FIRST's provided DriverStationLCD
+class.
 
 === Controls (ca.team3161.lib.utils.controls)
 ==== Gamepad
+An interface defining a physical gamepad type controller. These are
+expected to have two thumbsticks, a directional pad, and an assortment
+of buttons. They may have additional functionality as well, but this
+is the minimal set. The thumbsticks' Y-axes may also be inverted.
 ==== Joystick
+A thin wrapper overtop of FIRST's provided Joystick class, offering
+deadzone filtering.
 ==== LogitechDualAction
+A Gamepad implementation modelling the Logitech DualAction USB gamepad.
+In addition to the methods required by the Gamepad interface, this
+class offers convenience methods to check the "bumpers" and "triggers"
+(shoulder buttons) on the controller. It also offers deadzone filtering,
+so that very small values returned by the thumbsticks can be ignored, in
+case the gamepad is not properly zeroed, or has damaged springs, etc.
 
 === General utilities (ca.team3161.lib.utils)
 ==== Assert
