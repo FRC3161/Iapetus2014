@@ -71,9 +71,10 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
 
     private DriverStation.Alliance alliance;
-    private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
-    private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kOn;
+    private final Relay underglowController = new Relay(1);
+    private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kForward;
     private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
+    private static final Relay.Value PURPLE_BADASS_UNDERGLOW = Relay.Value.kOn;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -90,12 +91,6 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(2, "I MODE: START");
         dsLcd.println(3, "I CLAW: CLOSE");
         dsLcd.println(4, "I PUNCHER: RESET");
-        
-        if (alliance.equals(DriverStation.Alliance.kBlue)) {
-            underglowController.set(BLUE_UNDERGLOW);
-        } else {
-            underglowController.set(RED_UNDERGLOW);
-        }
         
         shooter.disableAll();
         shooter.start();
@@ -126,6 +121,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        underglowController.set(PURPLE_BADASS_UNDERGLOW);
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
@@ -166,6 +162,12 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        alliance = DriverStation.getInstance().getAlliance();
+        if (alliance.equals(DriverStation.Alliance.kBlue)) {
+            underglowController.set(BLUE_UNDERGLOW);
+        } else {
+            underglowController.set(RED_UNDERGLOW);
+        }
         pidDrive.cancel();
         shooter.setForkAngle(Constants.Positions.INTAKE);
         dsLcd.clear();
