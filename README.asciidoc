@@ -6,3 +6,21 @@ v0.1, 10 February 2014
 Iapetus is the working name for FRC 3161's robot code for the 2014 season. For
 more information about the team, or the robot for which this code was written,
 please visit http://team3161.ca.
+
+== Introduction
+Iapetus marks the first robot code system built by Team 3161 with the express
+intention of producing reusable code, both for Team 3161 and others.
+
+The package ca.team3161.iapetus contains robot-specific code.
+The other packages (ca.team3161.lib.*) are intended as reusable modules.
+Each such class has at least skeleton documentation explaining its
+purpose, but for ease of reference and a high-level overview, this
+document will explain the concepts behind the Iapetus libraries.
+
+== Overview
+=== IO (ca.team3161.lib.utils.io)
+=== Controls (ca.team3161.lib.utils.controls)
+=== General utilities (ca.team3161.lib.utils)
+=== PID (ca.team3161.lib.robot.pid)
+=== Robot subsystems (ca.team3161.lib.robot)
+=== Team 3161's 2014 robot (ca.team3161.iapetus)
