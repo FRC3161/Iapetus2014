@@ -27,23 +27,25 @@ package ca.team3161.lib.utils.controls;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
+/**
+ * A thin wrapper over the FRC Joystick class, with built-in Y-axis inversion
+ * and deadzone
+ */
 public class Joystick {
     
     private float inversion;
     private final float DEADZONE;
     private final GenericHID backingHID;
     
+    /**
+     * @param port which USB port this is plugged into, as reported by the
+     * Drive Station
+     * @param deadzone Axis values less than this in absolute value will be ignored
+     */
     public Joystick(final int port, final float deadzone) {
         this.backingHID = new edu.wpi.first.wpilibj.Joystick(port);
+        this.inversion = 1.0f;
         this.DEADZONE = deadzone;
-    }
-    
-    public float getX() {
-        return (float)backingHID.getX();
-    }
-    
-    public float getY() {
-        return (float)(inversion*backingHID.getY());
     }
     
     public void setInverted(final boolean inverted) {
@@ -54,8 +56,26 @@ public class Joystick {
         }
     }
     
+    public double getX() {
+        if (Math.abs(backingHID.getX()) < DEADZONE) {
+            return 0.0;
+        }
+        return backingHID.getX();
+    }
+    
+    public double getY() {
+        if (Math.abs(backingHID.getX()) < DEADZONE) {
+            return 0.0;
+        }
+        return backingHID.getX();
+    }
+    
     public boolean getButton(final int button) {
         return backingHID.getRawButton(button);
+    }
+    
+    public double getRawAxis(final int axis) {
+        return backingHID.getRawAxis(axis);
     }
     
 }

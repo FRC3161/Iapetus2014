@@ -151,49 +151,6 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
-        
-        /*
-        dsLcd.println(5, "AUTO: START");
-        SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
-        dsLcd.println(1, "A DRIVE: 0.5 0.5");
-        allDrive.set(0.5);
-        
-        dsLcd.println(2, "A MODE: SHOOTING");
-        shooter.setForkAngle(Constants.Positions.SHOOTING);
-        waitFor(1000);
-        
-        dsLcd.println(1, "A DRIVE: 0.0 0.0");
-        allDrive.set(0.0);
-        
-        dsLcd.println(3, "A CLAW: OPEN");
-        shooter.openClaw();
-        waitFor(500);
-        
-        dsLcd.clear(4);
-        dsLcd.println(4, "A PUNCHER: FIRING");
-        shooter.fire();
-        waitFor(300);
-        
-        dsLcd.println(4, "A PUNCHER: RESET");
-        dsLcd.println(3, "A CLAW: CLOSE");
-        shooter.closeClaw();
-        
-        dsLcd.println(1, "A DRIVE: -0.5 -0.5");
-        allDrive.set(-0.5);
-        
-        dsLcd.println(2, "A MODE: INTAKE");
-        shooter.setForkAngle(Constants.Positions.INTAKE);
-        waitFor(1000);
-        
-        dsLcd.println(1, "A DRIVE: 0.5 -0.5");
-        leftDrive.set(0.5);
-        rightDrive.set(-0.5);
-        waitFor(2000);
-        
-        dsLcd.println(1, "A DRIVE: 0.0 0.0");
-        allDrive.set(0.0);
-        dsLcd.println(5, "AUTO: FINISHED");
-        */
     }
 
     /**
@@ -251,15 +208,7 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setForkAngle(Constants.Positions.INTAKE);
             //dsLcd.println(2, "FORK MODE: INTAKE");
         }
-        /*
-        if (gamepad.getRightTrigger()) {
-            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
-            //dsLcd.println(3, "ROLLER: ON");
-        } else {
-            shooter.setRoller(0.0f);
-            //dsLcd.println(3, "ROLLER: OFF");
-        }
-        */
+        
         //roller up/down
         if (gamepad.getButton(3)) {
             shooter.closeClaw();
@@ -274,16 +223,6 @@ public class Iapetus extends ThreadedAutoRobot {
         if (gamepad.getButton(2)) {
             shooter.setRoller(0.0f);
         }
-        
-        //dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
-        /*
-        if (shooter.isFiring()) {
-            //dsLcd.println(5, "SHOOTER: FIRING");
-        } else if (!shooter.getStopSwitch()) {
-            //dsLcd.println(5, "SHOOTER: RELOADING");
-        } else {
-            //dsLcd.println(5, "SHOOTER: LOADED");
-        }*/
     }
 
     /**

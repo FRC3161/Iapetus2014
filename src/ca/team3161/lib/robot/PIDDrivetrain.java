@@ -25,7 +25,6 @@
 
 package ca.team3161.lib.robot;
 
-import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -106,14 +105,10 @@ public class PIDDrivetrain extends Subsystem {
         rightTicksTarget = -ticks;
     }
     
-    public void setLeftTicksTarget(final int ticks) {
-        leftTicksTarget = -ticks;
-    }
-    
-    public void setRightTicksTarget(final int ticks) {
-        rightTicksTarget = -ticks;
-    }
-    
+    /**
+     * Change the task from driving straight to turning
+     * @param t the task type to switch to
+     */
     public void setTask(final DriveTask t) {
         leftEncoder.clear();
         rightEncoder.clear();
@@ -122,6 +117,9 @@ public class PIDDrivetrain extends Subsystem {
         this.t = t;
     }
     
+    /**
+     * Reset the state of the drivetrain to fresh
+     */
     public void reset() {
         leftTicksTarget = 0;
         rightTicksTarget = 0;
@@ -136,6 +134,10 @@ public class PIDDrivetrain extends Subsystem {
         t.run();
     }
     
+    /**
+     * Suspends the calling thread until the target is reached, at which point it will be awoken again
+     * @throws InterruptedException  if the calling thread is interrupted while waiting
+     */
     public void waitForTarget() throws InterruptedException {
         synchronized (notifier) {
             notifier.wait();

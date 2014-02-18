@@ -36,6 +36,11 @@ public final class ResourceTracker {
     
     private static final Hashtable resources = new Hashtable();
     
+    /**
+     * Get the lock associated with a resource
+     * @param resource the resource required
+     * @return a unique associated lock
+     */
     public static Semaphore track(Object resource) {
         synchronized (resources) {
             Semaphore s = (Semaphore) resources.get(resource);

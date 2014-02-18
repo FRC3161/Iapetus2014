@@ -48,12 +48,20 @@ public class PID {
         this.atTarget = false;
     }
     
+    /**
+     * Reset the state of this PID loop
+     */
     public void clear() {
         integralError = 0.0f;
         prevError = 0.0f;
         deltaError = 0.0f;
     }
     
+    /**
+     * Iterate the PID loop
+     * @param target the desired target value. Units depend on the context of this PID
+     * @return the output value to set to eg a SpeedController to reach the specified target
+     */
     public float pid(final float target) {
         float kErr;
         float pOut;
@@ -93,10 +101,16 @@ public class PID {
         return output;
     }
     
+    /**
+     * @return the PIDSrc (PID source sensor) used by this PID loop
+     */
     public PIDSrc getSrc() {
         return this.source;
     }
     
+    /**
+     * @return whether this PID loop has reached the specified target value
+     */
     public boolean atTarget() {
         return atTarget;
     }

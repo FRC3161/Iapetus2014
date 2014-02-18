@@ -27,6 +27,10 @@ package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
+/**
+ * A PID source that converts a rotary potentiometer's voltage output into degrees of
+ * rotation
+ */
 public class PotentiometerPidSrc implements AnglePidSrc {
     
     private final Potentiometer pot;

@@ -48,6 +48,7 @@ public abstract class Subsystem {
     /**
      * @param timeout update period (in milliseconds) between task repeats (if any)
      * @param repeating true iff the task is recurring
+     * @param threadName the name for the background thread of this Subsystem
      */
     protected Subsystem(final long timeout, final boolean repeating, final String threadName) {
         TASK_TIMEOUT = timeout;
@@ -58,7 +59,7 @@ public abstract class Subsystem {
         this.threadName = threadName;
     }
     
-    private final Thread getTaskThread() {
+    private Thread getTaskThread() {
         return new Thread(new Runnable() {
             public void run() {
                 if (repeating && !cancelled) {
@@ -112,14 +113,24 @@ public abstract class Subsystem {
         }
     }
     
+    /**
+     * @return if this Subsystem's background task has been canceled
+     */
     public boolean getCancelled() {
         return cancelled;
     }
     
+    /**
+     * Cancel the background task of this Subsystem (stop it from running, if it
+     * is a recurring task)
+     */
     public void cancel() {
         cancelled = true;
     }
     
+    /**
+     * Start (or restart) this Subsystem's background task
+     */
     public final void start() {
         cancelled = false;
         if (thread != null) {

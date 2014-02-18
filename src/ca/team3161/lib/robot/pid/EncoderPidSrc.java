@@ -27,6 +27,9 @@ package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.Encoder;
 
+/**
+ * A PID source that returns values as encoder ticks
+ */
 public class EncoderPidSrc implements PIDSrc {
 
     private final Encoder enc;

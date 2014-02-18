@@ -26,7 +26,7 @@
 package ca.team3161.lib.robot.pid;
 
 /**
- * A PID controller for inverted pendulum systems
+ * A PID controller for inverted pendulum systems (PID pendulum... get it?)
  */
 public class PIDulum extends PID {
     
@@ -50,6 +50,11 @@ public class PIDulum extends PID {
         this.torqueConstant = torqueConstant;
     }
     
+    /**
+     * Iterate the PID loop
+     * @param target the desired target value. Units depend on the context of this PID
+     * @return the output value to set to eg a SpeedController to reach the specified target
+     */
     public float pid(final float target) {
         float kErr;
         float pOut;

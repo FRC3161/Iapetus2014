@@ -25,6 +25,10 @@
 
 package ca.team3161.lib.robot.pid;
 
+/**
+ * A simple interface for allowing different types of sensors to be used for
+ * PID loops
+ */
 public interface PIDSrc {
     public float getValue();
 }

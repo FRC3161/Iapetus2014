@@ -27,6 +27,9 @@ package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.Gyro;
 
+/**
+ * A PID source that returns values as degrees of rotation
+ */
 public class GyroPidSrc implements AnglePidSrc {
     
     private final Gyro gyro;
