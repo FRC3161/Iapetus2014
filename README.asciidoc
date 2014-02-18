@@ -19,8 +19,35 @@ document will explain the concepts behind the Iapetus libraries.
 
 == Overview
 === IO (ca.team3161.lib.utils.io)
+==== DriverStationLCD
+
 === Controls (ca.team3161.lib.utils.controls)
+==== Gamepad
+==== Joystick
+==== LogitechDualAction
+
 === General utilities (ca.team3161.lib.utils)
+==== Assert
+==== Utils
+
 === PID (ca.team3161.lib.robot.pid)
+==== AnglePidSrc
+==== EncoderPidSrc
+==== GyroPidSrc
+==== PID
+==== PIDSrc
+==== PIDulum
+==== PotentiometerPidSrc
+
 === Robot subsystems (ca.team3161.lib.robot)
+==== Drivetrain
+==== PIDDrivetrain
+==== ResourceTracker
+==== Subsystem
+==== ThreadedAutoRobot
+
 === Team 3161's 2014 robot (ca.team3161.iapetus)
+==== Constants
+==== Iapetus
+==== Shooter
+
