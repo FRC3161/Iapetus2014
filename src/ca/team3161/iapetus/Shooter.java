@@ -62,7 +62,7 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.76f/*minVolt*/, 1.63f/*maxVolt*/, 60, 185);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.70f/*minVolt*/, 1.63f/*maxVolt*/, 60, 185);
     private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
             -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
     
