@@ -32,6 +32,11 @@ public class Constants {
         public static final float DEADZONE = 0.125f;
     }
     
+    public static class Joystick {
+        public static final int PORT = 2;
+        public static final float DEADZONE = 0.125f;
+    }
+    
     public static class Game {
         public static final int AUTONOMOUS_SECONDS = 10;
     }
@@ -45,5 +50,6 @@ public class Constants {
     
     public static class Shooter {
         public static final float WINCH_SPEED = 0.65f;
+        public static final float ROLLER_SPEED = 0.65f;
     }
 }

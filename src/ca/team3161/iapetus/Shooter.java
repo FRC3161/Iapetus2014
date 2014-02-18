@@ -204,6 +204,9 @@ public class Shooter extends Subsystem {
         if (getStopSwitch()) {
             winch.set(0.0);
         }
+        if (getForkAngle() < Constants.Positions.SHOOTING - 10 && !getClaw()) {
+            setRoller(Constants.Shooter.ROLLER_SPEED);
+        }
         if (disabled) {
             return;
         }

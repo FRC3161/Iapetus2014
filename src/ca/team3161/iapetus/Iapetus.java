@@ -39,6 +39,7 @@ import ca.team3161.lib.robot.PIDDrivetrain;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
+import ca.team3161.lib.utils.controls.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
@@ -62,11 +63,12 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-                new PID(new EncoderPidSrc(leftEncoder), 50.0f, -0.005f, 0.0f, 0.0f),
-                new PID(new EncoderPidSrc(rightEncoder), 50.0f, -0.005f, 0.0f, 0.0f),
-                new PID(new GyroPidSrc(gyro), 1.0f, 0.05f, 0.0f, 0.0f));
+                new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
+                new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
+                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
+    private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
 
     private DriverStation.Alliance alliance;
     private final Relay underglowController = new Relay(8); // TODO: replace 8 with the actual Sidecar port
@@ -79,6 +81,7 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void robotInit() {
         gamepad.setInverted(true);
+        joystick.setInverted(true);
         alliance = DriverStation.getInstance().getAlliance();
         
         dsLcd.clear();
@@ -123,21 +126,33 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
-        /*
+        shooter.drawWinch();
+        shooter.setForkAngle(Constants.Positions.START);
+        shooter.closeClaw();
         restartEncoders();
         pidDrive.start();
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setLeftTicksTarget(1500);
-        pidDrive.setRightTicksTarget(1500);
+        pidDrive.setTicksTarget(10000);
         pidDrive.waitForTarget();
-        pidDrive.cancel();
-        */
-        
+        // next two commented lines are to try to ensure we are facing forward
         //pidDrive.setTask(pidDrive.TURN);
-        //pidDrive.turnByDegrees(180);
-        //pidDrive.waitForTarget();
+        //waitFor(750);
+        //pidDrive.turnByDegrees(-(float)gyro.getAngle());
+        shooter.setForkAngle(Constants.Positions.SHOOTING);
+        shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
+        waitFor(750);
+        shooter.openClaw();
+        shooter.setRoller(0.0f);
+        waitFor(1000);
+        shooter.fire();
+        waitFor(750);
+        shooter.closeClaw();
+        shooter.setForkAngle(Constants.Positions.START);
+        pidDrive.setTask(pidDrive.TURN);
+        pidDrive.turnByDegrees(180.0f);
+        pidDrive.waitForTarget();
         
-        
+        /*
         dsLcd.println(5, "AUTO: START");
         SpeedController allDrive = new Drivetrain(new SpeedController[] {leftDrive, rightDrive});
         dsLcd.println(1, "A DRIVE: 0.5 0.5");
@@ -178,6 +193,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "A DRIVE: 0.0 0.0");
         allDrive.set(0.0);
         dsLcd.println(5, "AUTO: FINISHED");
+        */
     }
 
     /**
@@ -187,8 +203,6 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */
     public void autonomousPeriodic() {
-        dsLcd.println(1, "L: " + leftEncoder.get());
-        dsLcd.println(2, "R: " + rightEncoder.get());
     }
 
     /**
@@ -196,6 +210,7 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopInit() {
         pidDrive.cancel();
+        shooter.setForkAngle(Constants.Positions.INTAKE);
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
         dsLcd.println(2, "FORK MODE:");
@@ -212,8 +227,8 @@ public class Iapetus extends ThreadedAutoRobot {
         
     public void teleopThreadsafe() {
         //semi-arcade drive
-        leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
-        rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
+        leftDrive.set(joystick.getY() + joystick.getX());
+        rightDrive.set(joystick.getY() - joystick.getX());
         //dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
         
         //trigger piston mechanism
@@ -236,36 +251,39 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setForkAngle(Constants.Positions.INTAKE);
             //dsLcd.println(2, "FORK MODE: INTAKE");
         }
-        
-        //roller on/off
+        /*
         if (gamepad.getRightTrigger()) {
-            shooter.setRoller(0.5f);
+            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
             //dsLcd.println(3, "ROLLER: ON");
         } else {
             shooter.setRoller(0.0f);
             //dsLcd.println(3, "ROLLER: OFF");
         }
-        
+        */
         //roller up/down
-        if (gamepad.getLeftTrigger()) {
+        if (gamepad.getButton(3)) {
             shooter.closeClaw();
             //dsLcd.println(4, "CLAW: CLOSE");
         }
     
-        if (gamepad.getLeftBumper()) {
+        if (gamepad.getButton(1)) {
             shooter.openClaw();
             //dsLcd.println(4, "CLAW: OPEN");
         }
         
-        //dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
+        if (gamepad.getButton(2)) {
+            shooter.setRoller(0.0f);
+        }
         
+        //dsLcd.println(4, "FORK ANGLE: " + Utils.round(shooter.getForkAngle(), 2));
+        /*
         if (shooter.isFiring()) {
             //dsLcd.println(5, "SHOOTER: FIRING");
         } else if (!shooter.getStopSwitch()) {
             //dsLcd.println(5, "SHOOTER: RELOADING");
         } else {
             //dsLcd.println(5, "SHOOTER: LOADED");
-        }
+        }*/
     }
 
     /**
@@ -280,6 +298,8 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
+        shooter.setForkAngle(Constants.Positions.START);
+        shooter.closeClaw();
     }
 
     /**

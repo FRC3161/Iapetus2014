@@ -25,6 +25,7 @@
 
 package ca.team3161.lib.robot;
 
+import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -46,11 +47,18 @@ public class PIDDrivetrain extends Subsystem {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
-                leftEncoder.clear();
-                rightEncoder.clear();
+            }
+            
+            if (bearingPid.atTarget()) {
                 bearingPid.clear();
-                leftTicksTarget = 0;
-                rightTicksTarget = 0;
+            }
+            
+            if (leftEncoder.atTarget()) {
+                leftEncoder.clear();
+            }
+            
+            if (rightEncoder.atTarget()) {
+                rightEncoder.clear();
             }
         }
     };
@@ -65,7 +73,6 @@ public class PIDDrivetrain extends Subsystem {
                     notifier.notifyAll();
                 }
                 turningPid.clear();
-                turningDegreesTarget = 0.0f;
             }
         }
     };
@@ -78,7 +85,7 @@ public class PIDDrivetrain extends Subsystem {
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.turningPid = turningPid;
-        this.bearingPid = new PID(turningPid.getSrc(), 0.0f, 0.0f, 0.0f, 0.0f);
+        this.bearingPid = new PID(turningPid.getSrc(), 0.0f, 0.3f, 0.0f, 0.0f);
         this.notifier = new Object();
     }
 
@@ -94,16 +101,35 @@ public class PIDDrivetrain extends Subsystem {
         turningDegreesTarget = degrees;
     }
     
+    public void setTicksTarget(final int ticks) {
+        leftTicksTarget = -ticks;
+        rightTicksTarget = -ticks;
+    }
+    
     public void setLeftTicksTarget(final int ticks) {
-        leftTicksTarget = ticks;
+        leftTicksTarget = -ticks;
     }
     
     public void setRightTicksTarget(final int ticks) {
-        rightTicksTarget = ticks;
+        rightTicksTarget = -ticks;
     }
     
     public void setTask(final DriveTask t) {
+        leftEncoder.clear();
+        rightEncoder.clear();
+        turningPid.clear();
+        bearingPid.clear();
         this.t = t;
+    }
+    
+    public void reset() {
+        leftTicksTarget = 0;
+        rightTicksTarget = 0;
+        turningDegreesTarget = 0.0f;
+        leftEncoder.clear();
+        rightEncoder.clear();
+        turningPid.clear();
+        bearingPid.clear();
     }
 
     protected void task() throws Exception {
@@ -116,7 +142,7 @@ public class PIDDrivetrain extends Subsystem {
         }
     }
     
-    private abstract class DriveTask implements Runnable {
+    public abstract class DriveTask implements Runnable {
     }
     
 }
