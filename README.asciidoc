@@ -19,11 +19,14 @@ document will explain the concepts behind the Iapetus libraries.
 
 == Overview
 === IO (ca.team3161.lib.utils.io)
+File and DriverStation IO classes
 ==== DriverStationLCD
 Provides a nice wrapper overtop of FIRST's provided DriverStationLCD
 class.
 
 === Controls (ca.team3161.lib.utils.controls)
+Interfaces and implementations for controllers for human operators to use
+
 ==== Gamepad
 An interface defining a physical gamepad type controller. These are
 expected to have two thumbsticks, a directional pad, and an assortment
@@ -43,8 +46,16 @@ so that very small values returned by the thumbsticks can be ignored, in
 case the gamepad is not properly zeroed, or has damaged springs, etc.
 
 === General utilities (ca.team3161.lib.utils)
+Assertions, PWM value validation, floating point rounding, etc.
+
 ==== Assert
+Assertions. Contains static methods which take a boolean condition and
+throw an exception if these conditions do not hold. Useful for debugging
+and during development.
+
 ==== Utils
+Pretty printing arrays, rounding doubles, and ensuring PWM values fall
+within the range [-1.0, 1.0].
 
 === PID (ca.team3161.lib.robot.pid)
 ==== AnglePidSrc

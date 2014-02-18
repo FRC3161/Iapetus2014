@@ -399,16 +399,18 @@ document will explain the concepts behind the Iapetus libraries.</p>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_io_ca_team3161_lib_utils_io">IO (ca.team3161.lib.utils.io)</h3>
-<div class="sect3">
-<h4 id="_driverstationlcd">DriverStationLCD</h4>
 <div class="paragraph">
-<p>Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
+<p>File and DriverStation IO classes
+==== DriverStationLCD
+Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
 class.</p>
-</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_controls_ca_team3161_lib_utils_controls">Controls (ca.team3161.lib.utils.controls)</h3>
+<div class="paragraph">
+<p>Interfaces and implementations for controllers for human operators to use</p>
+</div>
 <div class="sect3">
 <h4 id="_gamepad">Gamepad</h4>
 <div class="paragraph">
@@ -439,13 +441,23 @@ case the gamepad is not properly zeroed, or has damaged springs, etc.</p>
 </div>
 <div class="sect2">
 <h3 id="_general_utilities_ca_team3161_lib_utils">General utilities (ca.team3161.lib.utils)</h3>
+<div class="paragraph">
+<p>Assertions, PWM value validation, floating point rounding, etc.</p>
+</div>
 <div class="sect3">
 <h4 id="_assert">Assert</h4>
-
+<div class="paragraph">
+<p>Assertions. Contains static methods which take a boolean condition and
+throw an exception if these conditions do not hold. Useful for debugging
+and during development.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_utils">Utils</h4>
-
+<div class="paragraph">
+<p>Pretty printing arrays, rounding doubles, and ensuring PWM values fall
+within the range [-1.0, 1.0].</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -523,7 +535,7 @@ case the gamepad is not properly zeroed, or has damaged springs, etc.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2014-02-17 20:36:19 EST
+Last updated 2014-02-17 20:39:16 EST
 </div>
 </div>
 </body>
