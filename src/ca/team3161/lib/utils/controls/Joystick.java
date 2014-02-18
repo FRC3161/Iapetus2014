@@ -64,10 +64,10 @@ public class Joystick {
     }
     
     public double getY() {
-        if (Math.abs(backingHID.getX()) < DEADZONE) {
+        if (Math.abs(backingHID.getY()) < DEADZONE) {
             return 0.0;
         }
-        return backingHID.getX();
+        return backingHID.getY();
     }
     
     public boolean getButton(final int button) {
