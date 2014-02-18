@@ -365,7 +365,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <h1>Iapetus</h1>
 <span id="author" class="author">Team 3161</span><br>
 <span id="revnumber">version 0.1,</span>
-<span id="revdate">17 February 2014</span>
+<span id="revdate">18 February 2014</span>
 </div>
 <div id="content">
 <div class="sect1">
@@ -395,7 +395,40 @@ document will explain the concepts behind the Iapetus libraries.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_overview">Overview</h2>
+<h2 id="_design">Design</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The design intended by these libraries are a main robot class, subclassed
+from ThreadedAutoRobot, which defines the robot&#8217;s behaviour in autonomous,
+teleoperated, and disabled modes, in a manner very similar to the standard
+IterativeRobot provided by FRC. This base class provides for a robot&#8217;s
+autonomous routine to be performed in a separate thread from the main robot
+thread, allowing for a simpler, more straight-forward action scripting style,
+without having to rely on myriad Timer objects.</p>
+</div>
+<div class="paragraph">
+<p>Major component groups of the robot can be modelled as Subsystem subclasses,
+which allows for components to be monitored and controlled in the background
+by a new thread. This allows physical safety to be ensured, for example, by
+having a background thread monitor a limit switch to ensure that a motor
+controller shuts off, even if the main robot class' logic fails to check for
+this condition.</p>
+</div>
+<div class="paragraph">
+<p>As an example, 3161&#8217;s 2014 main robot code is called Iapetus and is a subclass
+of ThreadedAutoRobot. Our major component groups include our shooting mechanism,
+encapsulated in the class Shooter, which is a subclass of Subsystem. This
+subsystem automatically takes care of ensuring that our winch does not overdraw,
+and that our arm maintains position using PID control. We also have a Subsystem
+that handles PID-corrected driving in autonomous mode, which is in PIDDrivetrain.
+This drivetrain continuously corrects itself to reach PID targets, while the
+autonomous script thread is able to request these targets and go to sleep until
+they are reached.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_class_overview">Class Overview</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_io_ca_team3161_lib_utils_io">IO (ca.team3161.lib.utils.io)</h3>
@@ -619,7 +652,7 @@ in the main teleop or autonomous routines.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2014-02-17 21:03:57 EST
+Last updated 2014-02-18 16:34:37 EST
 </div>
 </div>
 </body>
