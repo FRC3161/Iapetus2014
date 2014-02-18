@@ -40,6 +40,7 @@ import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
 import ca.team3161.lib.utils.controls.Joystick;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Talon;
@@ -66,6 +67,7 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+    private final Compressor compressor = new Compressor(7, 2);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
@@ -147,6 +149,7 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
+        compressor.stop();
     }
 
     /**
@@ -174,6 +177,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(0, "TELEOP MODE");
         dsLcd.println(2, "FORK MODE:");
         restartEncoders();
+        compressor.start();
     }
 
     /**
@@ -241,6 +245,7 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.disableAll();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
+        compressor.stop();
     }
 
     /**
