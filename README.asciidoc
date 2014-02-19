@@ -1,6 +1,6 @@
 = Iapetus
 Team 3161
-v0.1, 18 February 2014
+v0.2, 19 February 2014
 
 == What is this?
 Iapetus is the working name for FRC 3161's robot code for the 2014 season. For
@@ -106,6 +106,12 @@ A PID loop, which uses a PIDSrc and a set of constants to iteratively
 determine output values with which a system can reach and maintain a
 target value.
 
+WARNING: Using PID control rather than operator control places the physical
+safety and wellbeing of your robot and anybody near it in the hands of
+the correctness of your PID system. Please ensure that your constants are
+the correct sign (positive vs negative) and of reasonable order (start very,
+very small) before using a PID-controlled system.
+
 ==== PIDSrc
 An interface with a single method, getValue(). These are used as backing
 sensors for PID objects. Encoders, Gyros, Potentiometers, Accelerometers,
@@ -127,6 +133,14 @@ is monitoring. The angles are arbitrarily defined by the user, and
 all returned angles will simply scale between these end points, so long
 as the arbitrarily defined endpoint angles have correctly measured
 corresponding voltages.
+
+WARNING: Be absolutely sure that you have correctly measured and entered
+the range of motion endpoints of your physical system. Depending on
+the potentiometer you use and the way it is mounted, your "higher angle"
+may actually have a lower voltage. This is not a problem and you should
+not try to correct it by swapping the voltages between endpoints when you
+instantiate a PotentiometerPidSrc, as this would result in your system
+moving in reverse.
 
 === Robot subsystems (ca.team3161.lib.robot)
 Higher level components and control systems defining major pieces of
@@ -176,6 +190,11 @@ without having to rely on using any timers or explicitly writing any
 looping behaviour to iteratively calculate PID targets. Subsystem is
 an abstract class and so a Subsystem's actual concrete behaviour can
 vary greatly between different subclasses.
+
+WARNING: Failure to require() the correct resources in
+defineResources() may lead to concurrency issues and indeterminate
+behaviour. Ensure that all of your Subsystems require() all of their
+resources.
 
 ==== ThreadedAutoRobot
 A subclass of IterativeRobot. Autonomous is run in a new Thread,
