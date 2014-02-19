@@ -67,7 +67,7 @@ public class Joystick {
         if (Math.abs(backingHID.getY()) < DEADZONE) {
             return 0.0;
         }
-        return backingHID.getY();
+        return inversion * backingHID.getY();
     }
     
     public boolean getButton(final int button) {
