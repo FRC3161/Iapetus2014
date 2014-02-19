@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="65cm" height="48cm" viewBox="-85 -338 1291 955" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="528.4" y="452" width="211.2" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="528.4" y="452" width="211.2" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="634" y="482.9">
+      <tspan x="634" y="482.9">Iapetus (ThreadedAutoRobot)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="529" y="397.958" width="106.525" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="529" y="397.958" width="106.525" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="582.262" y="420.858">
+      <tspan x="582.262" y="420.858">Autonomous</tspan>
+      <tspan x="582.262" y="436.858">(new thread)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="634.475" y="398" width="105.05" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="634.475" y="398" width="105.05" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="687" y="428.9">
+      <tspan x="687" y="428.9">Teleoperated</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-13.975" y="397" width="191.95" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-13.975" y="397" width="191.95" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="82" y="427.9">
+      <tspan x="82" y="427.9">PIDDrivetrain (Subsystem)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="562.6" y="60" width="156.8" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="562.6" y="60" width="156.8" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="641" y="90.9">
+      <tspan x="641" y="90.9">Shooter (Subsystem)</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="355.533,338.86 453.829,423.89 355.533,508.92 257.238,423.89 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="355.533,338.86 453.829,423.89 355.533,508.92 257.238,423.89 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="355.533" y="411.79">
+      <tspan x="355.533" y="411.79">Request</tspan>
+      <tspan x="355.533" y="427.79">target (distance,</tspan>
+      <tspan x="355.533" y="443.79">angle)</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="529" y1="424.958" x2="463.564" y2="424.028"/>
+    <polygon style="fill: #000000" points="456.065,423.922 466.135,419.064 463.564,424.028 465.993,429.063 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="456.065,423.922 466.135,419.064 463.564,424.028 465.993,429.063 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="257.238" y1="423.89" x2="187.711" y2="423.986"/>
+    <polygon style="fill: #000000" points="180.211,423.997 190.204,418.983 187.711,423.986 190.218,428.983 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="180.211,423.997 190.204,418.983 187.711,423.986 190.218,428.983 "/>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="640.498,155.055 740.533,234 640.498,312.945 540.464,234 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="640.498,155.055 740.533,234 640.498,312.945 540.464,234 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="640.498" y="221.9">
+      <tspan x="640.498" y="221.9">Request event</tspan>
+      <tspan x="640.498" y="237.9">(fire, fork angle,</tspan>
+      <tspan x="640.498" y="253.9">roller speed)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="608.894,397.958 608.894,355.473 640.498,355.473 640.498,322.681 "/>
+    <polygon style="fill: #000000" points="640.498,315.181 645.498,325.181 640.498,322.681 635.498,325.181 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="640.498,315.181 645.498,325.181 640.498,322.681 635.498,325.181 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="660.738,398 660.738,355.473 640.498,355.473 640.498,322.681 "/>
+    <polygon style="fill: #000000" points="640.498,315.181 645.498,325.181 640.498,322.681 635.498,325.181 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="640.498,315.181 645.498,325.181 640.498,322.681 635.498,325.181 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="640.498" y1="155.055" x2="640.881" y2="123.735"/>
+    <polygon style="fill: #000000" points="640.973,116.236 645.85,126.296 640.881,123.735 635.851,126.174 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="640.973,116.236 645.85,126.296 640.881,123.735 635.851,126.174 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="363.202" y="-190" width="103.6" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="363.202" y="-190" width="103.6" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="415.002" y="-167.1">
+      <tspan x="415.002" y="-167.1">Winch motor</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="838.077" y="-96" width="91.85" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="838.077" y="-96" width="91.85" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="884.002" y="-73.1">
+      <tspan x="884.002" y="-73.1">Fork motor</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="771.552" y="-295" width="100.9" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="771.552" y="-295" width="100.9" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="822.002" y="-272.1">
+      <tspan x="822.002" y="-272.1">Roller motor</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="764.777" y="-233" width="110.45" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="764.777" y="-233" width="110.45" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="820.002" y="-210.1">
+      <tspan x="820.002" y="-210.1">Claw solenoid</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="353.102" y="-295" width="123.8" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="353.102" y="-295" width="123.8" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="415.002" y="-272.1">
+      <tspan x="415.002" y="-272.1">Trigger solenoid</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="414.409,-96.5046 473.429,-50 414.409,-3.49537 355.389,-50 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="414.409,-96.5046 473.429,-50 414.409,-3.49537 355.389,-50 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="414.409" y="-54.1">
+      <tspan x="414.409" y="-54.1">Limit</tspan>
+      <tspan x="414.409" y="-38.1">switch</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="633.317,-162.21 711.998,-86.7826 633.317,-11.3557 554.637,-86.7826 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="633.317,-162.21 711.998,-86.7826 633.317,-11.3557 554.637,-86.7826 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="633.317" y="-90.8826">
+      <tspan x="633.317" y="-90.8826">Potentiometer</tspan>
+      <tspan x="633.317" y="-74.8826">(PIDSrc)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="562.6,60 562.6,-11.463 574.307,-11.463 574.307,-58.1898 "/>
+    <polygon style="fill: #000000" points="574.307,-65.6898 579.307,-55.6898 574.307,-58.1898 569.307,-55.6898 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="574.307,-65.6898 579.307,-55.6898 574.307,-58.1898 569.307,-55.6898 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="549.002" y="-17.1241">
+    <tspan x="549.002" y="-17.1241">Fire</tspan>
+  </text>
+  <g>
+    <polygon style="fill: #ffffff" points="638.007,-330.988 699.775,-274.124 638.007,-217.26 576.239,-274.124 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="638.007,-330.988 699.775,-274.124 638.007,-217.26 576.239,-274.124 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="638.007" y="-278.224">
+      <tspan x="638.007" y="-278.224">Claw</tspan>
+      <tspan x="638.007" y="-262.224">Solenoid</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="574.307,-105.639 574.307,-179.624 607.123,-179.624 607.123,-235.956 "/>
+    <polygon style="fill: #000000" points="607.123,-243.456 612.123,-233.456 607.123,-235.956 602.123,-233.456 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="607.123,-243.456 612.123,-233.456 607.123,-235.956 602.123,-233.456 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="578.002" y="-188.624">
+    <tspan x="578.002" y="-188.624">Fire</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="591.681,-288.34 591.681,-311.124 476.902,-311.124 476.902,-304.736 "/>
+    <polygon style="fill: #000000" points="476.902,-297.236 471.902,-307.236 476.902,-304.736 481.902,-307.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="476.902,-297.236 471.902,-307.236 476.902,-304.736 481.902,-307.236 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="519.002" y="-325.124">
+    <tspan x="519.002" y="-325.124">Fire</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="425.002" y="-220.124">
+    <tspan x="425.002" y="-220.124">Wind</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="415.002" y1="-257" x2="415.002" y2="-199.736"/>
+    <polygon style="fill: #000000" points="415.002,-192.236 410.002,-202.236 415.002,-199.736 420.002,-202.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="415.002,-192.236 410.002,-202.236 415.002,-199.736 420.002,-202.236 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="415.002" y1="-152" x2="414.513" y2="-106.24"/>
+    <polygon style="fill: #000000" points="414.433,-98.7406 409.54,-108.793 414.513,-106.24 419.54,-108.687 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="414.433,-98.7406 409.54,-108.793 414.513,-106.24 419.54,-108.687 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="355.389,-50 334.389,-50 334.389,-171 353.466,-171 "/>
+    <polygon style="fill: #000000" points="360.966,-171 350.966,-166 353.466,-171 350.966,-176 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="360.966,-171 350.966,-166 353.466,-171 350.966,-176 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="719.4,60 719.4,-164.024 668.891,-164.024 668.891,-235.956 "/>
+    <polygon style="fill: #000000" points="668.891,-243.456 673.891,-233.456 668.891,-235.956 663.891,-233.456 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="668.891,-243.456 673.891,-233.456 668.891,-235.956 663.891,-233.456 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="725.525" y="-29.0241">
+    <tspan x="725.525" y="-29.0241">Toggle claw</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="699.775" y1="-274.124" x2="761.819" y2="-275.746"/>
+    <polygon style="fill: #000000" points="769.317,-275.942 759.451,-270.682 761.819,-275.746 759.189,-280.679 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="769.317,-275.942 759.451,-270.682 761.819,-275.746 759.189,-280.679 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="699.775,-274.124 732.276,-274.124 732.276,-214 755.041,-214 "/>
+    <polygon style="fill: #000000" points="762.541,-214 752.541,-209 755.041,-214 752.541,-219 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="762.541,-214 752.541,-209 755.041,-214 752.541,-219 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="738.525" y="-242.024">
+    <tspan x="738.525" y="-242.024">Toggle claw</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="674.525,58.9759 674.525,-4.97499 692.328,-4.97499 692.328,-58.1898 "/>
+    <polygon style="fill: #000000" points="692.328,-65.6898 697.328,-55.6898 692.328,-58.1898 687.328,-55.6898 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="692.328,-65.6898 697.328,-55.6898 692.328,-58.1898 687.328,-55.6898 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="711.998" y1="-86.7826" x2="828.341" y2="-86.5218"/>
+    <polygon style="fill: #000000" points="835.841,-86.505 825.83,-81.5274 828.341,-86.5218 825.852,-91.5274 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="835.841,-86.505 825.83,-81.5274 828.341,-86.5218 825.852,-91.5274 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="884.002,-96 884.002,-141.024 672.658,-141.024 672.658,-134.232 "/>
+    <polygon style="fill: #000000" points="672.658,-126.732 667.658,-136.732 672.658,-134.232 677.658,-136.732 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="672.658,-126.732 667.658,-136.732 672.658,-134.232 677.658,-136.732 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="764.525" y="-157.024">
+    <tspan x="764.525" y="-157.024">Set angle</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="612.125" y="26.4759">
+    <tspan x="612.125" y="26.4759">Set angle</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="747.725" y="-94.9241">
+    <tspan x="747.725" y="-94.9241">Set angle</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="997.877" y="259.42" width="114.1" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="997.877" y="259.42" width="114.1" height="54"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1054.93" y="282.32">
+      <tspan x="1054.93" y="282.32">LED Controller</tspan>
+      <tspan x="1054.93" y="298.32">(Spike)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="555.631,397.958 555.631,345.42 1026.4,345.42 1026.4,323.156 "/>
+    <polygon style="fill: #000000" points="1026.4,315.656 1031.4,325.656 1026.4,323.156 1021.4,325.656 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1026.4,315.656 1031.4,325.656 1026.4,323.156 1021.4,325.656 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="822.927" y="337.42">
+    <tspan x="822.927" y="337.42">Purple</tspan>
+  </text>
+  <g>
+    <polygon style="fill: #ffffff" points="1037.07,352.549 1170.23,411.033 1037.07,469.518 903.907,411.033 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1037.07,352.549 1170.23,411.033 1037.07,469.518 903.907,411.033 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1037.07" y="414.933">
+      <tspan x="1037.07" y="414.933">DriverStation#getAlliance()</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="739.525" y1="411.5" x2="894.171" y2="411.061"/>
+    <polygon style="fill: #000000" points="901.671,411.04 891.685,416.068 894.171,411.061 891.657,406.068 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="901.671,411.04 891.685,416.068 894.171,411.061 891.657,406.068 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1070.36,367.17 1070.36,351.42 1083.45,351.42 1083.45,323.156 "/>
+    <polygon style="fill: #000000" points="1083.45,315.656 1088.45,325.656 1083.45,323.156 1078.45,325.656 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1083.45,315.656 1088.45,325.656 1083.45,323.156 1078.45,325.656 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="970.489,381.791 969.927,381.791 969.927,286.42 988.141,286.42 "/>
+    <polygon style="fill: #000000" points="995.641,286.42 985.641,291.42 988.141,286.42 985.641,281.42 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="995.641,286.42 985.641,291.42 988.141,286.42 985.641,281.42 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1092.93" y="336.42">
+    <tspan x="1092.93" y="336.42">Red</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="938.927" y="318.42">
+    <tspan x="938.927" y="318.42">Blue</tspan>
+  </text>
+  <g>
+    <polygon style="fill: #ffffff" points="-13.6945,252.637 50.7459,310.42 -13.6945,368.203 -78.1349,310.42 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-13.6945,252.637 50.7459,310.42 -13.6945,368.203 -78.1349,310.42 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="-13.6945" y="306.32">
+      <tspan x="-13.6945" y="306.32">Encoders</tspan>
+      <tspan x="-13.6945" y="322.32">(PIDSrc)</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="159.191,259.391 222.85,310.747 159.191,362.102 95.5322,310.747 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="159.191,259.391 222.85,310.747 159.191,362.102 95.5322,310.747 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="159.191" y="306.647">
+      <tspan x="159.191" y="306.647">Gyro</tspan>
+      <tspan x="159.191" y="322.647">(PIDSrc)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="34.0125,397 34.0125,378.602 -13.6945,378.602 -13.6945,377.939 "/>
+    <polygon style="fill: #000000" points="-13.6945,370.439 -8.69449,380.439 -13.6945,377.939 -18.6945,380.439 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-13.6945,370.439 -8.69449,380.439 -13.6945,377.939 -18.6945,380.439 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="129.987,397 129.987,378.21 159.191,378.21 159.191,371.838 "/>
+    <polygon style="fill: #000000" points="159.191,364.338 164.191,374.338 159.191,371.838 154.191,374.338 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="159.191,364.338 164.191,374.338 159.191,371.838 154.191,374.338 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="222.85,310.747 222.85,368.42 177.975,368.42 177.975,387.264 "/>
+    <polygon style="fill: #000000" points="177.975,394.764 172.975,384.764 177.975,387.264 182.975,384.764 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="177.975,394.764 172.975,384.764 177.975,387.264 182.975,384.764 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-78.1349,310.42 -83.475,310.42 -83.475,424 -23.7111,424 "/>
+    <polygon style="fill: #000000" points="-16.2111,424 -26.2111,429 -23.7111,424 -26.2111,419 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-16.2111,424 -26.2111,429 -23.7111,424 -26.2111,419 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="82,397 82,247.42 529,247.42 529,388.222 "/>
+    <polygon style="fill: #000000" points="529,395.722 524,385.722 529,388.222 534,385.722 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="529,395.722 524,385.722 529,388.222 534,385.722 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="232.525" y="234.42">
+    <tspan x="232.525" y="234.42">Notify target reached</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="541.65" y="538.92" width="188.375" height="78"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="541.65" y="538.92" width="188.375" height="78"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="635.838" y="573.82">
+      <tspan x="635.838" y="573.82">Motor controllers</tspan>
+      <tspan x="635.838" y="589.82">(Drivetrain)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="739.525,438.5 760.525,438.5 760.525,577.92 739.761,577.92 "/>
+    <polygon style="fill: #000000" points="732.261,577.92 742.261,572.92 739.761,577.92 742.261,582.92 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="732.261,577.92 742.261,572.92 739.761,577.92 742.261,582.92 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="82,451 82,577.92 531.914,577.92 "/>
+    <polygon style="fill: #000000" points="539.414,577.92 529.414,582.92 531.914,577.92 529.414,572.92 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="539.414,577.92 529.414,582.92 531.914,577.92 529.414,572.92 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1106.2" y="462.92" width="98.65" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1106.2" y="462.92" width="98.65" height="38"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1155.53" y="485.82">
+      <tspan x="1155.53" y="485.82">Compressor</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="739.525,425 912.525,425 912.525,481.92 1096.46,481.92 "/>
+    <polygon style="fill: #000000" points="1103.96,481.92 1093.96,486.92 1096.46,481.92 1093.96,476.92 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1103.96,481.92 1093.96,486.92 1096.46,481.92 1093.96,476.92 "/>
+  </g>
+</svg>

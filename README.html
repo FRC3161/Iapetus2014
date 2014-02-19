@@ -425,6 +425,9 @@ This drivetrain continuously corrects itself to reach PID targets, while the
 autonomous script thread is able to request these targets and go to sleep until
 they are reached.</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><img src="Iapetus.svg" alt="Iapetus Diagram SVG" height="480"></span></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -438,8 +441,9 @@ they are reached.</p>
 <div class="sect3">
 <h4 id="_driverstationlcd">DriverStationLCD</h4>
 <div class="paragraph">
-<p>Provides a nice wrapper overtop of FIRST&#8217;s provided DriverStationLCD
-class.</p>
+<p>Provides a nice, readable implementation of a system to write to the digital
+LCD display on the Driver Station software. Uses the same backend as FIRST&#8217;s
+official DriverStationLCD class.</p>
 </div>
 </div>
 </div>
@@ -454,14 +458,14 @@ class.</p>
 <p>An interface defining a physical gamepad type controller. These are
 expected to have two thumbsticks, a directional pad, and an assortment
 of buttons. They may have additional functionality as well, but this
-is the minimal set. The thumbsticks' Y-axes may also be inverted.</p>
+is the minimal set. The thumbsticks' Y-axes may optionally be inverted.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_joystick">Joystick</h4>
 <div class="paragraph">
 <p>A thin wrapper overtop of FIRST&#8217;s provided Joystick class, offering
-deadzone filtering.</p>
+deadzone filtering and Y-axis inversion.</p>
 </div>
 </div>
 <div class="sect3">
@@ -472,7 +476,8 @@ In addition to the methods required by the Gamepad interface, this
 class offers convenience methods to check the "bumpers" and "triggers"
 (shoulder buttons) on the controller. It also offers deadzone filtering,
 so that very small values returned by the thumbsticks can be ignored, in
-case the gamepad is not properly zeroed, or has damaged springs, etc.</p>
+case the gamepad is not properly zeroed, or has damaged springs, etc.
+The Y-axes of the thumbsticks may optionally be inverted.</p>
 </div>
 </div>
 </div>
@@ -512,13 +517,13 @@ take a look at <a href="http://team3161.ca/teamresources/">Team 3161&#8217;s Res
 <div class="sect3">
 <h4 id="_encoderpidsrc">EncoderPidSrc</h4>
 <div class="paragraph">
-<p>A PIDSrc which uses an encoder as its backing sensor.</p>
+<p>A PIDSrc which uses an Encoder as its backing sensor.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_gyropidsrc">GyroPidSrc</h4>
 <div class="paragraph">
-<p>A PIDSrc which uses a gyro as its backing sensor.</p>
+<p>An AnglePIDSrc which uses a Gyro as its backing sensor.</p>
 </div>
 </div>
 <div class="sect3">
@@ -533,7 +538,9 @@ target value.</p>
 <h4 id="_pidsrc">PIDSrc</h4>
 <div class="paragraph">
 <p>An interface with a single method, getValue(). These are used as backing
-sensors for PID objects.</p>
+sensors for PID objects. Encoders, Gyros, Potentiometers, Accelerometers,
+and Rangefinders are examples of backing sensors that can be usefully
+wrapped by a class implementing PIDSrc.</p>
 </div>
 </div>
 <div class="sect3">
@@ -548,9 +555,14 @@ pendulum.</p>
 <div class="sect3">
 <h4 id="_potentiometerpidsrc">PotentiometerPidSrc</h4>
 <div class="paragraph">
-<p>A PIDSrc that uses two known points (voltage, angle) of a rotary
+<p>An AnglePIDSrc that uses two known points (voltage, angle) of a rotary
 potentiometer and is able to then convert measured voltages into
-corresponding angles.</p>
+corresponding angles. Generally the two known points will be the
+endpoints of the degrees of freedom of whatever system this sensor
+is monitoring. The angles are arbitrarily defined by the user, and
+all returned angles will simply scale between these end points, so long
+as the arbitrarily defined endpoint angles have correctly measured
+corresponding voltages.</p>
 </div>
 </div>
 </div>
@@ -564,7 +576,14 @@ a robot.</p>
 <h4 id="_drivetrain">Drivetrain</h4>
 <div class="paragraph">
 <p>A container object which groups heterogenous SpeedControllers and
-allows them to be managed as a unit.</p>
+allows them to be managed as a unit. For example, a robot might use
+two Victors and two Talons to control its drive motors. Two
+Drivetrain object could then be constructed, each controlling one
+side of the robot, and managing one Victor and one Talon. These
+Drivetrain objcets can then be used in the robot code in the same
+manner as a Talon or Victor would be, but now only one method call
+needs to be performed rather than two for each change required to
+each side of the robot&#8217;s drive controllers.</p>
 </div>
 </div>
 <div class="sect3">
@@ -572,7 +591,11 @@ allows them to be managed as a unit.</p>
 <div class="paragraph">
 <p>A Drivetrain controller that uses PID objects and is able to accurately
 drive straight and turn by degrees. This is a type of Subsystem - the
-PID control is done in a background thread.</p>
+PID control is done in a background thread. In particular, two
+SpeedController instances are controlled, with two Encoders used to
+measure travelled distance, and a Gyro used to ensure a straight course
+while driving. The Gyro can also be used to orient the robot to face
+a specific direction.</p>
 </div>
 </div>
 <div class="sect3">
@@ -580,7 +603,14 @@ PID control is done in a background thread.</p>
 <div class="paragraph">
 <p>A system allowing Subsystems to safely operate concurrently without
 using the same resources (such as SpeedControllers, sensors, relays)
-and being interrupted by other subsystems.</p>
+and being interrupted by other subsystems. Any Subsystem will, before
+running its task, attempt to acquire all resources listed using
+require() in its defineResources() method. If any of these resources
+cannot be acquired in a timely fashion, the task skips this iteration
+and retries again later. If only a subset of its required resources were
+acquired, or if the task successfully runs, then it releases all
+resources until its next run. Resources may fail to be required if
+they are currently held by other running Subsystem tasks.</p>
 </div>
 </div>
 <div class="sect3">
@@ -590,7 +620,13 @@ and being interrupted by other subsystems.</p>
 on robots. Subsystems have a list of required resources and a task
 that they run in the background. This task can be run once or
 periodically. If being run periodically, the wait time between iterations
-is configurable.</p>
+is configurable. A Subsystem might be given references to, or contain
+instances of, PID objects and SpeedControllers (Drivetrain instances,
+perhaps!), and could then be used to implement PID-controlled driving,
+without having to rely on using any timers or explicitly writing any
+looping behaviour to iteratively calculate PID targets. Subsystem is
+an abstract class and so a Subsystem&#8217;s actual concrete behaviour can
+vary greatly between different subclasses.</p>
 </div>
 </div>
 <div class="sect3">
@@ -652,7 +688,7 @@ in the main teleop or autonomous routines.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.1<br>
-Last updated 2014-02-18 16:34:37 EST
+Last updated 2014-02-19 02:20:41 EST
 </div>
 </div>
 </body>
