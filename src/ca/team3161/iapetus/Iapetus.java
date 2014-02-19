@@ -64,9 +64,9 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-                new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+                new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.005f, 0.009f),
+                new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.005f, 0.009f),
+                new PID(new GyroPidSrc(gyro), 2.0f, 0.7f, 0.2f, 0.4f));
     private final Compressor compressor = new Compressor(7, 2);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
@@ -100,6 +100,7 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
+        compressor.start();
     }
     
     public void restartEncoders() {
@@ -123,19 +124,21 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        compressor.stop();
         underglowController.set(PURPLE_BADASS_UNDERGLOW);
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
         restartEncoders();
+        pidDrive.reset();
         pidDrive.start();
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(10000);
+        pidDrive.setTicksTarget(17500);
         pidDrive.waitForTarget();
         // next two commented lines are to try to ensure we are facing forward
-        //pidDrive.setTask(pidDrive.TURN);
-        //waitFor(750);
-        //pidDrive.turnByDegrees(-(float)gyro.getAngle());
+        pidDrive.setTask(pidDrive.TURN);
+        waitFor(750);
+        pidDrive.turnByDegrees(-(float)gyro.getAngle());
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         waitFor(750);
@@ -165,6 +168,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        compressor.start();
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
@@ -172,7 +176,7 @@ public class Iapetus extends ThreadedAutoRobot {
             underglowController.set(RED_UNDERGLOW);
         }
         pidDrive.cancel();
-        shooter.setForkAngle(Constants.Positions.INTAKE);
+        shooter.setForkAngle(Constants.Positions.START);
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
         dsLcd.println(2, "FORK MODE:");
@@ -216,12 +220,12 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         //roller up/down
-        if (gamepad.getButton(3)) {
+        if (gamepad.getButton(1)) {
             shooter.closeClaw();
             //dsLcd.println(4, "CLAW: CLOSE");
         }
     
-        if (gamepad.getButton(1)) {
+        if (gamepad.getButton(2)) {
             shooter.openClaw();
             //dsLcd.println(4, "CLAW: OPEN");
         }
@@ -235,6 +239,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * Called once when the robot enters the disabled state
      */
     public void disabledInit() {
+        compressor.stop();
         pidDrive.cancel();
         leftEncoder.stop();
         rightEncoder.stop();
@@ -246,6 +251,8 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
         compressor.stop();
+        leftEncoder.reset();
+        rightEncoder.reset();
     }
 
     /**
