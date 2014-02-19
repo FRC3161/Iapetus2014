@@ -34,10 +34,13 @@ public class PIDDrivetrain extends Subsystem {
     private final PID leftEncoder, rightEncoder, turningPid /*gyro*/, bearingPid;
     private volatile float turningDegreesTarget = 0.0f;
     private volatile int leftTicksTarget = 0, rightTicksTarget = 0;
-    private DriveTask t;
     private final Object notifier;
+    private int reversedDrive = 1;
     
-    public DriveTask DRIVE = new DriveTask() {
+    public static final int DRIVE_TASK = 0;
+    public static final int TURN_TASK = 1;
+    
+    private final DriveTask DRIVE = new DriveTask() {
         public void run() {
             final double skew = bearingPid.pid(0.0f);
             leftDrive.set(leftEncoder.pid(leftTicksTarget) + skew);
@@ -62,7 +65,7 @@ public class PIDDrivetrain extends Subsystem {
         }
     };
     
-    public DriveTask TURN = new DriveTask() {
+    private final DriveTask TURN = new DriveTask() {
         public void run() {
             final double pidVal = turningPid.pid(turningDegreesTarget);
             leftDrive.set(pidVal);
@@ -76,7 +79,22 @@ public class PIDDrivetrain extends Subsystem {
         }
     };
     
-    public PIDDrivetrain(final SpeedController leftDrive, final SpeedController rightDrive,
+    private DriveTask t = DRIVE;
+    
+    /**
+     * Create a PIDDrivetrain instance. Intended to handle a single "event" in autonomous mode,
+     * then be destroyed. Further events can be scripted by creating new PIDDrivetrains with this
+     * method.
+     * @param bundle a PIDBundle containing references to the controllers and sensors required by
+     * this PIDDrivetrain
+     * @return a new PIDDrivetrain instance
+     */
+    public static PIDDrivetrain build(final PIDBundle bundle) {
+        return new PIDDrivetrain(bundle.leftDrive, bundle.rightDrive,
+                bundle.leftEncoder, bundle.rightEncoder, bundle.turningPid);
+    }
+    
+    private PIDDrivetrain(final SpeedController leftDrive, final SpeedController rightDrive,
             final PID leftEncoder, final PID rightEncoder, final PID turningPid) {
         super(20, true, "PID Drivetrain");
         this.leftDrive = leftDrive;
@@ -96,31 +114,79 @@ public class PIDDrivetrain extends Subsystem {
         require(turningPid);
     }
     
-    public void turnByDegrees(final float degrees) {
+    /**
+     * Used with TURN_TASK to define how far to turn.
+     * The degrees may be either clockwise or anticlockwise - this will depend
+     * on the specific AnglePidSrc (eg Gyro) used to measure the robot's turn
+     * @param degrees how many degrees to turn by
+     * @return this object
+     */
+    public PIDDrivetrain turnByDegrees(final float degrees) {
         turningDegreesTarget = degrees;
+        return this;
     }
     
-    public void setTicksTarget(final int ticks) {
-        leftTicksTarget = -ticks;
-        rightTicksTarget = -ticks;
+    /**
+     * Used with DRIVE_TASK to define how far to drive.
+     * Positive values are intended to drive forward, but this may not
+     * always be the case. "setReversedDrive()" is provided as a convenience
+     * in this situation. setReversedDrive MUST be called before this method
+     * if it is to be used at all.
+     * @param ticks how many encoder ticks to drive
+     * @return this object
+     */
+    public PIDDrivetrain setTicksTarget(final int ticks) {
+        leftTicksTarget = reversedDrive * ticks;
+        rightTicksTarget = reversedDrive * ticks;
+        return this;
+    }
+    
+    /**
+     * Use if your encoders count backward when you drive forward.
+     * This is used in conjunction with setTicksTarget(int ticks) and
+     * setTask(DRIVE_TASK). This method MUST be called before setTicksTarget
+     * if it is to be used at all.
+     * @return this object
+     */
+    public PIDDrivetrain setReversedDrive() {
+        reversedDrive = -1;
+        return this;
     }
     
     /**
      * Change the task from driving straight to turning
      * @param t the task type to switch to
+     * @return PIDDrivetrain this object
      */
-    public void setTask(final DriveTask t) {
+    private PIDDrivetrain setTask(final DriveTask t) {
         leftEncoder.clear();
         rightEncoder.clear();
         turningPid.clear();
         bearingPid.clear();
         this.t = t;
+        return this;
     }
     
     /**
-     * Reset the state of the drivetrain to fresh
+     * Change the task from driving straight to turning
+     * @param t an int representing the task to switch to. See PIDDrivetrain.*_TASK constants. The default is DRIVE_TASK
+     * @return this object
      */
-    public void reset() {
+    public PIDDrivetrain setTask(final int t) {
+        if (t == DRIVE_TASK) {
+            this.setTask(this.DRIVE);
+        } else if (t == TURN_TASK) {
+            this.setTask(this.TURN);
+        } else {
+            this.setTask(this.DRIVE);
+        }
+        return this;
+    }
+    
+    /**
+     * Reset the state of the drivetrain
+     */
+    private void reset() {
         leftTicksTarget = 0;
         rightTicksTarget = 0;
         turningDegreesTarget = 0.0f;
@@ -135,16 +201,34 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     /**
-     * Suspends the calling thread until the target is reached, at which point it will be awoken again
+     * Suspends the calling thread until the target is reached, at which point it will be awoken again.
+     * This Subsystem's background thread will then be canceled immediately after the waiting thread
+     * resumes.
      * @throws InterruptedException  if the calling thread is interrupted while waiting
      */
-    public void waitForTarget() throws InterruptedException {
+    public void await() throws InterruptedException {
+        this.start();
         synchronized (notifier) {
             notifier.wait();
         }
+        this.cancel();
     }
     
     public abstract class DriveTask implements Runnable {
+    }
+    
+    public static class PIDBundle {
+        public final SpeedController leftDrive, rightDrive;
+        public final PID leftEncoder, rightEncoder, turningPid;
+        
+        public PIDBundle(final SpeedController leftDrive, final SpeedController rightDrive,
+                final PID leftEncoder, final PID rightEncoder, final PID turningPid) {
+            this.leftDrive = leftDrive;
+            this.rightDrive = rightDrive;
+            this.leftEncoder = leftEncoder;
+            this.rightEncoder = rightEncoder;
+            this.turningPid = turningPid;
+        }
     }
     
 }

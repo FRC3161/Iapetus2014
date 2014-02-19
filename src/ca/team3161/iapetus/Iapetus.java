@@ -36,6 +36,7 @@ import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.utils.controls.LogitechDualAction;
 import ca.team3161.lib.robot.Drivetrain;
 import ca.team3161.lib.robot.PIDDrivetrain;
+import ca.team3161.lib.robot.PIDDrivetrain.PIDBundle;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
@@ -63,7 +64,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Shooter shooter = new Shooter();
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
-    private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
+    private final PIDBundle pidBundle = new PIDBundle(leftDrive, rightDrive,
                 new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
@@ -123,19 +124,24 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        compressor.stop();
         underglowController.set(PURPLE_BADASS_UNDERGLOW);
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
         restartEncoders();
-        pidDrive.start();
-        pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(10000);
-        pidDrive.waitForTarget();
-        // next two commented lines are to try to ensure we are facing forward
-        //pidDrive.setTask(pidDrive.TURN);
-        //waitFor(750);
-        //pidDrive.turnByDegrees(-(float)gyro.getAngle());
+        
+        PIDDrivetrain.build(pidBundle)
+                .setTask(PIDDrivetrain.DRIVE_TASK)
+                .setReversedDrive()
+                .setTicksTarget(10000)
+                .await();
+        
+        PIDDrivetrain.build(pidBundle)
+                .setTask(PIDDrivetrain.TURN_TASK)
+                .turnByDegrees(-(float)gyro.getAngle())
+                .await();
+        
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         waitFor(750);
@@ -146,10 +152,17 @@ public class Iapetus extends ThreadedAutoRobot {
         waitFor(750);
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
-        pidDrive.setTask(pidDrive.TURN);
-        pidDrive.turnByDegrees(180.0f);
-        pidDrive.waitForTarget();
-        compressor.stop();
+        
+        PIDDrivetrain.build(pidBundle)
+                .setTask(PIDDrivetrain.TURN_TASK)
+                .turnByDegrees(180.0f)
+                .await();
+        
+        PIDDrivetrain.build(pidBundle)
+                .setTask(PIDDrivetrain.DRIVE_TASK)
+                .setReversedDrive()
+                .setTicksTarget(10000)
+                .await();
     }
 
     /**
@@ -171,7 +184,6 @@ public class Iapetus extends ThreadedAutoRobot {
         } else {
             underglowController.set(RED_UNDERGLOW);
         }
-        pidDrive.cancel();
         shooter.setForkAngle(Constants.Positions.INTAKE);
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
@@ -235,7 +247,6 @@ public class Iapetus extends ThreadedAutoRobot {
      * Called once when the robot enters the disabled state
      */
     public void disabledInit() {
-        pidDrive.cancel();
         leftEncoder.stop();
         rightEncoder.stop();
         leftEncoder.reset();
