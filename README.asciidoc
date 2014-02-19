@@ -43,6 +43,8 @@ This drivetrain continuously corrects itself to reach PID targets, while the
 autonomous script thread is able to request these targets and go to sleep until
 they are reached.
 
+image:Iapetus.svg["Iapetus",height=480]
+
 == Class Overview
 === IO (ca.team3161.lib.utils.io)
 File and DriverStation IO classes
