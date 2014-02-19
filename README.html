@@ -364,8 +364,8 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <div id="header">
 <h1>Iapetus</h1>
 <span id="author" class="author">Team 3161</span><br>
-<span id="revnumber">version 0.1,</span>
-<span id="revdate">18 February 2014</span>
+<span id="revnumber">version 0.2,</span>
+<span id="revdate">19 February 2014</span>
 </div>
 <div id="content">
 <div class="sect1">
@@ -533,6 +533,22 @@ take a look at <a href="http://team3161.ca/teamresources/">Team 3161&#8217;s Res
 determine output values with which a system can reach and maintain a
 target value.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Using PID control rather than operator control places the physical
+safety and wellbeing of your robot and anybody near it in the hands of
+the correctness of your PID system. Please ensure that your constants are
+the correct sign (positive vs negative) and of reasonable order (start very,
+very small) before using a PID-controlled system.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_pidsrc">PIDSrc</h4>
@@ -563,6 +579,24 @@ is monitoring. The angles are arbitrarily defined by the user, and
 all returned angles will simply scale between these end points, so long
 as the arbitrarily defined endpoint angles have correctly measured
 corresponding voltages.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Be absolutely sure that you have correctly measured and entered
+the range of motion endpoints of your physical system. Depending on
+the potentiometer you use and the way it is mounted, your "higher angle"
+may actually have a lower voltage. This is not a problem and you should
+not try to correct it by swapping the voltages between endpoints when you
+instantiate a PotentiometerPidSrc, as this would result in your system
+moving in reverse.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -628,6 +662,21 @@ looping behaviour to iteratively calculate PID targets. Subsystem is
 an abstract class and so a Subsystem&#8217;s actual concrete behaviour can
 vary greatly between different subclasses.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Failure to require() the correct resources in
+defineResources() may lead to concurrency issues and indeterminate
+behaviour. Ensure that all of your Subsystems require() all of their
+resources.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_threadedautorobot">ThreadedAutoRobot</h4>
@@ -687,8 +736,8 @@ in the main teleop or autonomous routines.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1<br>
-Last updated 2014-02-19 02:20:41 EST
+Version 0.2<br>
+Last updated 2014-02-19 18:29:28 EST
 </div>
 </div>
 </body>
