@@ -97,10 +97,14 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     public void turnByDegrees(final float degrees) {
+        turningPid.clear();
         turningDegreesTarget = degrees;
     }
     
     public void setTicksTarget(final int ticks) {
+        leftEncoder.clear();
+        rightEncoder.clear();
+        bearingPid.clear();
         leftTicksTarget = -ticks;
         rightTicksTarget = -ticks;
     }
