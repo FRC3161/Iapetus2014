@@ -150,7 +150,47 @@ PID control is done in a background thread. In particular, two
 SpeedController instances are controlled, with two Encoders used to
 measure travelled distance, and a Gyro used to ensure a straight course
 while driving. The Gyro can also be used to orient the robot to face
-a specific direction.
+a specific direction. This follows the Builder pattern - a typical
+usage of this Subsystem would look like this:
+
+ PIDDrivetrain.build(pidBundle)
+                 .setTask(PIDDrivetrain.DRIVE_TASK)
+                 .setReversedDrive()
+                 .setTicksTarget(10000)
+                 .await();
+
+The end result of this is that the sensors and speed controllers
+referenced within pidBundle will be used to create a new PIDDrivetrain,
+with the task of driving the robot forward, accounting for encoders
+which count backward when the robot drives forward, and driving forward
+for a total of 10 000 ticks. The calling thread will be put to sleep
+until this target is reached, at which point the calling thread will
+resume and the PIDDrivetrain's background task (since it is a Subsystem)
+will be automatically cancelled. This means that the PIDDrivetrain is
+no longer useful after await() is called, hence why await() does not
+return its own reference as the other methods do. The calling thread
+is always expected to call await() - the PIDDrivetrain Subsystem task
+does not start otherwise.
+
+WARNING: The background Subsystem task thread guarantees that a
+PIDDrivetrain cannot be interrupted while it is computing and setting
+values, however, these method calls may still be interlaced. This is
+generally avoided by using the await() method call, but can still be
+dangerous if multiple threads are spawning new PIDDrivetrain instances,
+which is HIGHLY DISCOURAGED. Further, subclassing PIDDrivetrain is
+allowed, but subclasses should also be very careful to not loosen
+these thread safety semantics.
+
+===== PIDDrivetrain.PIDBundle
+
+A small "struct" which contains references to two SpeedControllers
+and three PIDs. These are used to build new PIDDrivetrain instances.
+A single PIDBundle may (and probably should, if possible) be reused
+between different PIDDrivetrain instances.
+
+SpeedControllers of any type may be used, including Drivetrain from
+this library. Two of the PIDs are expected to be backed by Encoders
+and the third by an AnglePidSrc, eg a Gyro.
 
 ==== ResourceTracker
 A system allowing Subsystems to safely operate concurrently without
