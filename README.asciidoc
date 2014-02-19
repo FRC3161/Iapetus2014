@@ -50,8 +50,9 @@ image:Iapetus.svg["Iapetus Diagram SVG",height=480]
 File and DriverStation IO classes
 
 ==== DriverStationLCD
-Provides a nice wrapper overtop of FIRST's provided DriverStationLCD
-class.
+Provides a nice, readable implementation of a system to write to the digital
+LCD display on the Driver Station software. Uses the same backend as FIRST's
+official DriverStationLCD class.
 
 === Controls (ca.team3161.lib.utils.controls)
 Interfaces and implementations for controllers for human operators to use
@@ -60,11 +61,11 @@ Interfaces and implementations for controllers for human operators to use
 An interface defining a physical gamepad type controller. These are
 expected to have two thumbsticks, a directional pad, and an assortment
 of buttons. They may have additional functionality as well, but this
-is the minimal set. The thumbsticks' Y-axes may also be inverted.
+is the minimal set. The thumbsticks' Y-axes may optionally be inverted.
 
 ==== Joystick
 A thin wrapper overtop of FIRST's provided Joystick class, offering
-deadzone filtering.
+deadzone filtering and Y-axis inversion.
 
 ==== LogitechDualAction
 A Gamepad implementation modelling the Logitech DualAction USB gamepad.
@@ -94,10 +95,10 @@ take a look at link:http://team3161.ca/teamresources/[Team 3161's Resources] pag
 A PIDSrc which returns values as angles.
 
 ==== EncoderPidSrc
-A PIDSrc which uses an encoder as its backing sensor.
+A PIDSrc which uses an Encoder as its backing sensor.
 
 ==== GyroPidSrc
-A PIDSrc which uses a gyro as its backing sensor.
+An AnglePIDSrc which uses a Gyro as its backing sensor.
 
 ==== PID
 A PID loop, which uses a PIDSrc and a set of constants to iteratively
@@ -106,7 +107,9 @@ target value.
 
 ==== PIDSrc
 An interface with a single method, getValue(). These are used as backing
-sensors for PID objects.
+sensors for PID objects. Encoders, Gyros, Potentiometers, Accelerometers,
+and Rangefinders are examples of backing sensors that can be usefully 
+wrapped by a class implementing PIDSrc.
 
 ==== PIDulum
 A PID loop for the specific application of an inverted pendulum system.
@@ -115,9 +118,14 @@ Forward" term, which is used to compensate for gravity pulling on the
 pendulum.
 
 ==== PotentiometerPidSrc
-A PIDSrc that uses two known points (voltage, angle) of a rotary
+An AnglePIDSrc that uses two known points (voltage, angle) of a rotary
 potentiometer and is able to then convert measured voltages into
-corresponding angles.
+corresponding angles. Generally the two known points will be the
+endpoints of the degrees of freedom of whatever system this sensor
+is monitoring. The angles are arbitrarily defined by the user, and
+all returned angles will simply scale between these end points, so long
+as the arbitrarily defined endpoint angles have correctly measured
+corresponding voltages.
 
 === Robot subsystems (ca.team3161.lib.robot)
 Higher level components and control systems defining major pieces of
@@ -125,24 +133,48 @@ a robot.
 
 ==== Drivetrain
 A container object which groups heterogenous SpeedControllers and
-allows them to be managed as a unit.
+allows them to be managed as a unit. For example, a robot might use
+two Victors and two Talons to control its drive motors. Two
+Drivetrain object could then be constructed, each controlling one
+side of the robot, and managing one Victor and one Talon. These
+Drivetrain objcets can then be used in the robot code in the same
+manner as a Talon or Victor would be, but now only one method call
+needs to be performed rather than two for each change required to
+each side of the robot's drive controllers.
 
 ==== PIDDrivetrain
 A Drivetrain controller that uses PID objects and is able to accurately
 drive straight and turn by degrees. This is a type of Subsystem - the
-PID control is done in a background thread.
+PID control is done in a background thread. In particular, two
+SpeedController instances are controlled, with two Encoders used to
+measure travelled distance, and a Gyro used to ensure a straight course
+while driving. The Gyro can also be used to orient the robot to face
+a specific direction.
 
 ==== ResourceTracker
 A system allowing Subsystems to safely operate concurrently without
 using the same resources (such as SpeedControllers, sensors, relays)
-and being interrupted by other subsystems.
+and being interrupted by other subsystems. Any Subsystem will, before
+running its task, attempt to acquire all resources listed using
+require() in its defineResources() method. If any of these resources
+cannot be acquired in a timely fashion, the task skips this iteration
+and retries again later. If only a subset of its required resources were
+acquired, or if the task successfully runs, then it releases all
+resources until its next run. Resources may fail to be required if
+they are currently held by other running Subsystem tasks.
 
 ==== Subsystem
 Subsystems are objects that model major physical component subsystems
 on robots. Subsystems have a list of required resources and a task
 that they run in the background. This task can be run once or
 periodically. If being run periodically, the wait time between iterations
-is configurable.
+is configurable. A Subsystem might be given references to, or contain
+instances of, PID objects and SpeedControllers (Drivetrain instances,
+perhaps!), and could then be used to implement PID-controlled driving,
+without having to rely on using any timers or explicitly writing any
+looping behaviour to iteratively calculate PID targets. Subsystem is
+an abstract class and so a Subsystem's actual concrete behaviour can
+vary greatly between different subclasses.
 
 ==== ThreadedAutoRobot
 A subclass of IterativeRobot. Autonomous is run in a new Thread,
