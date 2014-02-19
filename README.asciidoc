@@ -74,6 +74,7 @@ class offers convenience methods to check the "bumpers" and "triggers"
 (shoulder buttons) on the controller. It also offers deadzone filtering,
 so that very small values returned by the thumbsticks can be ignored, in
 case the gamepad is not properly zeroed, or has damaged springs, etc.
+The Y-axes of the thumbsticks may optionally be inverted.
 
 === General utilities (ca.team3161.lib.utils)
 Assertions, PWM value validation, floating point rounding, etc.
