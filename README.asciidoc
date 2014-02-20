@@ -167,15 +167,31 @@ SpeedController instances are controlled, with two Encoders used to
 measure travelled distance, and a Gyro used to ensure a straight course
 while driving. The Gyro can also be used to orient the robot to face
 a specific direction. This follows the Builder pattern - a typical
-usage of this Subsystem would look like this:
+usage of this Subsystem could look like this:
 
  PIDDrivetrain.build(pidBundle)
-                 .setTask(PIDDrivetrain.DRIVE_TASK)
-                 .setReversedDrive()
-                 .setTicksTarget(10000)
+                 .drive()
+                 .reversed()
+                 .target(10000)
                  .await();
 
-The end result of this is that the sensors and speed controllers
+Or this:
+
+ PIDDrivetrain.build(pidBundle)
+                 .turn()
+                 .target(180)
+                 .await();
+
+But NOT this:
+
+ PIDDrivetrain.build(pidBundle)
+                 .turn()
+                 .target(180)
+                 .drive()
+                 .target(5000)
+                 .await();
+
+The result of the first example is that the sensors and speed controllers
 referenced within pidBundle will be used to create a new PIDDrivetrain,
 with the task of driving the robot forward, accounting for encoders
 which count backward when the robot drives forward, and driving forward

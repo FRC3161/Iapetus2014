@@ -633,19 +633,43 @@ SpeedController instances are controlled, with two Encoders used to
 measure travelled distance, and a Gyro used to ensure a straight course
 while driving. The Gyro can also be used to orient the robot to face
 a specific direction. This follows the Builder pattern - a typical
-usage of this Subsystem would look like this:</p>
+usage of this Subsystem could look like this:</p>
 </div>
 <div class="literalblock">
 <div class="content">
 <pre>PIDDrivetrain.build(pidBundle)
-                .setTask(PIDDrivetrain.DRIVE_TASK)
-                .setReversedDrive()
-                .setTicksTarget(10000)
+                .drive()
+                .reversed()
+                .target(10000)
                 .await();</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The end result of this is that the sensors and speed controllers
+<p>Or this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>PIDDrivetrain.build(pidBundle)
+                .turn()
+                .target(180)
+                .await();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But NOT this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>PIDDrivetrain.build(pidBundle)
+                .turn()
+                .target(180)
+                .drive()
+                .target(5000)
+                .await();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The result of the first example is that the sensors and speed controllers
 referenced within pidBundle will be used to create a new PIDDrivetrain,
 with the task of driving the robot forward, accounting for encoders
 which count backward when the robot drives forward, and driving forward
@@ -797,7 +821,7 @@ in the main teleop or autonomous routines.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.2<br>
-Last updated 2014-02-19 22:42:04 EST
+Last updated 2014-02-19 23:10:04 EST
 </div>
 </div>
 </body>
