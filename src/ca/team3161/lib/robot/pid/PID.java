@@ -39,7 +39,8 @@ public class PID {
     /**
      * PID constants
      */
-    protected float deadband, kP, kI, kD, integralError, prevError, deltaError;
+    protected final float deadband, kP, kI, kD;
+    protected float integralError, prevError, deltaError;
     
     /**
      * If this PID loop has reached its target
