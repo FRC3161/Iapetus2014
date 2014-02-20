@@ -70,7 +70,7 @@ public abstract class Subsystem {
     /**
      * The name to assign to the background task
      */
-    public final String threadName;
+    protected final String threadName;
     
     /**
      * @param timeout update period (in milliseconds) between task repeats (if any)
