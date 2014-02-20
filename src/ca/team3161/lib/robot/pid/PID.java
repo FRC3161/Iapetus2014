@@ -25,10 +25,25 @@
 
 package ca.team3161.lib.robot.pid;
 
+/**
+ * A PID loop, which uses a PIDSrc and a set of constants to iteratively determine
+ * output values with which a system can reach and maintain a target value.
+ */
 public class PID {
     
+    /**
+     * A PIDSrc sensor
+     */
     protected final PIDSrc source;
+    
+    /**
+     * PID constants
+     */
     protected float deadband, kP, kI, kD, integralError, prevError, deltaError;
+    
+    /**
+     * If this PID loop has reached its target
+     */
     protected boolean atTarget;
     
     /**

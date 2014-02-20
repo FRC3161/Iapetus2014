@@ -37,12 +37,39 @@ import java.util.Vector;
  */
 public abstract class Subsystem {
     
+    /**
+     * A list of resources which this Subsystem requires (see ResourceTracker)
+     */
     protected final Vector resources;
+    
+    /**
+     * The period length between task repeats (milliseconds)
+     */
     protected final long TASK_TIMEOUT;
+    
+    /**
+     * If this task repeats, or runs once only
+     */
     protected final boolean repeating;
+    
+    /**
+     * If this task has been requested for cancellation
+     */
     protected volatile boolean cancelled;
+    
+    /**
+     * If this task has been started
+     */
     protected boolean started;
+    
+    /**
+     * The background task for this Subsystem
+     */
     private Thread thread;
+    
+    /**
+     * The name to assign to the background task
+     */
     public final String threadName;
     
     /**
@@ -140,7 +167,15 @@ public abstract class Subsystem {
         thread.start();
     }
     
+    /**
+     * Use require() to define a set of required resources
+     */
     protected abstract void defineResources();
+    
+    /**
+     * The background task to run
+     * @throws Exception in case the defined task throws any Exceptions
+     */
     protected abstract void task() throws Exception;
     
 }

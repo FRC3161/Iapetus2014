@@ -28,6 +28,9 @@ package ca.team3161.lib.robot;
 import ca.team3161.lib.robot.pid.PID;
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * A Drivetrain controller that uses PID objects and is able to accurately drive straight and turn by degrees.
+ */
 public class PIDDrivetrain extends Subsystem {
     
     private final SpeedController leftDrive, rightDrive;
@@ -106,6 +109,9 @@ public class PIDDrivetrain extends Subsystem {
         this.notifier = new Object();
     }
 
+    /**
+     * Require the SpeedControllers and PID objects
+     */
     protected void defineResources() {
         require(leftDrive);
         require(rightDrive);
@@ -115,11 +121,11 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     /**
-     * Used with TURN_TASK to define how far to turn.
-     * The degrees may be either clockwise or anticlockwise - this will depend
-     * on the specific AnglePidSrc (eg Gyro) used to measure the robot's turn
-     * @param degrees how many degrees to turn by
-     * @return this object
+     * Used with TURN_TASK to define how far to turn
+     * Turn in place.
+     * Positive degrees may be either clockwise or anticlockwise, depending on
+     * the setup of your particular AnglePidSrc
+     * @param degrees how many degrees to turn
      */
     public PIDDrivetrain turnByDegrees(final float degrees) {
         turningDegreesTarget = degrees;
@@ -196,7 +202,10 @@ public class PIDDrivetrain extends Subsystem {
         bearingPid.clear();
     }
 
-    protected void task() throws Exception {
+    /**
+     * Iteratively PID loop.
+     */
+    protected void task() {
         t.run();
     }
     
@@ -204,7 +213,8 @@ public class PIDDrivetrain extends Subsystem {
      * Suspends the calling thread until the target is reached, at which point it will be awoken again.
      * This Subsystem's background thread will then be canceled immediately after the waiting thread
      * resumes.
-     * @throws InterruptedException  if the calling thread is interrupted while waiting
+     * Suspends the calling thread until the target is reached, at which point it will be awoken again
+     * @throws InterruptedException if the calling thread is interrupted while waiting
      */
     public void await() throws InterruptedException {
         this.start();
@@ -214,7 +224,10 @@ public class PIDDrivetrain extends Subsystem {
         this.cancel();
     }
     
-    public abstract class DriveTask implements Runnable {
+    /**
+     * An action this PIDDrivetrain may carry out.
+     */
+    private abstract class DriveTask implements Runnable {
     }
     
     public static class PIDBundle {

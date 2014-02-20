@@ -29,6 +29,12 @@ import ca.team3161.iapetus.Constants;
 import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
+/**
+ * A subclass of IterativeRobot. Autonomous is run in a new Thread, leaving the main robot thread
+ * responsible (generally) solely for handling FMS events, Watchdog, etc. This allows
+ * autonomous scripts to use convenient semantics such as Thread sleeping rather than periodically
+ * checking Timer objects.
+ */
 public abstract class ThreadedAutoRobot extends IterativeRobot {
     
     private static final int MAX_AUTO_PERIOD_LENGTH = Constants.Game.AUTONOMOUS_SECONDS * 1000;
@@ -36,6 +42,9 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
     private final Object modeLock = new Object();
     private Thread autoThread;
     
+    /**
+     * The DriverStation virtual LCD display panel instance
+     */
     protected final DriverStationLCD dsLcd = DriverStationLCD.getInstance();
     
     /** DO NOT override this in subclasses!

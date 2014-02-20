@@ -70,6 +70,7 @@ public class Drivetrain implements SpeedController {
     }
     
     /**
+     * The current speed of this Drivetrain
      * @return the current PWM value of the SpeedController collection (-1.0 to 1.0)
      */
     public double get() {
@@ -80,6 +81,9 @@ public class Drivetrain implements SpeedController {
     }
 
     /**
+     * The speeds of all SpeedControllers within this Drivetrain.
+     * They should all be nearly identical, other than error due to floating point
+     * precision.
      * @return an array enumerating all the current PWM values of the SpeedController collection (-1.0 to 1.0)
      */
     public double[] getAll() {
@@ -106,7 +110,7 @@ public class Drivetrain implements SpeedController {
     }
     
     /**
-     *  Don't use this!
+     * Don't use this!
      * @param pwm the PWM value to assign to each SpeedController in the collection
      * @param syncGroup
      */
@@ -131,6 +135,10 @@ public class Drivetrain implements SpeedController {
         }
     }
     
+    /**
+     * Call pidWrite on each SpeedController in this collection
+     * @param output 
+     */
     public void pidWrite(final double output) {
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {

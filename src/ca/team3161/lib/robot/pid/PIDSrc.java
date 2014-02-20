@@ -30,5 +30,9 @@ package ca.team3161.lib.robot.pid;
  * PID loops
  */
 public interface PIDSrc {
+    /**
+     * The measured value of this PIDSrc
+     * @return the measured value of this PIDSrc
+     */
     public float getValue();
 }
