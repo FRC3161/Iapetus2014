@@ -34,28 +34,24 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class PIDDrivetrain extends Subsystem {
     
     private final SpeedController leftDrive, rightDrive;
-    private final PID leftEncoder, rightEncoder, turningPid /*gyro*/, bearingPid;
-    private volatile float turningDegreesTarget = 0.0f;
-    private volatile int leftTicksTarget = 0, rightTicksTarget = 0;
+    private final PID leftEncoder, rightEncoder, turningPid;
+    private volatile float target;
     private final Object notifier;
-    private int reversedDrive = 1;
-    
-    public static final int DRIVE_TASK = 0;
-    public static final int TURN_TASK = 1;
+    private float reversedDrive;
     
     private final DriveTask DRIVE = new DriveTask() {
         public void run() {
-            final double skew = bearingPid.pid(0.0f);
-            leftDrive.set(leftEncoder.pid(leftTicksTarget) + skew);
-            rightDrive.set(rightEncoder.pid(rightTicksTarget) - skew);
+            final double skew = turningPid.pid(0.0f);
+            leftDrive.set(reversedDrive * leftEncoder.pid((int) target) + skew);
+            rightDrive.set(reversedDrive * rightEncoder.pid((int) target) - skew);
             if (leftEncoder.atTarget() || rightEncoder.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
             }
             
-            if (bearingPid.atTarget()) {
-                bearingPid.clear();
+            if (turningPid.atTarget()) {
+                turningPid.clear();
             }
             
             if (leftEncoder.atTarget()) {
@@ -70,9 +66,9 @@ public class PIDDrivetrain extends Subsystem {
     
     private final DriveTask TURN = new DriveTask() {
         public void run() {
-            final double pidVal = turningPid.pid(turningDegreesTarget);
-            leftDrive.set(pidVal);
-            rightDrive.set(-pidVal);
+            final double pidVal = turningPid.pid(target);
+            leftDrive.set(reversedDrive * pidVal);
+            rightDrive.set(reversedDrive * -pidVal);
             if (turningPid.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
@@ -82,7 +78,7 @@ public class PIDDrivetrain extends Subsystem {
         }
     };
     
-    private DriveTask t = DRIVE;
+    private DriveTask task = DRIVE;
     
     /**
      * Create a PIDDrivetrain instance. Intended to handle a single "event" in autonomous mode,
@@ -105,8 +101,9 @@ public class PIDDrivetrain extends Subsystem {
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.turningPid = turningPid;
-        this.bearingPid = new PID(turningPid.getSrc(), 0.0f, 0.3f, 0.0f, 0.0f);
         this.notifier = new Object();
+        this.target = 0.0f;
+        this.reversedDrive = 1.0f;
     }
 
     /**
@@ -121,92 +118,69 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     /**
-     * Used with TURN_TASK to define how far to turn
+     * Used with turn() to define how far to turn
      * Turn in place.
      * Positive degrees may be either clockwise or anticlockwise, depending on
      * the setup of your particular AnglePidSrc
      * @param degrees how many degrees to turn
+     * @return this object
      */
-    public PIDDrivetrain turnByDegrees(final float degrees) {
-        turningDegreesTarget = degrees;
+    public PIDDrivetrain degrees(final float degrees) {
+        target = degrees;
         return this;
     }
     
     /**
-     * Used with DRIVE_TASK to define how far to drive.
+     * Used with drive() to define how far to drive.
      * Positive values are intended to drive forward, but this may not
-     * always be the case. "setReversedDrive()" is provided as a convenience
-     * in this situation. setReversedDrive MUST be called before this method
+     * always be the case. "reversed()" is provided as a convenience
+     * in this situation. reversed() MUST be called before this method
      * if it is to be used at all.
      * @param ticks how many encoder ticks to drive
      * @return this object
      */
-    public PIDDrivetrain setTicksTarget(final int ticks) {
-        leftTicksTarget = reversedDrive * ticks;
-        rightTicksTarget = reversedDrive * ticks;
+    public PIDDrivetrain ticks(final int ticks) {
+        target = (int) ticks;
         return this;
     }
     
     /**
      * Use if your encoders count backward when you drive forward.
-     * This is used in conjunction with setTicksTarget(int ticks) and
-     * setTask(DRIVE_TASK). This method MUST be called before setTicksTarget
+     * This is used in conjunction with target(float val) and
+     * drive(). This method MUST be called before setTicksTarget
      * if it is to be used at all.
      * @return this object
      */
-    public PIDDrivetrain setReversedDrive() {
-        reversedDrive = -1;
+    public PIDDrivetrain reversed() {
+        reversedDrive = -1.0f;
         return this;
     }
     
     /**
      * Change the task from driving straight to turning
-     * @param t the task type to switch to
+     * @param task the task type to switch to
      * @return PIDDrivetrain this object
      */
-    private PIDDrivetrain setTask(final DriveTask t) {
-        leftEncoder.clear();
-        rightEncoder.clear();
-        turningPid.clear();
-        bearingPid.clear();
-        this.t = t;
+    private PIDDrivetrain setTask(final DriveTask task) {
+        this.task = task;
         return this;
     }
     
-    /**
-     * Change the task from driving straight to turning
-     * @param t an int representing the task to switch to. See PIDDrivetrain.*_TASK constants. The default is DRIVE_TASK
-     * @return this object
-     */
-    public PIDDrivetrain setTask(final int t) {
-        if (t == DRIVE_TASK) {
-            this.setTask(this.DRIVE);
-        } else if (t == TURN_TASK) {
-            this.setTask(this.TURN);
-        } else {
-            this.setTask(this.DRIVE);
-        }
+    public PIDDrivetrain drive() {
+        setTask(this.DRIVE);
         return this;
     }
     
-    /**
-     * Reset the state of the drivetrain
-     */
-    private void reset() {
-        leftTicksTarget = 0;
-        rightTicksTarget = 0;
-        turningDegreesTarget = 0.0f;
-        leftEncoder.clear();
-        rightEncoder.clear();
-        turningPid.clear();
-        bearingPid.clear();
+    public PIDDrivetrain turn() {
+        setTask(this.TURN);
+        return this;
     }
 
     /**
      * Iteratively PID loop.
      */
     protected void task() {
-        t.run();
+        task.run();
     }
     
     /**
@@ -217,6 +191,9 @@ public class PIDDrivetrain extends Subsystem {
      * @throws InterruptedException if the calling thread is interrupted while waiting
      */
     public void await() throws InterruptedException {
+        leftEncoder.clear();
+        rightEncoder.clear();
+        turningPid.clear();
         this.start();
         synchronized (notifier) {
             notifier.wait();
