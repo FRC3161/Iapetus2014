@@ -39,6 +39,7 @@ import ca.team3161.lib.robot.PIDDrivetrain;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
+import ca.team3161.lib.utils.Utils;
 import ca.team3161.lib.utils.controls.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -135,6 +136,7 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.DRIVE);
         pidDrive.setTicksTarget(17500);
         pidDrive.waitForTarget();
+        
         // next two commented lines are to try to ensure we are facing forward
         pidDrive.setTask(pidDrive.TURN);
         waitFor(750);
@@ -142,11 +144,14 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         waitFor(750);
+        
         shooter.openClaw();
         shooter.setRoller(0.0f);
         waitFor(1000);
+        
         shooter.fire();
         waitFor(750);
+        
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
         pidDrive.setTask(pidDrive.TURN);
@@ -196,7 +201,7 @@ public class Iapetus extends ThreadedAutoRobot {
         //semi-arcade drive
         leftDrive.set(joystick.getY() + joystick.getX());
         rightDrive.set(joystick.getY() - joystick.getX());
-        //dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
+        dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
         
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
@@ -206,32 +211,29 @@ public class Iapetus extends ThreadedAutoRobot {
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setForkAngle(Constants.Positions.START);
-            //dsLcd.println(2, "FORK MODE: TRAVEL");
+            dsLcd.println(2, "FORK MODE: TRAVEL");
         }
         
         if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
             shooter.setForkAngle(Constants.Positions.SHOOTING);
-            //dsLcd.println(2, "FORK MODE: SHOOTING");
+            dsLcd.println(2, "FORK MODE: SHOOTING");
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(Constants.Positions.INTAKE);
-            //dsLcd.println(2, "FORK MODE: INTAKE");
+            dsLcd.println(2, "FORK MODE: INTAKE");
         }
         
         //roller up/down
         if (gamepad.getButton(1)) {
             shooter.closeClaw();
-            //dsLcd.println(4, "CLAW: CLOSE");
+            dsLcd.println(4, "CLAW: CLOSE");
         }
     
         if (gamepad.getButton(2)) {
-            shooter.openClaw();
-            //dsLcd.println(4, "CLAW: OPEN");
-        }
-        
-        if (gamepad.getButton(2)) {
             shooter.setRoller(0.0f);
+            shooter.openClaw();
+            dsLcd.println(4, "CLAW: OPEN");
         }
     }
 
