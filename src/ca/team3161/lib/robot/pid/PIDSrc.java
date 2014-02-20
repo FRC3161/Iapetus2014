@@ -35,4 +35,9 @@ public interface PIDSrc {
      * @return the measured value of this PIDSrc
      */
     public float getValue();
+    
+    /**
+     * Clear this PIDSrc
+     */
+    public void clear();
 }

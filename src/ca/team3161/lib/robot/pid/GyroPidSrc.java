@@ -74,4 +74,12 @@ public class GyroPidSrc implements AnglePidSrc {
         return 360.0f;
     }
     
+    /**
+     * Inherited from PIDSrc
+     * Reset the gyro's bearing
+     */
+    public void clear() {
+        gyro.reset();
+    }
+    
 }

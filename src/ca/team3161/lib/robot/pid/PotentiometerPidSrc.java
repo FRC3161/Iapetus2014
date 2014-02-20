@@ -88,4 +88,12 @@ public class PotentiometerPidSrc implements AnglePidSrc {
         return maxAngle;
     }
     
+    /**
+     * Inherited from PIDSrc
+     * Do nothing - potentiometers have no meaningful "reset"
+     */
+    public void clear() {
+        // no-op
+    }
+    
 }

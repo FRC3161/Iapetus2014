@@ -57,4 +57,12 @@ public class EncoderPidSrc implements PIDSrc {
     public float getValue() {
         return enc.get();
     }
+    
+    /**
+     * Inherited from PIDSrc
+     * Clear the Encoder count
+     */
+    public void clear() {
+        enc.reset();
+    }
 }

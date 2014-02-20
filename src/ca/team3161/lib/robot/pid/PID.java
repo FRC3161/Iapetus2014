@@ -71,6 +71,7 @@ public class PID {
         integralError = 0.0f;
         prevError = 0.0f;
         deltaError = 0.0f;
+        source.clear();
     }
     
     /**
