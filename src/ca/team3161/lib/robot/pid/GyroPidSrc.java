@@ -34,22 +34,42 @@ public class GyroPidSrc implements AnglePidSrc {
     
     private final Gyro gyro;
     
+    /**
+     * Create a new GyroPidSrc instance
+     * @param gyro a Gyro object to use as a PIDSrc
+     */
     public GyroPidSrc(final Gyro gyro) {
         this.gyro = gyro;
     }
     
+    /**
+     * Retrieve the original sensor used to create this PIDSrc
+     * @return the Gyro
+     */
     public Gyro getSensor() {
         return gyro;
     }
     
+    /**
+     * Inherited from PIDSrc
+     * @return the measured value of this PIDSrc
+     */
     public float getValue() {
         return (float)gyro.getAngle();
     }
     
+    /**
+     * Inherited from AnglePidSrc
+     * @return the minimum angle of the Gyro (zero degrees)
+     */
     public float getMinAngle() {
         return 0.0f;
     }
     
+    /**
+     * Inherited from AnglePidSrc
+     * @return the maximum angle of the Gyro (three hundred and sixty degrees)
+     */
     public float getMaxAngle() {
         return 360.0f;
     }

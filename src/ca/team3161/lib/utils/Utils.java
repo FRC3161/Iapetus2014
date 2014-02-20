@@ -25,6 +25,10 @@
 
 package ca.team3161.lib.utils;
 
+/**
+ * Pretty printing arrays, rounding doubles, and ensuring PWM values fall within
+ * the range [-1.0, 1.0], etc.
+ */
 public class Utils {
     
     /**

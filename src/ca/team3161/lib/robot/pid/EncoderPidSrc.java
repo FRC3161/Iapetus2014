@@ -34,14 +34,26 @@ public class EncoderPidSrc implements PIDSrc {
 
     private final Encoder enc;
     
+    /**
+     * Create a new EncoderPidSrc instance
+     * @param enc an Encoder object to use as a PIDSrc
+     */
     public EncoderPidSrc(final Encoder enc) {
         this.enc = enc;
     }
     
+    /**
+     * Retrieve the original sensor used to construct this PIDSrc
+     * @return the Encoder
+     */
     public Encoder getSensor() {
         return enc;
     }
     
+    /**
+     * Inherited from PIDSrc
+     * @return the measured value of this PIDSrc
+     */
     public float getValue() {
         return enc.get();
     }
