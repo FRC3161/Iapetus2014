@@ -118,29 +118,17 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     /**
-     * Used with turn() to define how far to turn
-     * Turn in place.
+     * Used with drive() and turn() to define target distances/rotations.
      * Positive degrees may be either clockwise or anticlockwise, depending on
-     * the setup of your particular AnglePidSrc
-     * @param degrees how many degrees to turn
+     * the setup of your particular AnglePidSrc. Positive distance targets
+     * may likewise drive your robot backward. The method reversed() can be
+     * used as a convenience to flip these behaviours.
+     * @param target the target distance in ticks or degrees of rotation,
+     * depending on the task
      * @return this object
      */
-    public PIDDrivetrain degrees(final float degrees) {
-        target = degrees;
-        return this;
-    }
-    
-    /**
-     * Used with drive() to define how far to drive.
-     * Positive values are intended to drive forward, but this may not
-     * always be the case. "reversed()" is provided as a convenience
-     * in this situation. reversed() MUST be called before this method
-     * if it is to be used at all.
-     * @param ticks how many encoder ticks to drive
-     * @return this object
-     */
-    public PIDDrivetrain ticks(final int ticks) {
-        target = (int) ticks;
+    public PIDDrivetrain target(final float target) {
+        this.target = target;
         return this;
     }
     

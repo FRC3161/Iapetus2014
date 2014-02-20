@@ -134,12 +134,12 @@ public class Iapetus extends ThreadedAutoRobot {
         PIDDrivetrain.build(pidBundle)
                 .drive()
                 .reversed()
-                .ticks(10000)
+                .target(10000)
                 .await();
         
         PIDDrivetrain.build(pidBundle)
                 .turn()
-                .degrees(-(float)gyro.getAngle())
+                .target(-(float)gyro.getAngle())
                 .await();
         
         shooter.setForkAngle(Constants.Positions.SHOOTING);
@@ -155,13 +155,13 @@ public class Iapetus extends ThreadedAutoRobot {
         
         PIDDrivetrain.build(pidBundle)
                 .turn()
-                .degrees(180.0f)
+                .target(180.0f)
                 .await();
         
         PIDDrivetrain.build(pidBundle)
                 .drive()
                 .reversed()
-                .ticks(10000)
+                .target(10000)
                 .await();
     }
 
