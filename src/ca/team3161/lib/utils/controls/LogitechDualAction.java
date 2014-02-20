@@ -34,21 +34,47 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class LogitechDualAction implements Gamepad {
     
-    /** Axis mappings */
-    public static final int
-            LEFT_STICK_X = 1,
-            LEFT_STICK_Y = 2,
-            RIGHT_STICK_X = 3,
-            RIGHT_STICK_Y = 4,
-            DPAD_HORIZONTAL = 5,
-            DPAD_VERTICAL = 6;
+    /**
+     * Left thumbstick X-axis
+     */
+    public static final int LEFT_STICK_X = 1;
+    /**
+     * Left thumbstick Y-axis
+     */
+    public static final int LEFT_STICK_Y = 2;
+    /**
+     * Right thumbstick X-axis
+     */
+    public static final int RIGHT_STICK_X = 3;
+    /**
+     * Right thumbstick Y-axis
+     */
+    public static final int RIGHT_STICK_Y = 4;
+    /**
+     * Directional pad horizontal
+     */
+    public static final int DPAD_HORIZONTAL = 5;
+    /**
+     * Directional pad vertical
+     */
+    public static final int DPAD_VERTICAL = 6;
     
-    /** "Trigger" button numbers */
-    public static final int
-            LEFT_BUMPER = 5,
-            RIGHT_BUMPER = 6,
-            LEFT_TRIGGER = 7,
-            RIGHT_TRIGGER = 8;
+    /**
+     * Upper left shoulder button
+     */
+    public static final int LEFT_BUMPER = 5;
+    /**
+     * Upper right shoulder button
+     */
+    public static final int RIGHT_BUMPER = 6;
+    /**
+     * Lower left shoulder button
+     */
+    public static final int LEFT_TRIGGER = 7;
+    /**
+     * Lower right shoulder button
+     */
+    public static final int RIGHT_TRIGGER = 8;
 
     /* The actual FIRST-provided input device that we are implementing a
     * convenience wrapper around.
@@ -91,6 +117,7 @@ public class LogitechDualAction implements Gamepad {
     }
     
     /**
+     * Get the left thumbstick X-axis
      * @return the X-axis value of the left joystick
      */
     public float getLeftX() {
@@ -98,6 +125,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the left thumbstick Y-axis
      * @return the Y-axis value of the left joystick
      */
     public float getLeftY() {
@@ -105,6 +133,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the right thumbstick X-axis
      * @return the X-axis value of the right joystick
      */
     public float getRightX() {
@@ -112,6 +141,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the right thumbstick Y-axis
      * @return the Y-axis value of the right joystick
      */
     public float getRightY() {
@@ -119,6 +149,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the directional pad horizontal
      * @return the horizontal value of the directional pad
      */
     public float getDpadHorizontal() {
@@ -126,6 +157,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the directional pad vertical
      * @return the vertical value of the directional pad
      */
     public float getDpadVertical() {
@@ -141,6 +173,7 @@ public class LogitechDualAction implements Gamepad {
     }
     
     /**
+     * Get the left bumper
      * @return whether the left bumper is currently depressed
      */
     public boolean getLeftBumper() {
@@ -148,6 +181,7 @@ public class LogitechDualAction implements Gamepad {
     }
     
     /**
+     * Get the right bumper
      * @return whether the right bumper is currently depressed
      */
     public boolean getRightBumper() {
@@ -155,6 +189,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the left trigger
      * @return whether the left trigger is currently depressed
      */
     public boolean getLeftTrigger() {
@@ -162,6 +197,7 @@ public class LogitechDualAction implements Gamepad {
     }
         
     /**
+     * Get the right trigger
      * @return whether the right trigger is currently depressed
      */
     public boolean getRightTrigger() {
@@ -181,7 +217,6 @@ public class LogitechDualAction implements Gamepad {
         }
         return this;
     }
-    
 
     /**
      * Check if this gamepad's sticks are inverted

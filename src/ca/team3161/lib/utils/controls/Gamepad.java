@@ -43,31 +43,37 @@ public interface Gamepad {
     public GenericHID getBackingHID();
 
     /**
+     * Get the left thumbstick X-axis
      * @return the X-axis of the left thumbstick
      */
     public float getLeftX();
 
     /**
+     * Get the left thumbstick Y-axis
      * @return the Y-axis of the left thumbstick
      */
     public float getLeftY();
 
     /**
+     * Get the right thumbstick X-axis
      * @return the X-axis of the right thumbstick
      */
     public float getRightX();
 
     /**
+     * Get the right thumbstick Y-axis
      * @return the Y-axis of the right thumbstick
      */
     public float getRightY();
 
     /**
+     * Get the directional pad horizontal
      * @return the left/right value of the directional pad
      */
     public float getDpadHorizontal();
 
     /**
+     * Get the directional pad vertical
      * @return the up/down value of the directional pad
      */
     public float getDpadVertical();
@@ -88,6 +94,7 @@ public interface Gamepad {
     public Gamepad setInverted(boolean inverted);
 
     /**
+     * Check if this Gamepad's thumbstick Y-axes are inverted
      * @return whether the Y-axes of the thumbsticks are inverted
      */
     public boolean getInverted();

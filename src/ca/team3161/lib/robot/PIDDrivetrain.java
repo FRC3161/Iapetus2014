@@ -28,6 +28,9 @@ package ca.team3161.lib.robot;
 import ca.team3161.lib.robot.pid.PID;
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * A Drivetrain controller that uses PID objects and is able to accurately drive straight and turn by degrees.
+ */
 public class PIDDrivetrain extends Subsystem {
     
     private final SpeedController leftDrive, rightDrive;
@@ -37,6 +40,9 @@ public class PIDDrivetrain extends Subsystem {
     private DriveTask t;
     private final Object notifier;
     
+    /**
+     * The task defining the action of driving straight forward (or backward).
+     */
     public DriveTask DRIVE = new DriveTask() {
         public void run() {
             final double skew = bearingPid.pid(0.0f);
@@ -62,6 +68,9 @@ public class PIDDrivetrain extends Subsystem {
         }
     };
     
+    /**
+     * The task defining the action of turning in place.
+     */
     public DriveTask TURN = new DriveTask() {
         public void run() {
             final double pidVal = turningPid.pid(turningDegreesTarget);
@@ -76,6 +85,14 @@ public class PIDDrivetrain extends Subsystem {
         }
     };
     
+    /**
+     * Create a new PIDDrivetrain instance
+     * @param leftDrive the left side drivetrain SpeedController
+     * @param rightDrive the right side drivetrain SpeedController
+     * @param leftEncoder the left side drivetrain Encoder
+     * @param rightEncoder the right side drivetrain Encoder
+     * @param turningPid an AnglePidSrc (eg Gyro) to maintain a straight heading
+     */
     public PIDDrivetrain(final SpeedController leftDrive, final SpeedController rightDrive,
             final PID leftEncoder, final PID rightEncoder, final PID turningPid) {
         super(20, true, "PID Drivetrain");
@@ -88,6 +105,9 @@ public class PIDDrivetrain extends Subsystem {
         this.notifier = new Object();
     }
 
+    /**
+     * Require the SpeedControllers and PID objects
+     */
     protected void defineResources() {
         require(leftDrive);
         require(rightDrive);
@@ -96,10 +116,20 @@ public class PIDDrivetrain extends Subsystem {
         require(turningPid);
     }
     
+    /**
+     * Turn in place.
+     * Positive degrees may be either clockwise or anticlockwise, depending on
+     * the setup of your particular AnglePidSrc
+     * @param degrees how many degrees to turn
+     */
     public void turnByDegrees(final float degrees) {
         turningDegreesTarget = degrees;
     }
     
+    /**
+     * Drive forward a number of encoder ticks.
+     * @param ticks how many ticks to drive
+     */
     public void setTicksTarget(final int ticks) {
         leftTicksTarget = -ticks;
         rightTicksTarget = -ticks;
@@ -130,13 +160,16 @@ public class PIDDrivetrain extends Subsystem {
         bearingPid.clear();
     }
 
-    protected void task() throws Exception {
+    /**
+     * Iteratively PID loop.
+     */
+    protected void task() {
         t.run();
     }
     
     /**
      * Suspends the calling thread until the target is reached, at which point it will be awoken again
-     * @throws InterruptedException  if the calling thread is interrupted while waiting
+     * @throws InterruptedException if the calling thread is interrupted while waiting
      */
     public void waitForTarget() throws InterruptedException {
         synchronized (notifier) {
@@ -144,6 +177,9 @@ public class PIDDrivetrain extends Subsystem {
         }
     }
     
+    /**
+     * An action this PIDDrivetrain may carry out.
+     */
     public abstract class DriveTask implements Runnable {
     }
     

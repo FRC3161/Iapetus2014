@@ -25,9 +25,15 @@
 
 package ca.team3161.lib.utils;
 
+/**
+ * Assertions. Contains static methods which take a boolean condition and throw
+ * an exception if these conditions do not hold. Useful for debugging and during
+ * development.
+ */
 public class Assert {
 
     /**
+     * Assert a condition is true
      * @param condition throw an exception if the given condition does not hold
      */
     public static void assertTrue(boolean condition) {
@@ -37,6 +43,7 @@ public class Assert {
     }
     
     /**
+     * Assert a condition is true
      * @param reason why the condition should hold
      * @param condition throw an exception if the given condition does not hold
      */
@@ -47,6 +54,7 @@ public class Assert {
     }
 
     /**
+     * Assert a condition is false
      * @param condition throw an exception if the given condition holds
      */
     public static void assertFalse(boolean condition) {
@@ -54,6 +62,7 @@ public class Assert {
     }
     
     /**
+     * Assert a condition is false
      * @param reason why the condition should not hold
      * @param condition throw an exception if the given condition holds
      */
@@ -62,6 +71,7 @@ public class Assert {
     }
     
     /**
+     * Assert a reference is not null
      * @param obj throw an exception if this reference is null
      */
     public static void assertNonNull(Object obj) {
@@ -71,6 +81,7 @@ public class Assert {
     }
     
     /**
+     * Assert a reference is not null
      * @param reason why the reference cannot be null
      * @param obj throw an exception if this reference is null
      */

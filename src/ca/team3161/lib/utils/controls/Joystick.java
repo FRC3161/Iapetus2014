@@ -48,6 +48,10 @@ public class Joystick {
         this.DEADZONE = deadzone;
     }
     
+    /**
+     * Invert the Y-Axis of this Joystick
+     * @param inverted if the Y-Axis should be inverted
+     */
     public void setInverted(final boolean inverted) {
         if (inverted) {
             inversion = -1.0f;
@@ -56,6 +60,10 @@ public class Joystick {
         }
     }
     
+    /**
+     * Get the X-axis reading from this Joystick
+     * @return the value
+     */
     public double getX() {
         if (Math.abs(backingHID.getX()) < DEADZONE) {
             return 0.0;
@@ -63,6 +71,10 @@ public class Joystick {
         return backingHID.getX();
     }
     
+    /**
+     * Get the Y-axis reading from this Joystick
+     * @return the value
+     */
     public double getY() {
         if (Math.abs(backingHID.getY()) < DEADZONE) {
             return 0.0;
@@ -70,10 +82,20 @@ public class Joystick {
         return inversion * backingHID.getY();
     }
     
+    /**
+     * Check if a button is pressed
+     * @param button identifier for the button to check
+     * @return the button's pressed state
+     */
     public boolean getButton(final int button) {
         return backingHID.getRawButton(button);
     }
     
+    /**
+     * Get an arbitrary axis reading from this Joystick
+     * @param axis identifier for the axis to check
+     * @return the value
+     */
     public double getRawAxis(final int axis) {
         return backingHID.getRawAxis(axis);
     }
