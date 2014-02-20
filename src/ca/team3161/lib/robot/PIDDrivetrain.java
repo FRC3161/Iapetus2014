@@ -154,11 +154,20 @@ public class PIDDrivetrain extends Subsystem {
         return this;
     }
     
+    /**
+     * Set the action of this PIDDrivetrain instance to driving straight (forward
+     * or backward).
+     * @return this object
+     */
     public PIDDrivetrain drive() {
         setTask(this.DRIVE);
         return this;
     }
     
+    /**
+     * Set the action of this PIDDrivetrain to turning in place.
+     * @return this object
+     */
     public PIDDrivetrain turn() {
         setTask(this.TURN);
         return this;
@@ -195,10 +204,43 @@ public class PIDDrivetrain extends Subsystem {
     private abstract class DriveTask implements Runnable {
     }
     
+    /**
+     * A "struct" containing references needed for a PIDDrivetrain instance
+     */
     public static class PIDBundle {
-        public final SpeedController leftDrive, rightDrive;
-        public final PID leftEncoder, rightEncoder, turningPid;
+        /**
+         * Left side drivetrain SpeedController
+         */
+        public final SpeedController leftDrive;
         
+        /**
+         * Right side drivetrain SpeedController
+         */
+        public final SpeedController rightDrive;
+        
+        /**
+         * Left side drivetrain Encoder PID
+         */
+        public final PID leftEncoder;
+        
+        /**
+         * Right side drivetrain Encoder PID
+         */
+        public final PID rightEncoder;
+        
+        /**
+         * A PID using an AnglePidSrc eg Gyro
+         */
+        public final PID turningPid;
+        
+        /**
+         * Create a new PIDBundle instance
+         * @param leftDrive left side drivetrain SpeedController
+         * @param rightDrive right side drivetrain SpeedController
+         * @param leftEncoder left side drivetrain Encoder PID
+         * @param rightEncoder right side drivetrain Encoder PID
+         * @param turningPid a PID with an AnglePidSrc eg Gyro, used for turning and course correction
+         */
         public PIDBundle(final SpeedController leftDrive, final SpeedController rightDrive,
                 final PID leftEncoder, final PID rightEncoder, final PID turningPid) {
             this.leftDrive = leftDrive;
