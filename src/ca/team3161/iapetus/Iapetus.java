@@ -230,8 +230,16 @@ public class Iapetus extends ThreadedAutoRobot {
             //dsLcd.println(4, "CLAW: OPEN");
         }
         
-        if (gamepad.getButton(2)) {
+        /*if (gamepad.getButton(2)) {
             shooter.setRoller(0.0f);
+        }*/
+        
+        if (gamepad.getLeftBumper()) {
+            shooter.setRoller(-Constants.Shooter.ROLLER_SPEED);
+        }
+        
+        if (gamepad.getLeftTrigger()) {
+            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         }
     }
 
