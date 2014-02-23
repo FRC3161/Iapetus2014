@@ -210,7 +210,7 @@ public class Iapetus extends ThreadedAutoRobot {
             //dsLcd.println(2, "FORK MODE: SHOOTING");
         }
         
-        if (gamepad.getDpadHorizontal() == 1.-0) {
+        if (gamepad.getDpadHorizontal() == 1.0) {
             shooter.setForkAngle(Constants.Positions.LOWGOAL);
         }
         
