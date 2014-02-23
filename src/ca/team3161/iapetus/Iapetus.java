@@ -49,6 +49,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -69,6 +71,7 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
+    private final Vector autoEvents = new Vector();
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
@@ -131,16 +134,18 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         restartEncoders();
         
-        PIDDrivetrain.build(pidBundle)
+        final PIDDrivetrain driveEvent = PIDDrivetrain.build(pidBundle)
                 .drive()
                 .reversed()
-                .target(10000)
-                .await();
+                .target(10000);
+        autoEvents.addElement(driveEvent);
+        driveEvent.await();
         
-        PIDDrivetrain.build(pidBundle)
+        final PIDDrivetrain correctBearingEvent = PIDDrivetrain.build(pidBundle)
                 .turn()
-                .target(-(float)gyro.getAngle())
-                .await();
+                .target(-(float)gyro.getAngle());
+        autoEvents.addElement(correctBearingEvent);
+        correctBearingEvent.await();
         
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
@@ -153,16 +158,18 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
         
-        PIDDrivetrain.build(pidBundle)
+        final PIDDrivetrain turnAroundEvent = PIDDrivetrain.build(pidBundle)
                 .turn()
-                .target(180.0f)
-                .await();
+                .target(180.0f);
+        autoEvents.addElement(turnAroundEvent);
+        turnAroundEvent.await();
         
-        PIDDrivetrain.build(pidBundle)
+        final PIDDrivetrain driveBackEvent = PIDDrivetrain.build(pidBundle)
                 .drive()
                 .reversed()
-                .target(10000)
-                .await();
+                .target(10000);
+        autoEvents.addElement(driveBackEvent);
+        driveBackEvent.await();
     }
 
     /**
@@ -178,6 +185,11 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        final Enumeration e = autoEvents.elements();
+        while (e.hasMoreElements()) {
+            final PIDDrivetrain ev = (PIDDrivetrain) e.nextElement();
+            ev.cancel();
+        }
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
