@@ -243,7 +243,7 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         if (gamepad.getRightTrigger()) {
-            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
+            shooter.setRoller(-Constants.Shooter.ROLLER_SPEED);
         }
         
         if (! (gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
