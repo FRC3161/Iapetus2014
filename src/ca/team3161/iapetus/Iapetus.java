@@ -205,9 +205,13 @@ public class Iapetus extends ThreadedAutoRobot {
             //dsLcd.println(2, "FORK MODE: TRAVEL");
         }
         
-        if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
+        if (gamepad.getDpadHorizontal() == -1.0) {
             shooter.setForkAngle(Constants.Positions.SHOOTING);
             //dsLcd.println(2, "FORK MODE: SHOOTING");
+        }
+        
+        if (gamepad.getDpadHorizontal() == 1.-0) {
+            shooter.setForkAngle(Constants.Positions.LOWGOAL);
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
@@ -216,7 +220,7 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         //roller up/down
-        if (gamepad.getButton(3)) {
+        if (gamepad.getButton(2)) {
             shooter.closeClaw();
             //dsLcd.println(4, "CLAW: CLOSE");
         }
@@ -231,11 +235,15 @@ public class Iapetus extends ThreadedAutoRobot {
         }*/
         
         if (gamepad.getLeftBumper()) {
-            shooter.setRoller(-Constants.Shooter.ROLLER_SPEED);
+            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         }
         
-        if (gamepad.getLeftTrigger()) {
+        if (gamepad.getRightTrigger()) {
             shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
+        }
+        
+        if (! (gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
+            shooter.setRoller(0.0f);
         }
     }
 
