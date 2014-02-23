@@ -214,6 +214,10 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setForkAngle(Constants.Positions.LOWGOAL);
         }
         
+        if (gamepad.getButton(LogitechDualAction.SELECT)) {
+            shooter.setForkAngle(Constants.Positions.TRUSS);
+        }
+        
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(Constants.Positions.INTAKE);
             //dsLcd.println(2, "FORK MODE: INTAKE");
