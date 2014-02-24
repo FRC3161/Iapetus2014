@@ -35,21 +35,26 @@ public class PIDDrivetrain extends Subsystem {
     
     private final SpeedController leftDrive, rightDrive;
     private final PID leftEncoder, rightEncoder, turningPid;
-    private volatile float target;
+    private volatile int distance;
+    private volatile float bearing;
     private final Object notifier;
     private float reversedDrive;
     
     private final DriveTask DRIVE = new DriveTask() {
         public void run() {
-            final double skew = turningPid.pid(0.0f);
-            leftDrive.set(reversedDrive * leftEncoder.pid((int) target) + skew);
-            rightDrive.set(reversedDrive * rightEncoder.pid((int) target) - skew);
+            if (cancelled) {
+                return;
+            }
+            final double skew = turningPid.pid(bearing);
+            leftDrive.set(leftEncoder.pid((int) reversedDrive * distance) + skew);
+            rightDrive.set(rightEncoder.pid((int) reversedDrive * distance) - skew);
             if (leftEncoder.atTarget() || rightEncoder.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
             }
             
+            /*
             if (turningPid.atTarget()) {
                 turningPid.clear();
             }
@@ -61,19 +66,23 @@ public class PIDDrivetrain extends Subsystem {
             if (rightEncoder.atTarget()) {
                 rightEncoder.clear();
             }
+            */
         }
     };
     
     private final DriveTask TURN = new DriveTask() {
         public void run() {
-            final double pidVal = turningPid.pid(target);
+            if (cancelled) {
+                return;
+            }
+            final double pidVal = turningPid.pid(bearing);
             leftDrive.set(reversedDrive * pidVal);
             rightDrive.set(reversedDrive * -pidVal);
             if (turningPid.atTarget()) {
                 synchronized (notifier) {
                     notifier.notifyAll();
                 }
-                turningPid.clear();
+                //turningPid.clear();
             }
         }
     };
@@ -102,7 +111,8 @@ public class PIDDrivetrain extends Subsystem {
         this.rightEncoder = rightEncoder;
         this.turningPid = turningPid;
         this.notifier = new Object();
-        this.target = 0.0f;
+        this.distance = 0;
+        this.bearing = 0.0f;
         this.reversedDrive = 1.0f;
     }
 
@@ -118,17 +128,20 @@ public class PIDDrivetrain extends Subsystem {
     }
     
     /**
-     * Used with drive() and turn() to define target distances/rotations.
-     * Positive degrees may be either clockwise or anticlockwise, depending on
-     * the setup of your particular AnglePidSrc. Positive distance targets
-     * may likewise drive your robot backward. The method reversed() can be
+     * Used with drive() to define target distances.
+     * Positive distance targets may drive your robot backward, depending on
+     * your motors and encoders. The method reversed() can be
      * used as a convenience to flip these behaviours.
-     * @param target the target distance in ticks or degrees of rotation,
-     * depending on the task
+     * @param distance the target distance in 
      * @return this object
      */
-    public PIDDrivetrain target(final float target) {
-        this.target = target;
+    public PIDDrivetrain distance(final int distance) {
+        this.distance = distance;
+        return this;
+    }
+    
+    public PIDDrivetrain bearing(final float bearing) {
+        this.bearing = bearing;
         return this;
     }
     

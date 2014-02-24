@@ -69,7 +69,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final PIDBundle pidBundle = new PIDBundle(leftDrive, rightDrive,
                 new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.1f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
     private final Vector autoEvents = new Vector();
     
@@ -132,18 +132,20 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
+        gyro.reset();
         restartEncoders();
         
         final PIDDrivetrain driveEvent = PIDDrivetrain.build(pidBundle)
                 .drive()
                 .reversed()
-                .target(10000);
+                .bearing(0.0f)
+                .distance(10000);
         autoEvents.addElement(driveEvent);
         driveEvent.await();
         
         final PIDDrivetrain correctBearingEvent = PIDDrivetrain.build(pidBundle)
                 .turn()
-                .target(-(float)gyro.getAngle());
+                .bearing(-(float)gyro.getAngle());
         autoEvents.addElement(correctBearingEvent);
         correctBearingEvent.await();
         
@@ -160,16 +162,9 @@ public class Iapetus extends ThreadedAutoRobot {
         
         final PIDDrivetrain turnAroundEvent = PIDDrivetrain.build(pidBundle)
                 .turn()
-                .target(180.0f);
+                .bearing(180.0f);
         autoEvents.addElement(turnAroundEvent);
         turnAroundEvent.await();
-        
-        final PIDDrivetrain driveBackEvent = PIDDrivetrain.build(pidBundle)
-                .drive()
-                .reversed()
-                .target(10000);
-        autoEvents.addElement(driveBackEvent);
-        driveBackEvent.await();
     }
 
     /**
@@ -179,6 +174,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */
     public void autonomousPeriodic() {
+        dsLcd.println(3, "GYRO: " + gyro.getAngle());
     }
 
     /**
@@ -190,13 +186,14 @@ public class Iapetus extends ThreadedAutoRobot {
             final PIDDrivetrain ev = (PIDDrivetrain) e.nextElement();
             ev.cancel();
         }
+        autoEvents.removeAllElements();
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
         } else {
             underglowController.set(RED_UNDERGLOW);
         }
-        shooter.setForkAngle(Constants.Positions.INTAKE);
+        shooter.setForkAngle(Constants.Positions.START);
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
         dsLcd.println(2, "FORK MODE:");

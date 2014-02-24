@@ -153,6 +153,7 @@ public abstract class Subsystem {
      */
     public void cancel() {
         cancelled = true;
+        thread.interrupt();
     }
     
     /**
