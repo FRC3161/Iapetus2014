@@ -172,7 +172,7 @@ public class Iapetus extends ThreadedAutoRobot {
             underglowController.set(RED_UNDERGLOW);
         }
         pidDrive.cancel();
-        shooter.setForkAngle(Constants.Positions.INTAKE);
+        shooter.setForkAngle(Constants.Positions.START);
         dsLcd.clear();
         dsLcd.println(0, "TELEOP MODE");
         dsLcd.println(2, "FORK MODE:");
@@ -282,8 +282,8 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void testPeriodic() {
         //semi-arcade drive
-        leftDrive.set(gamepad.getLeftY() + gamepad.getLeftX());
-        rightDrive.set(gamepad.getLeftY() - gamepad.getLeftX());
+        leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
+        rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
         //dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
         
         //trigger piston mechanism
