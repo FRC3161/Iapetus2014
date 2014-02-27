@@ -69,7 +69,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final PIDBundle pidBundle = new PIDBundle(leftDrive, rightDrive,
                 new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
                 new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.1f, 0.6f));
+                new PID(new GyroPidSrc(gyro), 3.0f, 0.9f, 0.05f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
     private final Vector autoEvents = new Vector();
     
