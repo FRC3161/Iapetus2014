@@ -75,6 +75,16 @@ public class LogitechDualAction implements Gamepad {
      * Lower right shoulder button
      */
     public static final int RIGHT_TRIGGER = 8;
+    
+    /**
+     * Left function button
+     */
+    public static final int SELECT = 9;
+    
+    /**
+     * Right function button
+     */
+    public static final int START = 10;
 
     /* The actual FIRST-provided input device that we are implementing a
     * convenience wrapper around.
