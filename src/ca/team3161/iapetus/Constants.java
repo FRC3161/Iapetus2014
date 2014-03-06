@@ -43,13 +43,15 @@ public class Constants {
     
     public static class Positions {
         /* Angles. 0 is straight down, 90 is straight forward, 180 straight up... */
-        public static final int INTAKE = 60;
-        public static final int SHOOTING = 143;
+        public static final int INTAKE = 63;
+        public static final int LOWGOAL = 80;
+        public static final int TRUSS = 160;
+        public static final int SHOOTING = 145;
         public static final int START = 180;
     }
     
     public static class Shooter {
         public static final float WINCH_SPEED = 0.65f;
-        public static final float ROLLER_SPEED = 0.65f;
+        public static final float ROLLER_SPEED = 1f;
     }
 }
