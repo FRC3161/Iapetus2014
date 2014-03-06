@@ -203,6 +203,8 @@ public class Iapetus extends ThreadedAutoRobot {
         rightDrive.set(joystick.getY() - joystick.getX());
         dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
         
+        //dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
+        
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
             shooter.fire();
@@ -211,29 +213,36 @@ public class Iapetus extends ThreadedAutoRobot {
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setForkAngle(Constants.Positions.START);
-            dsLcd.println(2, "FORK MODE: TRAVEL");
+            //dsLcd.println(2, "FORK MODE: TRAVEL");
         }
         
-        if (gamepad.getDpadHorizontal() == 1.0 || gamepad.getDpadHorizontal() == -1.0) {
+        if (gamepad.getDpadHorizontal() == -1.0) {
             shooter.setForkAngle(Constants.Positions.SHOOTING);
-            dsLcd.println(2, "FORK MODE: SHOOTING");
+            //dsLcd.println(2, "FORK MODE: SHOOTING");
+        }
+        
+        if (gamepad.getDpadHorizontal() == 1.0) {
+            shooter.setForkAngle(Constants.Positions.LOWGOAL);
+        }
+        
+        if (gamepad.getButton(LogitechDualAction.SELECT)) {
+            shooter.setForkAngle(Constants.Positions.TRUSS);
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(Constants.Positions.INTAKE);
-            dsLcd.println(2, "FORK MODE: INTAKE");
+            //dsLcd.println(2, "FORK MODE: INTAKE");
         }
         
         //roller up/down
-        if (gamepad.getButton(1)) {
+        if (gamepad.getButton(2)) {
             shooter.closeClaw();
-            dsLcd.println(4, "CLAW: CLOSE");
+            //dsLcd.println(4, "CLAW: CLOSE");
         }
     
-        if (gamepad.getButton(2)) {
-            shooter.setRoller(0.0f);
+        if (gamepad.getButton(1)) {
             shooter.openClaw();
-            dsLcd.println(4, "CLAW: OPEN");
+            //dsLcd.println(4, "CLAW: OPEN");
         }
         
         if (gamepad.getLeftBumper()) {
