@@ -101,7 +101,9 @@ public class Shooter extends Subsystem {
     
     public boolean forkInfiringPosition() {
         return (getForkAngle() < Constants.Positions.SHOOTING + 5
-                && getForkAngle() > Constants.Positions.SHOOTING - 5);
+                && getForkAngle() > Constants.Positions.SHOOTING - 5)
+                || (getForkAngle() < Constants.Positions.TRUSS + 5
+                && getForkAngle() > Constants.Positions.TRUSS - 5);
     }
     
     public void fire() {
