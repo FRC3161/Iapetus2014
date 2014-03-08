@@ -62,7 +62,7 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon (9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.70f/*minVolt*/, 1.63f/*maxVolt*/, 60, 185);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.85f/*minVolt*/, 2.79f/*maxVolt*/, 60, 185);
     private final PIDulum pidulum = new PIDulum(pidPot, 1.5f,
             -0.03f/*kP*/, 0.0f/*kI*/, 0.075f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
     
@@ -192,6 +192,10 @@ public class Shooter extends Subsystem {
         return pidPot.getValue();
     }
     
+    public double getRawPotValue() {
+        return forkPot.get();
+    }
+    
     public float getForkTargetAngle() {
         return forkAngle;
     }
@@ -204,9 +208,9 @@ public class Shooter extends Subsystem {
         if (getStopSwitch()) {
             winch.set(0.0);
         }
-        if (getForkAngle() < Constants.Positions.SHOOTING - 10 && !getClaw()) {
+        /*if (getForkAngle() < Constants.Positions.SHOOTING - 10 && !getClaw()) {
             setRoller(Constants.Shooter.ROLLER_SPEED);
-        }
+        }*/
         if (disabled) {
             return;
         }
