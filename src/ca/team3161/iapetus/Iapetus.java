@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -65,9 +66,9 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-                new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.005f, 0.009f),
-                new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.005f, 0.009f),
-                new PID(new GyroPidSrc(gyro), 2.0f, 0.7f, 0.2f, 0.4f));
+                new PID(new EncoderPidSrc(leftEncoder), 350.0f, -0.008f, /*-0.0075f*/0.0f, 0.018f),
+                new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, /*-0.0075f*/0.0f, 0.018f),
+                new PID(new GyroPidSrc(gyro), 4.0f, 0.7f, 0.13f, 0.45f));
     private final Compressor compressor = new Compressor(7, 2);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
@@ -133,30 +134,87 @@ public class Iapetus extends ThreadedAutoRobot {
         restartEncoders();
         pidDrive.reset();
         pidDrive.start();
-        pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(17500);
+        
+        /*
+        FOR WHEN 1114 or someone needs 2ball
+        */
+        waitFor(8000);
+        pidDrive.setTicksTarget(10000);
+        pidDrive.waitForTarget();
+        
+        /* NORMAL AUTO ROUTINE */
+        
+        /*pidDrive.setTask(pidDrive.DRIVE);
+        pidDrive.setTicksTarget(10000);
         pidDrive.waitForTarget();
         
         // next two commented lines are to try to ensure we are facing forward
         pidDrive.setTask(pidDrive.TURN);
-        waitFor(750);
+        waitFor(1000);
         pidDrive.turnByDegrees(-(float)gyro.getAngle());
+        
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
-        waitFor(750);
+        waitFor(1000);
         
         shooter.openClaw();
         shooter.setRoller(0.0f);
-        waitFor(1000);
+        waitFor(1500);
         
         shooter.fire();
         waitFor(750);
+        */
+        
+        /* AUTO WITHOUT EXTRA THREADS */
+        /*
+        PID leftDrivePid = new PID(new EncoderPidSrc(leftEncoder), 350.0f, -0.008f, 0.0f, 0.018f);
+        PID rightDrivePid = new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, 0.0f, 0.018f);
+        PID gyroPid = new PID(new GyroPidSrc(gyro), 4.0f, 0.7f, 0.13f, 0.45f);
+        
+        do {
+            leftDrive.set(leftDrivePid.pid(12500) + gyroPid.pid(0.0f));
+            rightDrive.set(rightDrivePid.pid(12500) - gyroPid.pid(0.0f));
+            waitFor(50);
+        } while (!leftDrivePid.atTarget() && !rightDrivePid.atTarget());
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
+        
+        waitFor(750);
+        
+        do {
+            leftDrive.set(gyroPid.pid(0.0f));
+            rightDrive.set(gyroPid.pid(0.0f));
+            waitFor(50);
+        } while (!gyroPid.atTarget());
+        gyroPid.clear();
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
+        
+        shooter.openClaw();
+        waitFor(1500);
+        shooter.fire();
+        waitFor(500);
+        
+        do {
+            leftDrive.set(gyroPid.pid(180.0f));
+            rightDrive.set(gyroPid.pid(180.0f));
+            waitFor(50);
+        } while (!gyroPid.atTarget());
+        gyroPid.clear();
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
         
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
+        */
+        
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
+        
         compressor.stop();
     }
 
@@ -285,6 +343,7 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
+        dsLcd.println(5, "POT: " + shooter.getRawPotValue());
     }
 
     /**
