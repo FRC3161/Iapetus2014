@@ -178,5 +178,5 @@ public abstract class Subsystem {
      * @throws Exception in case the defined task throws any Exceptions
      */
     protected abstract void task() throws Exception;
-    
+
 }

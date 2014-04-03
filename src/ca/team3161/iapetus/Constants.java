@@ -52,6 +52,6 @@ public class Constants {
     
     public static class Shooter {
         public static final float WINCH_SPEED = 0.65f;
-        public static final float ROLLER_SPEED = 0.65f;
+        public static final float ROLLER_SPEED = 1f;
     }
 }
