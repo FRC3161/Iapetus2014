@@ -129,7 +129,17 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         restartEncoders();
         pidDrive.start();
-        pidDrive.setTask(pidDrive.DRIVE);
+        
+        /*
+        FOR WHEN 1114 or someone needs 2ball
+        */
+        waitFor(8000);
+        pidDrive.setTicksTarget(10000);
+        pidDrive.waitForTarget();
+        
+        /* NORMAL AUTO ROUTINE */
+        
+        /*pidDrive.setTask(pidDrive.DRIVE);
         pidDrive.setTicksTarget(10000);
         pidDrive.waitForTarget();
         // next two commented lines are to try to ensure we are facing forward
@@ -144,6 +154,50 @@ public class Iapetus extends ThreadedAutoRobot {
         waitFor(1000);
         shooter.fire();
         waitFor(750);
+        */
+        
+        /* AUTO WITHOUT EXTRA THREADS */
+        /*
+        PID leftDrivePid = new PID(new EncoderPidSrc(leftEncoder), 350.0f, -0.008f, 0.0f, 0.018f);
+        PID rightDrivePid = new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, 0.0f, 0.018f);
+        PID gyroPid = new PID(new GyroPidSrc(gyro), 4.0f, 0.7f, 0.13f, 0.45f);
+        
+        do {
+            leftDrive.set(leftDrivePid.pid(12500) + gyroPid.pid(0.0f));
+            rightDrive.set(rightDrivePid.pid(12500) - gyroPid.pid(0.0f));
+            waitFor(50);
+        } while (!leftDrivePid.atTarget() && !rightDrivePid.atTarget());
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
+        
+        waitFor(750);
+        
+        do {
+            leftDrive.set(gyroPid.pid(0.0f));
+            rightDrive.set(gyroPid.pid(0.0f));
+            waitFor(50);
+        } while (!gyroPid.atTarget());
+        gyroPid.clear();
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
+        
+        shooter.openClaw();
+        waitFor(1500);
+        shooter.fire();
+        waitFor(500);
+        
+        do {
+            leftDrive.set(gyroPid.pid(180.0f));
+            rightDrive.set(gyroPid.pid(180.0f));
+            waitFor(50);
+        } while (!gyroPid.atTarget());
+        gyroPid.clear();
+        leftDrivePid.clear();
+        rightDrivePid.clear();
+        restartEncoders();
+        
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
         pidDrive.setTask(pidDrive.TURN);
@@ -158,6 +212,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * Solenoid, etc. fields in here - these are reserved for use ONLY
      * within autonomousThreaded()!
      */
+    }
+    
     public void autonomousPeriodic() {
     }
 
