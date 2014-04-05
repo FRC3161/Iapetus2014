@@ -100,7 +100,7 @@ public abstract class Subsystem {
                             releaseResources();
                         }
                     }
-                } else {
+                } else if (!repeating) {
                     try {
                         acquireResources();
                         task();
