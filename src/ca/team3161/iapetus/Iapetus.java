@@ -80,7 +80,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Relay underglowController = new Relay(1);
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kForward;
     private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
-    private static final Relay.Value PURPLE_BADASS_UNDERGLOW = Relay.Value.kOn;
+    private static final Relay.Value PURPLE_UNDERGLOW = Relay.Value.kOn;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -128,12 +128,13 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void autonomousThreaded() throws Exception {
         compressor.stop();
-        underglowController.set(PURPLE_BADASS_UNDERGLOW);
+        underglowController.set(PURPLE_UNDERGLOW);
+        gyro.reset();
+        restartEncoders();
+        
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
-        gyro.reset();
-        restartEncoders();
         
         final PIDDrivetrain driveEvent = PIDDrivetrain.build(pidBundle)
                 .drive()
@@ -181,12 +182,14 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        // Stop any long-running auto tasks!
         final Enumeration e = autoEvents.elements();
         while (e.hasMoreElements()) {
             final PIDDrivetrain ev = (PIDDrivetrain) e.nextElement();
             ev.cancel();
         }
         autoEvents.removeAllElements();
+        
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
