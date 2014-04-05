@@ -78,7 +78,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Relay underglowController = new Relay(1);
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kForward;
     private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
-    private static final Relay.Value PURPLE_BADASS_UNDERGLOW = Relay.Value.kOn;
+    private static final Relay.Value PURPLE_UNDERGLOW = Relay.Value.kOn;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -126,8 +126,9 @@ public class Iapetus extends ThreadedAutoRobot {
      * @throws Exception 
      */
     public void autonomousThreaded() throws Exception {
+        underglowController.set(PURPLE_UNDERGLOW);
         compressor.stop();
-        underglowController.set(PURPLE_BADASS_UNDERGLOW);
+        
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
@@ -135,24 +136,18 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.reset();
         pidDrive.start();
         
-        /*
-        FOR WHEN 1114 or someone needs 2ball
-        */
-        waitFor(8000);
-        pidDrive.setTicksTarget(10000);
-        pidDrive.waitForTarget();
-        
         /* NORMAL AUTO ROUTINE */
-        
-        /*pidDrive.setTask(pidDrive.DRIVE);
+        // drive closer to goal
+        pidDrive.setTask(pidDrive.DRIVE);
         pidDrive.setTicksTarget(10000);
         pidDrive.waitForTarget();
         
-        // next two commented lines are to try to ensure we are facing forward
+        // try to ensure we are facing forward
         pidDrive.setTask(pidDrive.TURN);
-        waitFor(1000);
+        waitFor(750);
         pidDrive.turnByDegrees(-(float)gyro.getAngle());
         
+        // fire
         shooter.setForkAngle(Constants.Positions.SHOOTING);
         shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
         waitFor(1000);
@@ -163,7 +158,13 @@ public class Iapetus extends ThreadedAutoRobot {
         
         shooter.fire();
         waitFor(750);
-        */
+        
+        // reset and turn around
+        shooter.closeClaw();
+        shooter.setForkAngle(Constants.Positions.START);
+        pidDrive.setTask(pidDrive.TURN);
+        pidDrive.turnByDegrees(180.0f);
+        pidDrive.waitForTarget();
         
         /* AUTO WITHOUT EXTRA THREADS */
         /*
@@ -210,12 +211,6 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.setForkAngle(Constants.Positions.START);
         */
-        
-        pidDrive.setTask(pidDrive.TURN);
-        pidDrive.turnByDegrees(180.0f);
-        pidDrive.waitForTarget();
-        
-        compressor.stop();
     }
 
     /**
@@ -223,7 +218,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * during the autonomous period. DO NOT use any Drivetrain, Gamepad,
      * Solenoid, etc. fields in here - these are reserved for use ONLY
      * within autonomousThreaded()!
-     */
+     */    
     public void autonomousPeriodic() {
     }
 
