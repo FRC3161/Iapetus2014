@@ -89,7 +89,10 @@ public abstract class Subsystem {
     private Thread getTaskThread() {
         return new Thread(new Runnable() {
             public void run() {
-                if (repeating && !cancelled) {
+                if (cancelled) {
+                    return;
+                }
+                if (repeating) {
                     while (!cancelled) {
                         try {
                             acquireResources();
