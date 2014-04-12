@@ -28,7 +28,6 @@ package ca.team3161.iapetus;
 public class Constants {
     
     public static class Auto {
-        public static final String ROBOT_IP = "10.31.61.2";
         public static final int VISION_PORT = 1180;
     }
 
