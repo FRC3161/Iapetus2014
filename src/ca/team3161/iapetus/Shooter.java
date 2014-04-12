@@ -194,12 +194,12 @@ public class Shooter extends Subsystem {
         return pidPot.getValue();
     }
     
-    public double getRawPotValue() {
-        return forkPot.get();
-    }
-    
     public float getForkTargetAngle() {
         return forkAngle;
+    }
+    
+    public double getPotVoltage() {
+        return pidPot.getSensor().get();
     }
     
     public boolean isFiring() {
