@@ -40,8 +40,6 @@ import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
 import ca.team3161.lib.utils.controls.Joystick;
-import ca.team3161.lib.utils.io.DriverStationLCD;
-import com.team254.lib.CheesyVisionServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -50,6 +48,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
+import com.team254.lib.CheesyVisionServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
