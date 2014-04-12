@@ -69,7 +69,7 @@ import socket
 import time
 
 # CHANGE THIS TO BE YOUR TEAM'S cRIO IP ADDRESS!
-HOST, PORT = "10.2.54.2", 1180
+HOST, PORT = "10.31.61.2", 1180
 
 # Name of displayed window
 WINDOW_NAME = "CheesyVision"
