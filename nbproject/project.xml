@@ -93,7 +93,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="boot">${sunspot.home}/lib/squawk.jar</classpath>
-                <classpath mode="compile">/home/andrew/sunspotfrcsdk/lib/wpilibj.jar:/home/andrew/sunspotfrcsdk/lib/networktables-crio.jar:CheesyVision/examples/Java-CheesyVisionSample/src</classpath>
+                <classpath mode="compile">CheesyVision/examples/Java-CheesyVisionSample/src:../sunspotfrcsdk/lib/networktables-crio.jar:../sunspotfrcsdk/lib/wpilibj.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.4</source-level>
             </compilation-unit>
