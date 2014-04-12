@@ -70,7 +70,7 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
     
-    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance();
+    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(Constants.Auto.VISION_PORT);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
@@ -100,7 +100,6 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.drawWinch();
         restartEncoders();
         
-        visionServer.setPort(Constants.Auto.VISION_PORT);
         visionServer.start();
     }
     
