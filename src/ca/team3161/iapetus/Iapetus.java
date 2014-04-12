@@ -41,6 +41,7 @@ import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
 import ca.team3161.lib.utils.controls.Joystick;
 import ca.team3161.lib.utils.io.DriverStationLCD;
+import com.team254.lib.CheesyVisionServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -70,6 +71,8 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
     
+    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance();
+    
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
 
@@ -97,6 +100,9 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
+        
+        visionServer.setPort(Constants.Auto.VISION_PORT);
+        visionServer.start();
     }
     
     public void restartEncoders() {
@@ -122,6 +128,8 @@ public class Iapetus extends ThreadedAutoRobot {
     public void autonomousThreaded() throws Exception {
         underglowController.set(PURPLE_UNDERGLOW);
         compressor.stop();
+        visionServer.reset();
+        visionServer.startSamplingCounts();
         dsLcd.println(1, "Starting AUTO");
         
         shooter.drawWinch();
@@ -161,6 +169,9 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
+        
+        visionServer.stopSamplingCounts();
+        visionServer.stop();
     }
 
     /**
@@ -170,12 +181,17 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */    
     public void autonomousPeriodic() {
+        dsLcd.println(4, "LEFT: " + visionServer.getLeftStatus() + " - " + visionServer.getLeftCount());
+        dsLcd.println(5, "RIGHT: " + visionServer.getRightStatus() + " - " + visionServer.getRightCount());
     }
 
     /**
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        visionServer.stopSamplingCounts();
+        visionServer.stop();
+        
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
