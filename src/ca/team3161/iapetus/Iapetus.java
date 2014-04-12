@@ -39,9 +39,7 @@ import ca.team3161.lib.robot.PIDDrivetrain;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
-import ca.team3161.lib.utils.Utils;
 import ca.team3161.lib.utils.controls.Joystick;
-import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -50,7 +48,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Timer;
+import com.team254.lib.CheesyVisionServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -71,6 +69,8 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, /*-0.0075f*/0.0f, 0.018f),
                 new PID(new GyroPidSrc(gyro), 4.0f, 0.7f, 0.13f, 0.45f));
     private final Compressor compressor = new Compressor(7, 2);
+    
+    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(Constants.Auto.VISION_PORT);
     
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
@@ -99,7 +99,9 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
+        
         compressor.start();
+        visionServer.start();
     }
     
     public void restartEncoders() {
@@ -125,6 +127,8 @@ public class Iapetus extends ThreadedAutoRobot {
     public void autonomousThreaded() throws Exception {
         underglowController.set(PURPLE_UNDERGLOW);
         compressor.stop();
+        visionServer.reset();
+        visionServer.startSamplingCounts();
         dsLcd.println(1, "Starting AUTO");
         
         shooter.drawWinch();
@@ -167,6 +171,9 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
+        
+        visionServer.stopSamplingCounts();
+        visionServer.stop();
     }
 
     /**
@@ -176,6 +183,8 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */    
     public void autonomousPeriodic() {
+        dsLcd.println(4, "LEFT: " + visionServer.getLeftStatus() + " - " + visionServer.getLeftCount());
+        dsLcd.println(5, "RIGHT: " + visionServer.getRightStatus() + " - " + visionServer.getRightCount());
     }
 
     /**
@@ -183,6 +192,9 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopInit() {
         compressor.start();
+        visionServer.stopSamplingCounts();
+        visionServer.stop();
+        
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
@@ -287,71 +299,21 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.disableAll();
         dsLcd.println(5, "POT: " + shooter.getPotVoltage());
     }
+    
+    public void testInit() {
+        visionServer.reset();
+        visionServer.startSamplingCounts();
+    }
 
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        //semi-arcade drive
-        leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
-        rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
-        //dsLcd.println(1, "DRIVE: " + Utils.round(leftDrive.get(), 2) + " " + Utils.round(rightDrive.get(), 2));
-        
-        //trigger piston mechanism
-        if (gamepad.getRightBumper()) {
-            shooter.fire();
-        }
-        
-        //shoulder motor (fork) control
-        if (gamepad.getDpadVertical() > 0.0) {
-            shooter.setForkAngle(Constants.Positions.START);
-            //dsLcd.println(2, "FORK MODE: TRAVEL");
-        }
-        
-        if (gamepad.getDpadHorizontal() == -1.0) {
-            shooter.setForkAngle(Constants.Positions.SHOOTING);
-            //dsLcd.println(2, "FORK MODE: SHOOTING");
-        }
-        
-        if (gamepad.getDpadHorizontal() == 1.0) {
-            shooter.setForkAngle(Constants.Positions.LOWGOAL);
-        }
-        
-        if (gamepad.getButton(LogitechDualAction.SELECT)) {
-            shooter.setForkAngle(Constants.Positions.TRUSS);
-        }
-        
-        if (gamepad.getDpadVertical() < 0.0) {
-            shooter.setForkAngle(Constants.Positions.INTAKE);
-            //dsLcd.println(2, "FORK MODE: INTAKE");
-        }
-        
-        //roller up/down
-        if (gamepad.getButton(2)) {
-            shooter.closeClaw();
-            //dsLcd.println(4, "CLAW: CLOSE");
-        }
-    
-        if (gamepad.getButton(1)) {
-            shooter.openClaw();
-            //dsLcd.println(4, "CLAW: OPEN");
-        }
-        
-        /*if (gamepad.getButton(2)) {
-            shooter.setRoller(0.0f);
-        }*/
-        
-        if (gamepad.getLeftBumper()) {
-            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
-        }
-        
-        if (gamepad.getRightTrigger()) {
-            shooter.setRoller(-Constants.Shooter.ROLLER_SPEED);
-        }
-        
-        if (! (gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
-            shooter.setRoller(0.0f);
-        }
+        leftDrive.disable();
+        rightDrive.disable();
+        shooter.disableAll();
+        dsLcd.println(3, "LEFT: " + visionServer.getLeftStatus() + " - " + visionServer.getLeftCount());
+        dsLcd.println(4, "RIGHT: " + visionServer.getRightStatus() + " - " + visionServer.getRightCount());
     }
 
 }
