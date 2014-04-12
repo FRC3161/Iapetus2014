@@ -14,7 +14,6 @@ import javax.microedition.io.SocketConnection;
 public class CheesyVisionServer {
 
     private class ServerTask implements Runnable {
-
         // This method listens for incoming connections and spawns new
         // VisionServerConnectionHandlers to handle them
         public void run() {
@@ -38,7 +37,7 @@ public class CheesyVisionServer {
         }
     }
 
-    private static CheesyVisionServer INSTANCE;
+    private static CheesyVisionServer INSTANCE = null;
     private final Thread serverThread = new Thread(new ServerTask());
     private final int port;
     private final Vector connections = new Vector();
