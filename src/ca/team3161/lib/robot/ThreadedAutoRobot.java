@@ -67,7 +67,7 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
                     }
                 } catch (Exception e) {
                     dsLcd.println(0, "AUTO INTERRUPTED!");
-                    dsLcd.println(1, e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }, "AUTO THREAD");
