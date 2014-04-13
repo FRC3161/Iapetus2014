@@ -28,7 +28,6 @@ package ca.team3161.iapetus;
 public class Constants {
     
     public static class Auto {
-        public static final String ROBOT_IP = "10.31.61.2";
         public static final int VISION_PORT = 1180;
     }
 
@@ -48,7 +47,7 @@ public class Constants {
     
     public static class Positions {
         /* Angles. 0 is straight down, 90 is straight forward, 180 straight up... */
-        public static final int INTAKE = 63;
+        public static final int INTAKE = 58;
         public static final int LOWGOAL = 80;
         public static final int TRUSS = 160;
         public static final int SHOOTING = 145;

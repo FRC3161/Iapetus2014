@@ -45,6 +45,14 @@ they are reached.
 
 image:doc/Iapetus.svg["Iapetus Diagram SVG",height=480]
 
+== Other Libraries
+Late in the season, 3161 forked Team 254's
+link:https://github.com/Team254/CheesyVision[CheesyVision] library, and began
+to experiment with using this functionality to enhance our own autonomous
+routine with hotgoal detection. Parts of this forked repository are included
+in this repository, as cheesyvision.py in the root and the src/com/team254
+source directory.
+
 == Class Overview
 Javadocs for all of these classes are available link:doc/javadoc/index.html[here].
 

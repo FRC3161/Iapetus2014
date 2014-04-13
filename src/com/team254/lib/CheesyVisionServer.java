@@ -13,30 +13,6 @@ import javax.microedition.io.SocketConnection;
 
 public class CheesyVisionServer {
 
-    private class ServerTask implements Runnable {
-        // This method listens for incoming connections and spawns new
-        // VisionServerConnectionHandlers to handle them
-        public void run() {
-            try {
-                final ServerSocketConnection s = (ServerSocketConnection) Connector.open("serversocket://:" + port);
-                while (listening) {
-                    final SocketConnection connection = (SocketConnection) s.acceptAndOpen(); // blocks until a connection is made
-                    final Thread t = new Thread(new VisionServerConnectionHandler(connection));
-                    t.start();
-                    connections.addElement(connection);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        System.out.println("Thread sleep failed.");
-                    }
-                }
-            } catch (final IOException e) {
-                System.out.println("Socket failure.");
-                e.printStackTrace();
-            }
-        }
-    }
-
     private static CheesyVisionServer INSTANCE = null;
     private final Thread serverThread = new Thread(new ServerTask());
     private final int port;
@@ -66,7 +42,7 @@ public class CheesyVisionServer {
         this(1180);
     }
 
-    private CheesyVisionServer(int port) {
+    private CheesyVisionServer(final int port) {
         this.port = port;
     }
 
@@ -74,7 +50,7 @@ public class CheesyVisionServer {
         return lastHeartbeatTime > 0 && (Timer.getFPGATimestamp() - lastHeartbeatTime) < 3.0;
     }
 
-    private void updateCounts(boolean left, boolean right) {
+    private void updateCounts(final boolean left, final boolean right) {
         if (counting) {
             leftCount += left ? 1 : 0;
             rightCount += right ? 1 : 0;
@@ -117,49 +93,67 @@ public class CheesyVisionServer {
 
     // This class handles incoming TCP connections
     private class VisionServerConnectionHandler implements Runnable {
-
         SocketConnection connection;
-
         public VisionServerConnectionHandler(SocketConnection c) {
             connection = c;
         }
 
         public void run() {
             try {
-                InputStream is = connection.openInputStream();
+                final InputStream is = connection.openInputStream();
 
-                int ch = 0;
-                byte[] b = new byte[1024];
-                double timeout = 10.0;
+                final byte[] b = new byte[1024];
+                final double timeout = 10.0d;
                 double lastHeartbeat = Timer.getFPGATimestamp();
-                CheesyVisionServer.this.lastHeartbeatTime = lastHeartbeat;
+                lastHeartbeatTime = lastHeartbeat;
                 while (Timer.getFPGATimestamp() < lastHeartbeat + timeout) {
-                    boolean gotData = false;
                     while (is.available() > 0) {
-                        gotData = true;
-                        int read = is.read(b);
+                        final int read = is.read(b);
                         for (int i = 0; i < read; ++i) {
-                            byte reading = b[i];
-                            boolean leftStatus = (reading & (1 << 1)) > 0;
-                            boolean rightStatus = (reading & (1 << 0)) > 0;
-                            CheesyVisionServer.this.curLeftStatus = leftStatus;
-                            CheesyVisionServer.this.curRightStatus = rightStatus;
-                            CheesyVisionServer.this.updateCounts(leftStatus, rightStatus);
+                            final byte reading = b[i];
+                            final boolean leftStatus = (reading & (1 << 1)) > 0;
+                            final boolean rightStatus = (reading & 1) > 0;
+                            curLeftStatus = leftStatus;
+                            curRightStatus = rightStatus;
+                            updateCounts(leftStatus, rightStatus);
                         }
                         lastHeartbeat = Timer.getFPGATimestamp();
-                        CheesyVisionServer.this.lastHeartbeatTime = lastHeartbeat;
+                        lastHeartbeatTime = lastHeartbeat;
                     }
-
                     try {
-                        Thread.sleep(50); // sleep a bit
-                    } catch (InterruptedException ex) {
+                        Thread.sleep(50);
+                    } catch (final InterruptedException ex) {
                         System.out.println("Thread sleep failed.");
                     }
                 }
                 is.close();
                 connection.close();
-
-            } catch (IOException e) {
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private class ServerTask implements Runnable {
+        // This method listens for incoming connections and spawns new
+        // VisionServerConnectionHandlers to handle them
+        public void run() {
+            try {
+                final ServerSocketConnection s = (ServerSocketConnection) Connector.open("serversocket://:" + port);
+                while (listening) {
+                    final SocketConnection connection = (SocketConnection) s.acceptAndOpen(); // blocks until a connection is made
+                    final Thread t = new Thread(new VisionServerConnectionHandler(connection));
+                    t.start();
+                    connections.addElement(connection);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Thread sleep failed.");
+                    }
+                }
+            } catch (final IOException e) {
+                System.out.println("Socket failure.");
+                e.printStackTrace();
             }
         }
     }
