@@ -140,23 +140,24 @@ public class Iapetus extends ThreadedAutoRobot {
         // drive closer to goal
         dsLcd.println(1, "Driving up...");
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(10000);
+        pidDrive.setTicksTarget(15000);
         pidDrive.waitForTarget();
         
         // try to ensure we are facing forward
         dsLcd.println(1, "Correcting bearing");
         pidDrive.setTask(pidDrive.TURN);
-        waitFor(750);
+        waitFor(250);
         pidDrive.turnByDegrees(-(float)gyro.getAngle());
+        
+        if (!visionServer.getLeftStatus() && !visionServer.getRightStatus()) {
+            dsLcd.println(1, "Waiting for hot goal");
+            waitFor(3000);
+        }
         
         // fire
         dsLcd.println(1, "Firing");
         shooter.setForkAngle(Constants.Positions.SHOOTING);
-        shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
-        waitFor(750);
-        shooter.openClaw();
-        shooter.setRoller(0.0f);
-        waitFor(1000);
+        waitFor(500);
         shooter.fire();
         waitFor(750);
         
@@ -179,8 +180,6 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */    
     public void autonomousPeriodic() {
-        dsLcd.println(4, "LEFT: " + visionServer.getLeftStatus() + " - " + visionServer.getLeftCount());
-        dsLcd.println(5, "RIGHT: " + visionServer.getRightStatus() + " - " + visionServer.getRightCount());
     }
 
     /**
@@ -201,6 +200,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.clear();
         restartEncoders();
         compressor.start();
+        shooter.closeClaw();
     }
 
     /**
@@ -212,7 +212,6 @@ public class Iapetus extends ThreadedAutoRobot {
      */
         
     public void teleopThreadsafe() {
-        dsLcd.println(1, "TELEOP WOOOOOO");
         //semi-arcade drive
         leftDrive.set(joystick.getY() + joystick.getX());
         rightDrive.set(joystick.getY() - joystick.getX());
@@ -304,8 +303,6 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
-        dsLcd.println(3, "LEFT: " + visionServer.getLeftStatus() + " - " + visionServer.getLeftCount());
-        dsLcd.println(4, "RIGHT: " + visionServer.getRightStatus() + " - " + visionServer.getRightCount());
     }
 
 }
