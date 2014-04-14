@@ -59,20 +59,20 @@ import com.team254.lib.CheesyVisionServer;
  */
 public class Iapetus extends ThreadedAutoRobot {
 
-    private final SpeedController leftDrive = new Drivetrain (new SpeedController[] {new Talon (1), new Victor (2), new Talon (3)}).setInverted(true);
-    private final SpeedController rightDrive = new Drivetrain (new SpeedController[] {new Talon (4), new Victor (5), new Talon (6)}).setInverted(false);
+    private final SpeedController leftDrive = new Drivetrain(new SpeedController[]{new Talon(1), new Victor(2), new Talon(3)}).setInverted(true);
+    private final SpeedController rightDrive = new Drivetrain(new SpeedController[]{new Talon(4), new Victor(5), new Talon(6)}).setInverted(false);
     private final Shooter shooter = new Shooter();
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-                new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-                new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+            new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
+            new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
+            new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
-    
+
     private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(RobotConstants.Auto.VISION_PORT);
-    
-    private final LogitechDualAction gamepad = new LogitechDualAction (RobotConstants.Gamepad.PORT, RobotConstants.Gamepad.DEADZONE);
+
+    private final LogitechDualAction gamepad = new LogitechDualAction(RobotConstants.Gamepad.PORT, RobotConstants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(RobotConstants.Joystick.PORT, RobotConstants.Joystick.DEADZONE);
 
     private DriverStation.Alliance alliance = DriverStation.Alliance.kInvalid;
@@ -89,17 +89,17 @@ public class Iapetus extends ThreadedAutoRobot {
         gamepad.setInverted(true);
         joystick.setInverted(true);
         alliance = DriverStation.getInstance().getAlliance();
-        
+
         dsLcd.clear();
         dsLcd.println(0, "Alliance: " + alliance.name.toUpperCase());
-        
+
         shooter.disableAll();
         shooter.start();
         shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
-        
+
         visionServer.start();
     }
     
@@ -131,37 +131,37 @@ public class Iapetus extends ThreadedAutoRobot {
         restartEncoders();
         gyro.reset();
         dsLcd.println(1, "Starting AUTO");
-        
+
         shooter.drawWinch();
         shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         pidDrive.start();
-        
+
         /* NORMAL AUTO ROUTINE */
         // drive closer to goal
         dsLcd.println(1, "Driving up...");
         pidDrive.setTask(pidDrive.DRIVE);
         pidDrive.setTicksTarget(RobotConstants.Auto.DRIVE_DISTANCE);
         pidDrive.waitForTarget();
-        
+
         // try to ensure we are facing forward
         dsLcd.println(1, "Correcting bearing");
         pidDrive.setTask(pidDrive.TURN);
         waitFor(250);
-        pidDrive.turnByDegrees(-(float)gyro.getAngle());
-        
+        pidDrive.turnByDegrees(-(float) gyro.getAngle());
+
         if (!visionServer.getLeftStatus() && !visionServer.getRightStatus()) {
             dsLcd.println(1, "Waiting for hot goal");
             waitFor(RobotConstants.Auto.HOTGOAL_DELAY);
         }
-        
+
         // fire
         dsLcd.println(1, "Firing");
         shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
         waitFor(500);
         shooter.fire();
         waitFor(750);
-        
+
         // reset and turn around
         dsLcd.println(1, "Turning around");
         shooter.closeClaw();
@@ -169,7 +169,7 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
-        
+
         dsLcd.println(1, "AUTO complete");
         visionServer.stopSamplingCounts();
         visionServer.stop();
@@ -189,7 +189,7 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopInit() {
         visionServer.stopSamplingCounts();
-        
+
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
             underglowController.set(BLUE_UNDERGLOW);
@@ -215,51 +215,51 @@ public class Iapetus extends ThreadedAutoRobot {
         //semi-arcade drive
         leftDrive.set(joystick.getY() + joystick.getX());
         rightDrive.set(joystick.getY() - joystick.getX());
-        
+
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
             shooter.fire();
         }
-        
+
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
             shooter.setForkAngle(RobotConstants.Positions.START);
         }
-        
+
         if (gamepad.getDpadHorizontal() == -1.0) {
             shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
         }
-        
+
         if (gamepad.getDpadHorizontal() == 1.0) {
             shooter.setForkAngle(RobotConstants.Positions.LOWGOAL);
         }
-        
+
         if (gamepad.getButton(LogitechDualAction.SELECT)) {
             shooter.setForkAngle(RobotConstants.Positions.TRUSS);
         }
-        
+
         if (gamepad.getDpadVertical() < 0.0) {
             shooter.setForkAngle(RobotConstants.Positions.INTAKE);
         }
-        
+
         //roller up/down
         if (gamepad.getButton(2)) {
             shooter.closeClaw();
         }
-    
+
         if (gamepad.getButton(1)) {
             shooter.openClaw();
         }
-        
+
         if (gamepad.getLeftBumper()) {
             shooter.setRoller(RobotConstants.Shooter.ROLLER_SPEED);
         }
-        
+
         if (gamepad.getRightTrigger()) {
             shooter.setRoller(-RobotConstants.Shooter.ROLLER_SPEED);
         }
-        
-        if (! (gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
+
+        if (!(gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
             shooter.setRoller(0.0f);
         }
     }
