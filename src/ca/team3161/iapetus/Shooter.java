@@ -87,7 +87,7 @@ public class Shooter extends Subsystem {
     }
 
     public void drawWinch() {
-        final float speed = Constants.Shooter.WINCH_SPEED;
+        final float speed = RobotConstants.Shooter.WINCH_SPEED;
         if (getStopSwitch()) {
             winch.set(0.0f);
             return;
@@ -99,10 +99,10 @@ public class Shooter extends Subsystem {
     }
 
     public boolean forkInfiringPosition() {
-        return (getForkAngle() < Constants.Positions.SHOOTING + 5
-                && getForkAngle() > Constants.Positions.SHOOTING - 5)
-                || (getForkAngle() < Constants.Positions.TRUSS + 5
-                && getForkAngle() > Constants.Positions.TRUSS - 5);
+        return (getForkAngle() < RobotConstants.Positions.SHOOTING + 5
+                && getForkAngle() > RobotConstants.Positions.SHOOTING - 5)
+                || (getForkAngle() < RobotConstants.Positions.TRUSS + 5
+                && getForkAngle() > RobotConstants.Positions.TRUSS - 5);
     }
 
     public void fire() {

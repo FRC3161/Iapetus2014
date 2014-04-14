@@ -70,10 +70,10 @@ public class Iapetus extends ThreadedAutoRobot {
                 new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
     
-    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(Constants.Auto.VISION_PORT);
+    private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(RobotConstants.Auto.VISION_PORT);
     
-    private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
-    private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
+    private final LogitechDualAction gamepad = new LogitechDualAction (RobotConstants.Gamepad.PORT, RobotConstants.Gamepad.DEADZONE);
+    private final Joystick joystick = new Joystick(RobotConstants.Joystick.PORT, RobotConstants.Joystick.DEADZONE);
 
     private DriverStation.Alliance alliance = DriverStation.Alliance.kInvalid;
     private final Relay underglowController = new Relay(1);
@@ -95,7 +95,7 @@ public class Iapetus extends ThreadedAutoRobot {
         
         shooter.disableAll();
         shooter.start();
-        shooter.setForkAngle(Constants.Positions.START);
+        shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
@@ -133,7 +133,7 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(1, "Starting AUTO");
         
         shooter.drawWinch();
-        shooter.setForkAngle(Constants.Positions.START);
+        shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         pidDrive.start();
         
@@ -141,7 +141,7 @@ public class Iapetus extends ThreadedAutoRobot {
         // drive closer to goal
         dsLcd.println(1, "Driving up...");
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(Constants.Auto.DRIVE_DISTANCE);
+        pidDrive.setTicksTarget(RobotConstants.Auto.DRIVE_DISTANCE);
         pidDrive.waitForTarget();
         
         // try to ensure we are facing forward
@@ -152,12 +152,12 @@ public class Iapetus extends ThreadedAutoRobot {
         
         if (!visionServer.getLeftStatus() && !visionServer.getRightStatus()) {
             dsLcd.println(1, "Waiting for hot goal");
-            waitFor(Constants.Auto.HOTGOAL_DELAY);
+            waitFor(RobotConstants.Auto.HOTGOAL_DELAY);
         }
         
         // fire
         dsLcd.println(1, "Firing");
-        shooter.setForkAngle(Constants.Positions.SHOOTING);
+        shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
         waitFor(500);
         shooter.fire();
         waitFor(750);
@@ -165,7 +165,7 @@ public class Iapetus extends ThreadedAutoRobot {
         // reset and turn around
         dsLcd.println(1, "Turning around");
         shooter.closeClaw();
-        shooter.setForkAngle(Constants.Positions.START);
+        shooter.setForkAngle(RobotConstants.Positions.START);
         pidDrive.setTask(pidDrive.TURN);
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
@@ -197,7 +197,7 @@ public class Iapetus extends ThreadedAutoRobot {
             underglowController.set(RED_UNDERGLOW);
         }
         pidDrive.cancel();
-        shooter.setForkAngle(Constants.Positions.START);
+        shooter.setForkAngle(RobotConstants.Positions.START);
         dsLcd.clear();
         restartEncoders();
         compressor.start();
@@ -223,23 +223,23 @@ public class Iapetus extends ThreadedAutoRobot {
         
         //shoulder motor (fork) control
         if (gamepad.getDpadVertical() > 0.0) {
-            shooter.setForkAngle(Constants.Positions.START);
+            shooter.setForkAngle(RobotConstants.Positions.START);
         }
         
         if (gamepad.getDpadHorizontal() == -1.0) {
-            shooter.setForkAngle(Constants.Positions.SHOOTING);
+            shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
         }
         
         if (gamepad.getDpadHorizontal() == 1.0) {
-            shooter.setForkAngle(Constants.Positions.LOWGOAL);
+            shooter.setForkAngle(RobotConstants.Positions.LOWGOAL);
         }
         
         if (gamepad.getButton(LogitechDualAction.SELECT)) {
-            shooter.setForkAngle(Constants.Positions.TRUSS);
+            shooter.setForkAngle(RobotConstants.Positions.TRUSS);
         }
         
         if (gamepad.getDpadVertical() < 0.0) {
-            shooter.setForkAngle(Constants.Positions.INTAKE);
+            shooter.setForkAngle(RobotConstants.Positions.INTAKE);
         }
         
         //roller up/down
@@ -252,11 +252,11 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         if (gamepad.getLeftBumper()) {
-            shooter.setRoller(Constants.Shooter.ROLLER_SPEED);
+            shooter.setRoller(RobotConstants.Shooter.ROLLER_SPEED);
         }
         
         if (gamepad.getRightTrigger()) {
-            shooter.setRoller(-Constants.Shooter.ROLLER_SPEED);
+            shooter.setRoller(-RobotConstants.Shooter.ROLLER_SPEED);
         }
         
         if (! (gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
@@ -276,7 +276,7 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
-        shooter.setForkAngle(Constants.Positions.START);
+        shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         compressor.stop();
         visionServer.stopSamplingCounts();

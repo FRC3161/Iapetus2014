@@ -25,29 +25,32 @@
 
 package ca.team3161.iapetus;
 
-public class Constants {
+public final class RobotConstants {
     
-    public static class Auto {
+    // Uninstantiable
+    private RobotConstants(){}
+    
+    public static final class Auto {
+        private Auto(){}
         public static final int VISION_PORT = 1180;
         public static final int DRIVE_DISTANCE = 15000;
         public static final int HOTGOAL_DELAY = 3000;
     }
 
-    public static class Gamepad {
+    public static final class Gamepad {
+        private Gamepad(){}
         public static final int PORT = 1;
         public static final float DEADZONE = 0.125f;
     }
     
-    public static class Joystick {
+    public static final class Joystick {
+        private Joystick(){}
         public static final int PORT = 2;
         public static final float DEADZONE = 0.125f;
     }
     
-    public static class Game {
-        public static final int AUTONOMOUS_SECONDS = 10;
-    }
-    
-    public static class Positions {
+    public static final class Positions {
+        private Positions(){}
         /* Angles. 0 is straight down, 90 is straight forward, 180 straight up... */
         public static final int INTAKE = 58;
         public static final int LOWGOAL = 80;
@@ -56,7 +59,8 @@ public class Constants {
         public static final int START = 180;
     }
     
-    public static class Shooter {
+    public static final class Shooter {
+        private Shooter(){}
         public static final float WINCH_SPEED = 0.75f;
         public static final float ROLLER_SPEED = 1f;
     }

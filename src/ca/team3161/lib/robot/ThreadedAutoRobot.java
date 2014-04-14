@@ -25,7 +25,6 @@
 
 package ca.team3161.lib.robot;
 
-import ca.team3161.iapetus.Constants;
 import ca.team3161.lib.utils.io.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -37,7 +36,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public abstract class ThreadedAutoRobot extends IterativeRobot {
     
-    private static final int MAX_AUTO_PERIOD_LENGTH = Constants.Game.AUTONOMOUS_SECONDS * 1000;
+    private static final int MAX_AUTO_PERIOD_LENGTH = GameConstants.AUTONOMOUS.SECONDS * 1000;
     private volatile int accumulatedTime = 0;
     private final Object modeLock = new Object();
     private Thread autoThread;
