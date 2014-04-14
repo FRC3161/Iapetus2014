@@ -29,6 +29,8 @@ public class Constants {
     
     public static class Auto {
         public static final int VISION_PORT = 1180;
+        public static final int DRIVE_DISTANCE = 15000;
+        public static final int HOTGOAL_DELAY = 3000;
     }
 
     public static class Gamepad {

@@ -141,7 +141,7 @@ public class Iapetus extends ThreadedAutoRobot {
         // drive closer to goal
         dsLcd.println(1, "Driving up...");
         pidDrive.setTask(pidDrive.DRIVE);
-        pidDrive.setTicksTarget(15000);
+        pidDrive.setTicksTarget(Constants.Auto.DRIVE_DISTANCE);
         pidDrive.waitForTarget();
         
         // try to ensure we are facing forward
@@ -152,7 +152,7 @@ public class Iapetus extends ThreadedAutoRobot {
         
         if (!visionServer.getLeftStatus() && !visionServer.getRightStatus()) {
             dsLcd.println(1, "Waiting for hot goal");
-            waitFor(3000);
+            waitFor(Constants.Auto.HOTGOAL_DELAY);
         }
         
         // fire
