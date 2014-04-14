@@ -75,7 +75,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final LogitechDualAction gamepad = new LogitechDualAction (Constants.Gamepad.PORT, Constants.Gamepad.DEADZONE);
     private final Joystick joystick = new Joystick(Constants.Joystick.PORT, Constants.Joystick.DEADZONE);
 
-    private DriverStation.Alliance alliance;
+    private DriverStation.Alliance alliance = DriverStation.Alliance.kInvalid;
     private final Relay underglowController = new Relay(1);
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kForward;
     private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
@@ -128,12 +128,13 @@ public class Iapetus extends ThreadedAutoRobot {
         compressor.stop();
         visionServer.reset();
         visionServer.startSamplingCounts();
+        restartEncoders();
+        gyro.reset();
         dsLcd.println(1, "Starting AUTO");
         
         shooter.drawWinch();
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
-        restartEncoders();
         pidDrive.start();
         
         /* NORMAL AUTO ROUTINE */
@@ -169,6 +170,7 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.turnByDegrees(180.0f);
         pidDrive.waitForTarget();
         
+        dsLcd.println(1, "AUTO complete");
         visionServer.stopSamplingCounts();
         visionServer.stop();
     }
@@ -187,7 +189,6 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopInit() {
         visionServer.stopSamplingCounts();
-        visionServer.stop();
         
         alliance = DriverStation.getInstance().getAlliance();
         if (alliance.equals(DriverStation.Alliance.kBlue)) {
@@ -210,7 +211,6 @@ public class Iapetus extends ThreadedAutoRobot {
      * autonomous thread. DO NOT create a teleopPeriodic in this class or any
      * subclasses! Use teleopThreadsafe instead, only!
      */
-        
     public void teleopThreadsafe() {
         //semi-arcade drive
         leftDrive.set(joystick.getY() + joystick.getX());
@@ -279,6 +279,7 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.setForkAngle(Constants.Positions.START);
         shooter.closeClaw();
         compressor.stop();
+        visionServer.stopSamplingCounts();
     }
 
     /**
@@ -291,9 +292,10 @@ public class Iapetus extends ThreadedAutoRobot {
         dsLcd.println(5, "VOLT: " + shooter.getPotVoltage());
     }
     
+    /**
+     * Called once when the robot enters test mode
+     */
     public void testInit() {
-        visionServer.reset();
-        visionServer.startSamplingCounts();
     }
 
     /**
