@@ -184,6 +184,11 @@ public class Iapetus extends ThreadedAutoRobot {
      * within autonomousThreaded()!
      */    
     public void autonomousPeriodic() {
+        if (visionServer.hasClientConnection()) {
+            dsLcd.println(2, "Vision connected");
+        } else {
+            dsLcd.println(2, "WARNING: NO VISION");
+        }
     }
 
     /**
