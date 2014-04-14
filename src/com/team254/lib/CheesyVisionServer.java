@@ -13,15 +13,14 @@ import javax.microedition.io.SocketConnection;
 
 public class CheesyVisionServer {
 
+    public static final int DEFAULT_PORT = 1180;
     private static CheesyVisionServer INSTANCE = null;
     private final Thread serverThread = new Thread(new ServerTask());
     private final int port;
     private final Vector connections = new Vector();
-    private boolean counting = false;
-    private int leftCount = 0, rightCount = 0, totalCount = 0;
-    private boolean curLeftStatus = false, curRightStatus = false;
-    private double lastHeartbeatTime = -1.0d;
-    private boolean listening = true;
+    private volatile boolean counting = false, listening = true, curLeftStatus = false, curRightStatus = false;
+    private volatile int leftCount = 0, rightCount = 0, totalCount = 0;
+    private volatile double lastHeartbeatTime = -1.0d;
 
     public static CheesyVisionServer getInstance(final int port) {
         if (INSTANCE == null) {
@@ -39,7 +38,7 @@ public class CheesyVisionServer {
     }
 
     private CheesyVisionServer() {
-        this(1180);
+        this(DEFAULT_PORT);
     }
 
     private CheesyVisionServer(final int port) {
@@ -51,11 +50,17 @@ public class CheesyVisionServer {
     }
 
     private void updateCounts(final boolean left, final boolean right) {
-        if (counting) {
-            leftCount += left ? 1 : 0;
-            rightCount += right ? 1 : 0;
-            totalCount++;
+        if (!counting) {
+            return;
         }
+        
+        if (left) {
+            ++leftCount;
+        }
+        if (right) {
+            ++rightCount;
+        }
+        ++totalCount;
     }
 
     public void startSamplingCounts() {
@@ -67,8 +72,10 @@ public class CheesyVisionServer {
     }
 
     public void reset() {
-        leftCount = rightCount = totalCount = 0;
-        curLeftStatus = curRightStatus = false;
+        leftCount = 0;
+        rightCount = 0;
+        curLeftStatus = false;
+        curRightStatus = false;
     }
 
     public int getLeftCount() {
@@ -93,8 +100,8 @@ public class CheesyVisionServer {
 
     // This class handles incoming TCP connections
     private class VisionServerConnectionHandler implements Runnable {
-        SocketConnection connection;
-        public VisionServerConnectionHandler(SocketConnection c) {
+        private final SocketConnection connection;
+        public VisionServerConnectionHandler(final SocketConnection c) {
             connection = c;
         }
 
@@ -147,7 +154,7 @@ public class CheesyVisionServer {
                     connections.addElement(connection);
                     try {
                         Thread.sleep(100);
-                    } catch (InterruptedException ex) {
+                    } catch (final InterruptedException ex) {
                         System.out.println("Thread sleep failed.");
                     }
                 }
