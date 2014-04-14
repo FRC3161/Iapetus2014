@@ -65,9 +65,9 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-            new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-            new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-            new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+            new PID(new EncoderPidSrc(leftEncoder), 350.0f, -0.008f, -0.0f, 0.018f),
+            new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, -0.0f, 0.018f),
+            new PID(new GyroPidSrc(gyro), 4.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
 
     private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(RobotConstants.Auto.VISION_PORT);
