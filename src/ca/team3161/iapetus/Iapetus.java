@@ -128,6 +128,7 @@ public class Iapetus extends ThreadedAutoRobot {
         compressor.stop();
         visionServer.reset();
         visionServer.startSamplingCounts();
+        pidDrive.reset();
         restartEncoders();
         gyro.reset();
         dsLcd.println(1, "Starting AUTO");
