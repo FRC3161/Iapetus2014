@@ -175,7 +175,6 @@ public class Iapetus extends ThreadedAutoRobot {
 
         dsLcd.println(1, "AUTO complete");
         visionServer.stopSamplingCounts();
-        visionServer.stop();
     }
 
     /**
