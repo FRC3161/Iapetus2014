@@ -149,6 +149,10 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.setTask(pidDrive.TURN);
         waitFor(250);
         pidDrive.turnByDegrees(-(float) gyro.getAngle());
+        
+        dsLcd.println(1, "Assuming firing position");
+        shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
+        waitFor(500);
 
         if (!visionServer.getLeftStatus() && !visionServer.getRightStatus()) {
             dsLcd.println(1, "Waiting for hot goal");
@@ -157,8 +161,6 @@ public class Iapetus extends ThreadedAutoRobot {
 
         // fire
         dsLcd.println(1, "Firing");
-        shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
-        waitFor(500);
         shooter.fire();
         waitFor(750);
 
