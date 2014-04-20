@@ -201,7 +201,9 @@ def main():
             continue
 
         # Get a new frame.
-        _, img = capture.read()
+        has_frame, img = capture.read()
+        if not has_frame:
+            continue
 
         # Flip it and shrink it.
         small_img = cv.flip(cv.resize(img, (WEBCAM_WIDTH_PX, WEBCAM_HEIGHT_PX)), 1)
