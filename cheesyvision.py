@@ -78,30 +78,36 @@ WINDOW_NAME = "CheesyVision"
 WIDTH_PX = 1000
 
 # Dimensions of the webcam image (it will be resized to this size)
-WEBCAM_WIDTH_PX = 640
-WEBCAM_HEIGHT_PX = 360
+WEBCAM_WIDTH_PX = 427 # default 640
+WEBCAM_HEIGHT_PX = 240 # default 360
 
 # The number of columns from the left of the widget where the image starts.
-X_OFFSET = (WIDTH_PX - WEBCAM_WIDTH_PX)/2
+X_OFFSET = int((WIDTH_PX - WEBCAM_WIDTH_PX)/2)
+
+CAL_HEIGHT = int(0.0625 * WEBCAM_WIDTH_PX)
+CAL_WIDTH = CAL_HEIGHT
 
 # The location of the calibration rectangle.
-CAL_UL = (X_OFFSET + WEBCAM_WIDTH_PX/2 - 20, 180)
-CAL_LR = (X_OFFSET + WEBCAM_WIDTH_PX/2 + 20, 220)
+CAL_UL = (int(X_OFFSET + WEBCAM_WIDTH_PX/2), int(WEBCAM_HEIGHT_PX/3))
+CAL_LR = (int(CAL_UL[0] + CAL_WIDTH), int(CAL_UL[1] + CAL_HEIGHT))
+
+RECT_HEIGHT = int(WEBCAM_HEIGHT_PX / 6)
+RECT_WIDTH = RECT_HEIGHT
 
 # The location of the left rectangle.
-LEFT_UL = (240 + X_OFFSET, 250)
-LEFT_LR = (310 + X_OFFSET, 300)
+LEFT_UL = (int(X_OFFSET + 0.375 * WEBCAM_WIDTH_PX), int(2 * WEBCAM_HEIGHT_PX / 3))
+LEFT_LR = (int(LEFT_UL[0] + RECT_WIDTH), int(LEFT_UL[1] + RECT_HEIGHT))
 
 # The location of the right rectangle.
-RIGHT_UL = (WEBCAM_WIDTH_PX - 310 + X_OFFSET, 250)
-RIGHT_LR = (WEBCAM_WIDTH_PX - 240 + X_OFFSET, 300)
+RIGHT_UL = (int(WEBCAM_WIDTH_PX - (2 * WEBCAM_HEIGHT_PX / 3) + X_OFFSET), int(LEFT_UL[1]))
+RIGHT_LR = (int(RIGHT_UL[0] + RECT_WIDTH), int(RIGHT_UL[1] + RECT_HEIGHT))
 
 # Constants for drawing.
 BOX_BORDER = 3
 CONNECTED_BORDER = 15
 
 # This is the rate at which we will send updates to the cRIO.
-UPDATE_RATE_HZ = 40.0
+UPDATE_RATE_HZ = 20.0
 PERIOD = (1.0 / UPDATE_RATE_HZ) * 1000.0
 
 def get_time_millis():
@@ -188,6 +194,12 @@ def main():
     s = None
 
     while 1:
+        # Throttle the output
+        cur_time = get_time_millis()
+        if last_t + PERIOD > cur_time:
+            time.sleep(PERIOD / 1000)
+            continue
+
         # Get a new frame.
         _, img = capture.read()
 
@@ -197,40 +209,25 @@ def main():
         # Render the image onto our canvas.
         bg = draw_static(small_img, connected)
 
-        # Get the average color of each of the three boxes.
-        cal, left, right = detect_colors(cv.cvtColor(bg, cv.COLOR_BGR2HSV))
+        if connected:
+            # Get the average color of each of the three boxes.
+            cal, left, right = detect_colors(cv.cvtColor(bg, cv.COLOR_BGR2HSV))
 
-        # Get the difference between the left and right boxes vs. calibration.
-        left_dist = color_distance(left, cal)
-        right_dist = color_distance(right, cal)
+            # Get the difference between the left and right boxes vs. calibration.
+            left_dist = color_distance(left, cal)
+            right_dist = color_distance(right, cal)
 
-        # Check the difference.
-        left_on = left_dist < max_color_distance
-        right_on = right_dist < max_color_distance
+            # Check the difference.
+            left_on = left_dist < max_color_distance
+            right_on = right_dist < max_color_distance
 
-        # If we detect a hot goal, color that side of the widget.
-        B = CONNECTED_BORDER-5
-        if left_on:
-            color_far(bg, (B, B), ((WIDTH_PX-WEBCAM_WIDTH_PX)/2-B, WEBCAM_HEIGHT_PX-B))
-        if right_on:
-            color_far(bg, ((WIDTH_PX+WEBCAM_WIDTH_PX)/2+B, B), (WIDTH_PX-B, WEBCAM_HEIGHT_PX-B))
+            # If we detect a hot goal, color that side of the widget.
+            B = CONNECTED_BORDER-5
+            if left_on:
+                color_far(bg, (B, B), ((WIDTH_PX-WEBCAM_WIDTH_PX)/2-B, WEBCAM_HEIGHT_PX-B))
+            if right_on:
+                color_far(bg, ((WIDTH_PX+WEBCAM_WIDTH_PX)/2+B, B), (WIDTH_PX-B, WEBCAM_HEIGHT_PX-B))
 
-        # Throttle the output
-        cur_time = get_time_millis()
-        if last_t + PERIOD <= cur_time:
-            # Try to connect to the robot on open or disconnect
-            if not connected:
-                try:
-                    # Open a socket with the cRIO so that we can send the state of the hot goal.
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-                    # This is a pretty aggressive timeout...we want to reconnect automatically
-                    # if we are disconnected.
-                    s.settimeout(.1)
-                    s.connect((HOST, PORT))
-                except:
-                    print "failed to reconnect"
-                    last_t = cur_time + 1000
             try:
                 # Send one byte to the cRIO:
                 # 0x01: Right on
@@ -241,9 +238,24 @@ def main():
                 write_bytes.append(v)
                 s.send(write_bytes)
                 last_t = cur_time
-                connected = True
             except:
                 print "Could not send data to robot"
+                connected = False
+
+        # Try to connect to the robot on open or disconnect
+        else:
+            try:
+                # Open a socket with the cRIO so that we can send the state of the hot goal.
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+                # This is a pretty aggressive timeout...we want to reconnect automatically
+                # if we are disconnected.
+                s.settimeout(0.5)
+                s.connect((HOST, PORT))
+                connected = True
+            except:
+                print "failed to reconnect"
+                last_t = cur_time + 1000
                 connected = False
 
         # Show the image.
