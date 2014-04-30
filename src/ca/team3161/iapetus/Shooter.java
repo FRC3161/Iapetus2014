@@ -49,6 +49,8 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  * Travel mode: roller motors off, roller down, fork up
  */
 public class Shooter extends Subsystem {
+    
+    private static Shooter INSTANCE;
 
     private volatile boolean firing = false;
     private volatile boolean disabled = false;
@@ -61,12 +63,20 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon(9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.85f/*minVolt*/, 2.79f/*maxVolt*/, 60, 185);
-    private final PIDulum pidulum = new PIDulum(pidPot, 1.5f,
-            -0.03f/*kP*/, 0.0f/*kI*/, 0.075f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
-  
-    public Shooter() {
+    
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.92f/*minVolt*/, 2.19f/*maxVolt*/, 90, 180);
+    private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
+            -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
+
+    private Shooter() {
         super(20, true, "SHOOTER");
+    }
+    
+    public static Shooter getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Shooter();
+        }
+        return INSTANCE;
     }
 
     protected void defineResources() {

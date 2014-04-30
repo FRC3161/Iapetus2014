@@ -61,7 +61,7 @@ public class Iapetus extends ThreadedAutoRobot {
 
     private final SpeedController leftDrive = new Drivetrain(new SpeedController[]{new Talon(1), new Victor(2), new Talon(3)}).setInverted(true);
     private final SpeedController rightDrive = new Drivetrain(new SpeedController[]{new Talon(4), new Victor(5), new Talon(6)}).setInverted(false);
-    private final Shooter shooter = new Shooter();
+    private final Shooter shooter = Shooter.getInstance();
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
