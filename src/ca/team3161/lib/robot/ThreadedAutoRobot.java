@@ -74,6 +74,13 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
     }
     
     /**
+    * IterativeRobot defines this, but we do not want it to be possible for anything
+    * but teleopThreadsafe to be used during teleop. We can't remove or hide it,
+    * so we make it empty and final instead.
+    */
+    public final void teleopContinuous() { }
+    
+    /**
      * Add a delay to the autonomous routine.
      * This also ensures that the autonomous routine does not continue
      * to run after the FMS notifies us that the autonomous period
@@ -107,8 +114,16 @@ public abstract class ThreadedAutoRobot extends IterativeRobot {
     }
     
     /**
-     * Override these two methods in subclasses to complete autonomous
-     * and teleop functionality
+     * Called once when the robot enters the teleop mode.
+     */
+    public abstract void teleopInit();
+    
+    /**
+     * Periodically called during robot teleop mode to enable operator control.
+     * This is the only way teleop mode should be handled - do not directly call
+     * teleopPeriodic from within this method or unbounded recursion will occur,
+     * resulting in a stack overflow and crashed robot code. teleopContinuous
+     * is likewise unsupported.
      */
     public abstract void teleopThreadsafe();
 
