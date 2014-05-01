@@ -1,4 +1,4 @@
- /* Copyright (c) 2014, FRC3161
+/* Copyright (c) 2014, FRC3161
 * All rights reserved.
 * 
 * Redistribution and use in source and binary forms, with or without modification,
