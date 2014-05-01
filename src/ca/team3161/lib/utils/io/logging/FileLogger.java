@@ -42,8 +42,7 @@ public class FileLogger implements LogWriter {
     
     public void write(final String s) throws IOException {
         logFile.writeUTF(s); // should this be writeChars?
-        // logFile.flush(); // we may need to flush periodically, but every write is overkill
-        // and defeats the purpose of a buffered stream
+        logFile.flush(); // should we flush every time, really?
     }
     
 }
