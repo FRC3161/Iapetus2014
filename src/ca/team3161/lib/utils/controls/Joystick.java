@@ -33,19 +33,36 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 public class Joystick {
     
+    private JoystickMode mode;
     private float inversion;
     private final float DEADZONE;
     private final GenericHID backingHID;
     
     /**
-     * @param port which USB port this is plugged into, as reported by the
-     * Drive Station
+     * @param port which USB port this is plugged into, as reported by the Driver Station
+     */
+    public Joystick(final int port) {
+        this(port, 0.0f);
+    }
+    
+    /**
+     * @param port which USB port this is plugged into, as reported by the Driver Station
      * @param deadzone Axis values less than this in absolute value will be ignored
      */
     public Joystick(final int port, final float deadzone) {
+        this(port, deadzone, new LinearJoystickMode());
+    }
+    
+    /**
+     * @param port which USB port this is plugged into, as reported by the Driver Station
+     * @param deadzone Axis values less than this in absolute value will be ignored
+     * @param mode the joystick input scaling mode
+     */
+    public Joystick(final int port, final float deadzone, final JoystickMode mode) {
         this.backingHID = new edu.wpi.first.wpilibj.Joystick(port);
         this.inversion = 1.0f;
         this.DEADZONE = deadzone;
+        this.mode = mode;
     }
     
     /**
@@ -68,7 +85,7 @@ public class Joystick {
         if (Math.abs(backingHID.getX()) < DEADZONE) {
             return 0.0;
         }
-        return backingHID.getX();
+        return mode.adjust(backingHID.getX());
     }
     
     /**
@@ -79,7 +96,7 @@ public class Joystick {
         if (Math.abs(backingHID.getY()) < DEADZONE) {
             return 0.0;
         }
-        return inversion * backingHID.getY();
+        return inversion * mode.adjust(backingHID.getY());
     }
     
     /**
