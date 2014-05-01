@@ -25,27 +25,25 @@
 
 package ca.team3161.lib.utils.io.logging;
 
+import com.sun.squawk.microedition.io.FileConnection;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import javax.microedition.io.Connector;
 
 public class FileLogger implements LogWriter {
     
-    private static FileLogger INSTANCE;
+    private final DataOutputStream logFile;
     
-    private FileLogger() { }
-    
-    public static FileLogger getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FileLogger();
-        }
-        return INSTANCE;
-    }
-    
-    public void open() throws IOException {
-        // TODO: implement
+    public FileLogger(final String logFileName) throws IOException {
+        final FileConnection conn = (FileConnection) Connector.open(logFileName, Connector.WRITE);
+        conn.create();
+        logFile = conn.openDataOutputStream();
     }
     
     public void write(final String s) throws IOException {
-        // TODO: implement
+        logFile.writeUTF(s); // should this be writeChars?
+        // logFile.flush(); // we may need to flush periodically, but every write is overkill
+        // and defeats the purpose of a buffered stream
     }
     
 }

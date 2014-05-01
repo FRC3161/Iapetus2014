@@ -26,6 +26,7 @@
 package ca.team3161.lib.utils.io.logging;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -36,8 +37,18 @@ public class AllOutputsLogger implements LogWriter {
     
     private AllOutputsLogger() {
         writers = new Vector();
-        writers.addElement(StdoutLogger.getInstance());
-        writers.addElement(AllOutputsLogger.getInstance());
+        final LogWriter stdout = StdoutLogger.getInstance();
+        writers.addElement(stdout);
+        final String logFileName = "AllOutputs-" + (new Date()).getTime() + ".txt";
+        try {
+            writers.addElement(new FileLogger(logFileName));
+        } catch (final IOException e) {
+            try {
+                stdout.write("WARNING: Could not open FileLogger for log file " + logFileName + "!");
+            } catch (final IOException e2) {
+                
+            }
+        }
     }
     
     public static AllOutputsLogger getInstance() {
@@ -45,14 +56,6 @@ public class AllOutputsLogger implements LogWriter {
             INSTANCE = new AllOutputsLogger();
         }
         return INSTANCE;
-    }
-    
-    public void open() throws IOException {
-        final Enumeration e = writers.elements();
-        while (e.hasMoreElements()) {
-            final LogWriter writer = (LogWriter) e.nextElement();
-            writer.open();
-        }
     }
     
     public void write(final String s) throws IOException {

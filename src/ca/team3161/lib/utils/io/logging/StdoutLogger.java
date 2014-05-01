@@ -40,10 +40,6 @@ public class StdoutLogger implements LogWriter {
         return INSTANCE;
     }
     
-    public void open() throws IOException {
-        // no-op
-    }
-    
     public void write(final String s) throws IOException {
         System.out.println(s);
     }
