@@ -28,7 +28,13 @@ package ca.team3161.lib.utils.controls;
 public class SquaredJoystickMode implements JoystickMode {
     
     public double adjust(final double raw) {
-        return raw * raw;
+        final double negate;
+        if (raw < 0.0d) {
+            negate = -1.0d;
+        } else {
+            negate = 1.0d;
+        }
+        return negate * Math.abs(raw * raw);
     }
     
 }
