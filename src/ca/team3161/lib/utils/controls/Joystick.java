@@ -78,6 +78,14 @@ public class Joystick {
     }
     
     /**
+     * Set the JoystickMode after the Joystick has already been constructed
+     * @param mode
+     */
+    public void setMode(final JoystickMode mode) {
+        this.mode = mode;
+    }
+    
+    /**
      * Get the X-axis reading from this Joystick
      * @return the value
      */
