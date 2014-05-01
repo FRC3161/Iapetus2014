@@ -29,7 +29,6 @@ import java.io.IOException;
 
 public interface LogWriter {
     
-    public void open() throws IOException;
     public void write(final String s) throws IOException;
     
 }
