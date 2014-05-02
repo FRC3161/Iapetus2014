@@ -51,7 +51,7 @@ public class AllOutputsLogger implements LogWriter {
         }
     }
     
-    public static AllOutputsLogger getInstance() {
+    public static synchronized AllOutputsLogger getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new AllOutputsLogger();
         }
