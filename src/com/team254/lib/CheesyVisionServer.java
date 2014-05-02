@@ -22,7 +22,15 @@ public class CheesyVisionServer {
     private volatile int leftCount = 0, rightCount = 0, totalCount = 0;
     private volatile double lastHeartbeatTime = -1.0d;
 
-    public static CheesyVisionServer getInstance(final int port) {
+    /**
+     * Returns the vison server instance.
+     * Providing a port number is only effective upon the first invocation of
+     * this method. Subsequent calls to getInstance() effectively ignore the
+     * parameter.
+     * @param port
+     * @return 
+     */
+    public static synchronized CheesyVisionServer getInstance(final int port) {
         if (INSTANCE == null) {
             INSTANCE = new CheesyVisionServer(port);
         }
