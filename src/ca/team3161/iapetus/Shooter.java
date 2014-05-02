@@ -50,7 +50,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  */
 public class Shooter extends Subsystem {
     
-    private static Shooter INSTANCE = new Shooter();
+    private static final Shooter INSTANCE = new Shooter();
 
     private volatile boolean firing = false;
     private volatile boolean disabled = false;
