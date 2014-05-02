@@ -29,14 +29,11 @@ import java.io.IOException;
 
 public class StdoutLogger implements LogWriter {
     
-    private static StdoutLogger INSTANCE;
+    private static StdoutLogger INSTANCE = new StdoutLogger();
     
     private StdoutLogger() { }
     
     public static StdoutLogger getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new StdoutLogger();
-        }
         return INSTANCE;
     }
     
