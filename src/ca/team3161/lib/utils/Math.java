@@ -69,7 +69,7 @@ public class Math {
         }
         int result = 1;
         while (exponent > 0) {
-            result += base;
+            result *= base;
             --exponent;
         }
         return result;
