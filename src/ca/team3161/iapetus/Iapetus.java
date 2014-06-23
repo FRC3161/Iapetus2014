@@ -33,7 +33,7 @@
 package ca.team3161.iapetus;
 
 import ca.team3161.lib.robot.ThreadedAutoRobot;
-import ca.team3161.lib.utils.controls.LogitechDualAction;
+import ca.team3161.lib.utils.controls.*;
 import ca.team3161.lib.robot.Drivetrain;
 import ca.team3161.lib.robot.PIDDrivetrain;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
@@ -65,9 +65,9 @@ public class Iapetus extends ThreadedAutoRobot {
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
     private final PIDDrivetrain pidDrive = new PIDDrivetrain(leftDrive, rightDrive,
-            new PID(new EncoderPidSrc(leftEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-            new PID(new EncoderPidSrc(rightEncoder), 25.0f, -0.0075f, -0.003f, 0.0065f),
-            new PID(new GyroPidSrc(gyro), 5.0f, 0.9f, 0.0f, 0.6f));
+            new PID(new EncoderPidSrc(leftEncoder), 350.0f, -0.008f, -0.0f, 0.018f),
+            new PID(new EncoderPidSrc(rightEncoder), 350.0f, -0.008f, -0.0f, 0.018f),
+            new PID(new GyroPidSrc(gyro), 4.0f, 0.9f, 0.0f, 0.6f));
     private final Compressor compressor = new Compressor(7, 2);
 
     private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(RobotConstants.Auto.VISION_PORT);
@@ -80,6 +80,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private static final Relay.Value BLUE_UNDERGLOW = Relay.Value.kForward;
     private static final Relay.Value RED_UNDERGLOW = Relay.Value.kReverse;
     private static final Relay.Value PURPLE_UNDERGLOW = Relay.Value.kOn;
+    private int ledCount = 1;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -99,7 +100,8 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.closeClaw();
         shooter.drawWinch();
         restartEncoders();
-
+        
+        compressor.start();
         visionServer.start();
     }
     
@@ -136,6 +138,7 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.drawWinch();
         shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
+        pidDrive.reset();
         pidDrive.start();
 
         /* NORMAL AUTO ROUTINE */
@@ -195,6 +198,7 @@ public class Iapetus extends ThreadedAutoRobot {
      * Runs through once at the start of teleop
      */
     public void teleopInit() {
+        compressor.start();
         visionServer.stopSamplingCounts();
 
         alliance = DriverStation.getInstance().getAlliance();
@@ -220,8 +224,8 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void teleopThreadsafe() {
         //semi-arcade drive
-        leftDrive.set(joystick.getY() + joystick.getX());
-        rightDrive.set(joystick.getY() - joystick.getX());
+        leftDrive.set(gamepad.getLeftY() + gamepad.getRightX());
+        rightDrive.set(gamepad.getLeftY() - gamepad.getRightX());
 
         //trigger piston mechanism
         if (gamepad.getRightBumper()) {
@@ -269,12 +273,26 @@ public class Iapetus extends ThreadedAutoRobot {
         if (!(gamepad.getLeftBumper() || gamepad.getRightTrigger())) {
             shooter.setRoller(0.0f);
         }
+        
+        if (underglowController.get().equals(RED_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+            underglowController.set(BLUE_UNDERGLOW);
+            ledCount = 0;
+        } else if (underglowController.get().equals(BLUE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+            underglowController.set(PURPLE_UNDERGLOW);
+            ledCount = 0;
+        } else if (underglowController.get().equals(PURPLE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+            underglowController.set(RED_UNDERGLOW);
+            ledCount = 0;
+        }
+        
+        ledCount++;
     }
 
     /**
      * Called once when the robot enters the disabled state
      */
     public void disabledInit() {
+        compressor.stop();
         pidDrive.cancel();
         leftEncoder.stop();
         rightEncoder.stop();
@@ -286,6 +304,8 @@ public class Iapetus extends ThreadedAutoRobot {
         shooter.setForkAngle(RobotConstants.Positions.START);
         shooter.closeClaw();
         compressor.stop();
+        leftEncoder.reset();
+        rightEncoder.reset();
         visionServer.stopSamplingCounts();
     }
 
@@ -296,7 +316,8 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
-        dsLcd.println(5, "VOLT: " + shooter.getPotVoltage());
+        dsLcd.println(5, "POT: " + shooter.getPotVoltage());
+        dsLcd.println(4, "Gyro: " + String.valueOf(gyro.getAngle()));
     }
     
     /**
