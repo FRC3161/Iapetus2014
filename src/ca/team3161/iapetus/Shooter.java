@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
@@ -64,11 +63,9 @@ public class Shooter extends Subsystem {
     private final SpeedController fork = new Talon(9);
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
-    
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.31f/*minVolt*/, 2.54f/*maxVolt*/, 90, 180);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 2.92f/*minVolt*/, 2.19f/*maxVolt*/, 90, 180);
     private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
             -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
-    private final Timer winchTimer = new Timer();
 
     private Shooter() {
         super(20, true, "SHOOTER");
@@ -135,7 +132,6 @@ public class Shooter extends Subsystem {
                 }
                 returnTrigger();
                 firing = false;
-                winchTimer.start();
                 drawWinch();
             }
         }, "TRIGGER").start();
@@ -217,10 +213,8 @@ public class Shooter extends Subsystem {
     }
 
     public void task() throws Exception {
-        
-        if (getStopSwitch()||winchTimer.get() > 0.85) {
+        if (getStopSwitch()) {
             winch.set(0.0);
-            winchTimer.reset();
         }
         /*if (getForkAngle() < Constants.Positions.SHOOTING - 10 && !getClaw()) {
          setRoller(Constants.Shooter.ROLLER_SPEED);
