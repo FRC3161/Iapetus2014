@@ -32,22 +32,17 @@
 
 package ca.team3161.iapetus;
 
-import ca.team3161.lib.robot.ThreadedAutoRobot;
-import ca.team3161.lib.utils.controls.*;
-import ca.team3161.lib.robot.Drivetrain;
 import ca.team3161.lib.robot.PIDDrivetrain;
+import ca.team3161.lib.robot.RampedDrivetrain;
+import ca.team3161.lib.robot.ThreadedAutoRobot;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Relay;
+import ca.team3161.lib.utils.controls.Joystick;
+import ca.team3161.lib.utils.controls.LinearJoystickMode;
+import ca.team3161.lib.utils.controls.LogitechDualAction;
 import com.team254.lib.CheesyVisionServer;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -58,8 +53,8 @@ import com.team254.lib.CheesyVisionServer;
  */
 public class Iapetus extends ThreadedAutoRobot {
 
-    private final SpeedController leftDrive = new Drivetrain(new SpeedController[]{new Talon(1), new Victor(2), new Talon(3)}).setInverted(true);
-    private final SpeedController rightDrive = new Drivetrain(new SpeedController[]{new Talon(4), new Victor(5), new Talon(6)}).setInverted(false);
+    private final SpeedController leftDrive = new RampedDrivetrain(new SpeedController[]{new Talon(1), new Victor(2), new Talon(3)}).setInverted(true);
+    private final SpeedController rightDrive = new RampedDrivetrain(new SpeedController[]{new Talon(4), new Victor(5), new Talon(6)}).setInverted(false);
     private final Shooter shooter = Shooter.getInstance();
     private final Gyro gyro = new Gyro(1);
     private final Encoder leftEncoder = new Encoder(2, 3), rightEncoder = new Encoder(4, 5);
