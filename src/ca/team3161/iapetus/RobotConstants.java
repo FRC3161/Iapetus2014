@@ -29,6 +29,10 @@ public final class RobotConstants {
     
     // Uninstantiable
     private RobotConstants(){}
+
+    public static final class Drive {
+        public static final double VELOCITY_RAMP_THRESHOLD = 0.1;
+    }
     
     public static final class Auto {
         private Auto(){}

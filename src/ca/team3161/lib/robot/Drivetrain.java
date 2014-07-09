@@ -35,8 +35,8 @@ import java.util.Vector;
  * Implements a container for SpeedControllers.
  */
 public class Drivetrain implements SpeedController {
-    private final Vector motorControllers;
-    private float inversion = 1.0f;
+    protected final Vector motorControllers;
+    protected float inversion = 1.0f;
     
     /**
      * Create a new Drivetrain instance
@@ -102,8 +102,6 @@ public class Drivetrain implements SpeedController {
     public void set(double pwm) {
         // PWM value must be between -1 and 1
         pwm = Utils.normalizePwm(pwm);
-        // velocity ramps
-        pwm = Utils.velocityRamps(pwm, get());
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();
@@ -119,8 +117,6 @@ public class Drivetrain implements SpeedController {
     public void set(double pwm, final byte syncGroup) {
         // PWM value must be between -1 and 1
         pwm = Utils.normalizePwm(pwm);
-        // velocity ramps
-        pwm = Utils.velocityRamps(pwm, get());
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();
