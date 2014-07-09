@@ -59,4 +59,17 @@ public class Utils {
         if (val > 1.0d) return 1.0d;
         return val;
     }
+    
+    /**
+     * Velocity ramps to keep our motors from drawing way more 
+     * current than needed due to rapid changes in Joystick values
+     * (aka smooth out acceleration a bit)
+     * @param vIn the raw joystick value
+     * @param vMotor the current motor velocity
+     * @return a step towards the joystick value
+     */
+    public static double velocityRamps(final double vIn, final double vMotor) {
+        if (vIn - vMotor >= 0.01) return (vMotor + 0.01);                       //if there is a 0.1+ diff between motor & joystick values while accelerating, insert ramp
+        return vIn;                                                             //if there is a smaller gap, or if deccelerating, continue normally
+    }
 }

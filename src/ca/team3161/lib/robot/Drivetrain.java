@@ -102,6 +102,8 @@ public class Drivetrain implements SpeedController {
     public void set(double pwm) {
         // PWM value must be between -1 and 1
         pwm = Utils.normalizePwm(pwm);
+        // velocity ramps
+        pwm = Utils.velocityRamps(pwm, get());
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();
@@ -117,6 +119,8 @@ public class Drivetrain implements SpeedController {
     public void set(double pwm, final byte syncGroup) {
         // PWM value must be between -1 and 1
         pwm = Utils.normalizePwm(pwm);
+        // velocity ramps
+        pwm = Utils.velocityRamps(pwm, get());
         final Enumeration e = motorControllers.elements();
         while (e.hasMoreElements()) {
             final SpeedController controller = (SpeedController) e.nextElement();

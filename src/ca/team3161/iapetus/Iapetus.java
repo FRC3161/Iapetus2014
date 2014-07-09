@@ -33,13 +33,12 @@
 package ca.team3161.iapetus;
 
 import ca.team3161.lib.robot.ThreadedAutoRobot;
-import ca.team3161.lib.utils.controls.LogitechDualAction;
+import ca.team3161.lib.utils.controls.*;
 import ca.team3161.lib.robot.Drivetrain;
 import ca.team3161.lib.robot.PIDDrivetrain;
 import ca.team3161.lib.robot.pid.EncoderPidSrc;
 import ca.team3161.lib.robot.pid.GyroPidSrc;
 import ca.team3161.lib.robot.pid.PID;
-import ca.team3161.lib.utils.controls.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -88,6 +87,7 @@ public class Iapetus extends ThreadedAutoRobot {
     public void robotInit() {
         gamepad.setInverted(true);
         joystick.setInverted(true);
+        joystick.setMode(new LinearJoystickMode());
         alliance = DriverStation.getInstance().getAlliance();
 
         dsLcd.clear();
