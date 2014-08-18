@@ -41,4 +41,8 @@ public class StdoutLogger implements LogWriter {
         System.out.println(s);
     }
     
+    public void flush() throws IOException {
+        // no-op for stdout
+    }
+    
 }

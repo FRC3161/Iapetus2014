@@ -65,4 +65,12 @@ public class AllOutputsLogger implements LogWriter {
             writer.write(s);
         }
     }
+    
+    public void flush() throws IOException {
+        final Enumeration e = writers.elements();
+        while (e.hasMoreElements()) {
+            final LogWriter writer = (LogWriter) e.nextElement();
+            writer.flush();
+        }
+    }
 }

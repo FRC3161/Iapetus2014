@@ -45,4 +45,8 @@ public class FileLogger implements LogWriter {
         logFile.flush(); // should we flush every time, really?
     }
     
+    public void flush() throws IOException {
+        logFile.flush();
+    }
+    
 }

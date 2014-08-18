@@ -30,5 +30,6 @@ import java.io.IOException;
 public interface LogWriter {
     
     public void write(final String s) throws IOException;
+    public void flush() throws IOException;
     
 }
