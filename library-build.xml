@@ -34,7 +34,7 @@
     <mkdir dir="${dist}/lib"/>
 
     <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/Iapetus2014-${DSTAMP}.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/lib/${ant.project.name}-${DSTAMP}.jar" basedir="${build}"/>
   </target>
 
   <target name="clean"
