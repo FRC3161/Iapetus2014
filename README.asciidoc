@@ -43,7 +43,7 @@ This drivetrain continuously corrects itself to reach PID targets, while the
 autonomous script thread is able to request these targets and go to sleep until
 they are reached.
 
-image:doc/Iapetus.svg["Iapetus Diagram SVG",height=480]
+image:Iapetus.svg["Iapetus Diagram SVG",height=480]
 
 == Other Libraries
 Late in the season, 3161 forked Team 254's
@@ -54,7 +54,7 @@ in this repository, as cheesyvision.py in the root and the src/com/team254
 source directory.
 
 == Class Overview
-Javadocs for all of these classes are available link:doc/javadoc/index.html[here].
+Javadocs for all of these classes are available link:javadoc/index.html[here].
 
 === IO (ca.team3161.lib.utils.io)
 File and DriverStation IO classes
@@ -125,12 +125,12 @@ very small) before using a PID-controlled system.
 ==== PIDSrc
 An interface with a single method, getValue(). These are used as backing
 sensors for PID objects. Encoders, Gyros, Potentiometers, Accelerometers,
-and Rangefinders are examples of backing sensors that can be usefully 
+and Rangefinders are examples of backing sensors that can be usefully
 wrapped by a class implementing PIDSrc.
 
 ==== PIDulum
 A PID loop for the specific application of an inverted pendulum system.
-This works the same as a standard PID, but with an additional "Feed 
+This works the same as a standard PID, but with an additional "Feed
 Forward" term, which is used to compensate for gravity pulling on the
 pendulum.
 
