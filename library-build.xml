@@ -1,0 +1,66 @@
+<project name="Iapetus2014" default="dist" basedir=".">
+    <description>
+        Apache Ant build file for Iapetus2014
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="doc"   location="doc"/>
+  <property name="javadoc-dir" location="${doc}/javadoc"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+   <javac srcdir="${src}" destdir="${build}" source="1.4" target="1.4">
+     <classpath>
+       <pathelement path="${classpath}"/>
+       <pathelement location="lib/wpilibj.jar"/>
+       <pathelement location="lib/squawk.jar"/>
+       <pathelement location="lib/networktables-crio.jar"/>
+     </classpath>
+   </javac>
+  </target>
+
+  <target name="docs" depends="init"
+          description="generate documentation" >
+      <mkdir dir="${doc}"/>
+      <mkdir dir="${javadoc-dir}"/>
+      <javadoc sourcepath="${src}" destdir="${javadoc-dir}" source="1.4">
+        <classpath>
+          <pathelement path="${classpath}"/>
+          <pathelement location="lib/squawk.jar"/>
+          <pathelement location="lib/wpilibj.jar"/>
+          <pathelement location="lib/networktables-crio.jar"/>
+        </classpath>
+      </javadoc>
+      <exec executable="asciidoctor">
+        <arg line="-D doc/ README.asciidoc"/>
+      </exec>
+      <copy file="Iapetus.svg" todir="${doc}"/>
+  </target>
+
+  <target name="dist" depends="compile,docs"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/${ant.project.name}-${DSTAMP}-${TSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${doc}"/>
+  </target>
+</project>

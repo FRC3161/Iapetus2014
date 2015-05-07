@@ -73,7 +73,7 @@ public class Iapetus extends ThreadedAutoRobot {
     private final CheesyVisionServer visionServer = CheesyVisionServer.getInstance(RobotConstants.Auto.VISION_PORT);
 
     private final LogitechDualAction gamepad = new LogitechDualAction(RobotConstants.Gamepad.PORT, RobotConstants.Gamepad.DEADZONE);
-    private final Joystick joystick = new Joystick(RobotConstants.Joystick.PORT, RobotConstants.Joystick.DEADZONE);
+    private final LogitechDualAction gamepad2 = new LogitechDualAction(RobotConstants.Gamepad2.PORT, RobotConstants.Gamepad2.DEADZONE);
 
     private DriverStation.Alliance alliance = DriverStation.Alliance.kInvalid;
     private final Relay underglowController = new Relay(1);
@@ -88,7 +88,7 @@ public class Iapetus extends ThreadedAutoRobot {
      */
     public void robotInit() {
         gamepad.setInverted(true);
-        joystick.setInverted(true);
+        gamepad2.setInverted(true);
         alliance = DriverStation.getInstance().getAlliance();
 
         dsLcd.clear();
@@ -286,6 +286,17 @@ public class Iapetus extends ThreadedAutoRobot {
         }
         
         ledCount++;
+
+        // GAMEPAD2 for claw control using 2015 Driver Station
+        if (gamepad2.getButton(1)) {
+            shooter.setForkAngle(RobotConstants.Positions.INTAKE);
+        } else if (gamepad2.getButton(2)) {
+            shooter.setForkAngle(RobotConstants.Positions.LOWGOAL);
+        } else if (gamepad2.getButton(3)) {
+            shooter.setForkAngle(RobotConstants.Positions.SHOOTING);
+        } else if (gamepad2.getButton(4)) {
+            shooter.setForkAngle(RobotConstants.Positions.START);
+        }
     }
 
     /**

@@ -40,13 +40,13 @@ public final class RobotConstants {
     public static final class Gamepad {
         private Gamepad(){}
         public static final int PORT = 1;
-        public static final float DEADZONE = 0.125f;
+        public static final float DEADZONE = 0.08f;
     }
     
-    public static final class Joystick {
-        private Joystick(){}
+    public static final class Gamepad2 {
+        private Gamepad2(){}
         public static final int PORT = 2;
-        public static final float DEADZONE = 0.125f;
+        public static final float DEADZONE = 0.08f;
     }
     
     public static final class Positions {
