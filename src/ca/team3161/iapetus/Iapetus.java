@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, FRC3161
+ /* Copyright (c) 2014, FRC3161
 * All rights reserved.
 * 
 * Redistribution and use in source and binary forms, with or without modification,
@@ -49,6 +49,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Relay;
 import com.team254.lib.CheesyVisionServer;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -93,6 +95,7 @@ public class Iapetus extends ThreadedAutoRobot {
 
         dsLcd.clear();
         dsLcd.println(0, "Alliance: " + alliance.name.toUpperCase());
+        SmartDashboard.putString("Mode", alliance.name.toUpperCase() + " ALLIANCE");
 
         shooter.disableAll();
         shooter.start();
@@ -134,6 +137,7 @@ public class Iapetus extends ThreadedAutoRobot {
         restartEncoders();
         gyro.reset();
         dsLcd.println(1, "Starting AUTO");
+        SmartDashboard.putString("Mode", "AUTO RUNNING");
 
         shooter.drawWinch();
         shooter.setForkAngle(RobotConstants.Positions.START);
@@ -177,6 +181,7 @@ public class Iapetus extends ThreadedAutoRobot {
         pidDrive.waitForTarget();
 
         dsLcd.println(1, "AUTO complete");
+        SmartDashboard.putString("Mode", "AUTO COMPLETE");
         visionServer.stopSamplingCounts();
     }
 
@@ -189,8 +194,10 @@ public class Iapetus extends ThreadedAutoRobot {
     public void autonomousPeriodic() {
         if (visionServer.hasClientConnection()) {
             dsLcd.println(2, "Vision connected");
+            SmartDashboard.putString("Vision Server", "CONNECTED");
         } else {
             dsLcd.println(2, "WARNING: NO VISION");
+            SmartDashboard.putString("Vision Server", "ERROR: NOT CONNECTED");
         }
     }
 
@@ -274,13 +281,13 @@ public class Iapetus extends ThreadedAutoRobot {
             shooter.setRoller(0.0f);
         }
         
-        if (underglowController.get().equals(RED_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+        if (underglowController.get().equals(RED_UNDERGLOW) && gamepad.getButton(4) && ledCount > 20) {
             underglowController.set(BLUE_UNDERGLOW);
             ledCount = 0;
-        } else if (underglowController.get().equals(BLUE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+        } else if (underglowController.get().equals(BLUE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 20) {
             underglowController.set(PURPLE_UNDERGLOW);
             ledCount = 0;
-        } else if (underglowController.get().equals(PURPLE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 5) {
+        } else if (underglowController.get().equals(PURPLE_UNDERGLOW) && gamepad.getButton(4) && ledCount > 20) {
             underglowController.set(RED_UNDERGLOW);
             ledCount = 0;
         }
@@ -297,12 +304,16 @@ public class Iapetus extends ThreadedAutoRobot {
         } else if (gamepad2.getButton(4)) {
             shooter.setForkAngle(RobotConstants.Positions.START);
         }
+
+        dsLcd.println(0, "ShotCount: " + shooter.getShotCount());
+        SmartDashboard.putNumber("Shot Count", shooter.getShotCount());
     }
 
     /**
      * Called once when the robot enters the disabled state
      */
     public void disabledInit() {
+        shooter.resetShotCount();
         compressor.stop();
         pidDrive.cancel();
         leftEncoder.stop();
@@ -327,6 +338,8 @@ public class Iapetus extends ThreadedAutoRobot {
         leftDrive.disable();
         rightDrive.disable();
         shooter.disableAll();
+        SmartDashboard.putNumber("POT: ", shooter.getPotVoltage());
+        SmartDashboard.putNumber("Gyro: ", shooter.getPotVoltage());
         dsLcd.println(5, "POT: " + shooter.getPotVoltage());
         dsLcd.println(4, "Gyro: " + String.valueOf(gyro.getAngle()));
     }

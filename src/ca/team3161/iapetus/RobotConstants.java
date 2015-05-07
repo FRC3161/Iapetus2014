@@ -34,7 +34,7 @@ public final class RobotConstants {
         private Auto(){}
         public static final int VISION_PORT = 1180;
         public static final int DRIVE_DISTANCE = 15000;
-        public static final int HOTGOAL_DELAY = 3000;
+        public static final int HOTGOAL_DELAY = 5000;
     }
 
     public static final class Gamepad {
@@ -55,8 +55,8 @@ public final class RobotConstants {
         public static final int INTAKE = 58;
         public static final int LOWGOAL = 80;
         public static final int TRUSS = 160;
-        public static final int SHOOTING = 145;
-        public static final int START = 180;
+        public static final int SHOOTING = 148;
+        public static final int START = 182;
     }
     
     public static final class Shooter {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, FRC3161
+  /* Copyright (c) 2014, FRC3161
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -65,10 +65,11 @@ public class Shooter extends Subsystem {
     private final DigitalInput drawbackStopSwitch = new DigitalInput(1);
     private final Potentiometer forkPot = new AnalogPotentiometer(2);
     
-    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.31f/*minVolt*/, 2.54f/*maxVolt*/, 90, 180);
+    private final PotentiometerPidSrc pidPot = new PotentiometerPidSrc(forkPot, 3.81f/*minVolt*/, 3.08f/*maxVolt*/, 90, 180);
     private final PIDulum pidulum = new PIDulum(pidPot, 0.75f,
             -0.035f/*kP*/, 0.0f/*kI*/, 0.065f/*kD*/, 135.0f/*offsetAngle*/, 0.001f/*torqueConstant*/);
     private final Timer winchTimer = new Timer();
+    private volatile int shotCount = 0;
 
     private Shooter() {
         super(20, true, "SHOOTER");
@@ -76,6 +77,14 @@ public class Shooter extends Subsystem {
     
     public static Shooter getInstance() {
         return INSTANCE;
+    }
+    
+    public int getShotCount() {
+        return shotCount;
+    }
+    
+    public void resetShotCount() {
+        shotCount = 0;
     }
 
     protected void defineResources() {
@@ -137,6 +146,7 @@ public class Shooter extends Subsystem {
                 firing = false;
                 winchTimer.start();
                 drawWinch();
+                ++shotCount;
             }
         }, "TRIGGER").start();
     }
@@ -218,7 +228,7 @@ public class Shooter extends Subsystem {
 
     public void task() throws Exception {
         
-        if (getStopSwitch()||winchTimer.get() > 0.85) {
+        if (getStopSwitch()||winchTimer.get() > 1.9) {
             winch.set(0.0);
             winchTimer.reset();
         }
